@@ -527,8 +527,8 @@ class Caculator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width:MediaQuery.of(context).size.width,
-      child:Wrap(
+      // width:MediaQuery.of(context).size.width,
+      child:Column(
         children:const [
           DateItem(),
           SizedBox(width:10),
@@ -553,7 +553,6 @@ class SortItem extends StatelessWidget {
   Widget build(BuildContext context) {
 
     SortTypeViewModel sortTypeViewModel = Provider.of<SortTypeViewModel>(context);
-
 
     return Observer(builder:(context){
 
@@ -670,19 +669,34 @@ class DateItem extends StatelessWidget {
   Widget build(BuildContext context) {
     EffectiveTimeViewModel effectiveTimeViewModel = Provider.of<EffectiveTimeViewModel>(context);
     return Container(
-      child:Wrap(
+      child:Row(
+        mainAxisAlignment: MainAxisAlignment.start,
         children:[
           Container(
-            width:30,
-            height:40,
-            alignment: Alignment.center,
-            child:const Icon(Icons.calendar_today, size:25,),
+            // width:30,
+            // height:40,
+            // alignment: Alignment.center,
+            child:const Text(
+              '日期',
+              style: TextStyle(
+                fontFamily: "Netflix",
+                fontWeight: FontWeight.w300,
+                fontSize: 15,
+                // color: Color.fromRGBO(245, 246, 255, 1),
+              ),
+            )//const Icon(Icons.calendar_today, size:25,),
           ),
-          const SizedBox(width:5,),
-          SizedBox(
-            height:32,
-            width:160,
+          const SizedBox(width:10,),
+          ConstrainedBox(
+            constraints: BoxConstraints(
+              maxWidth: 300,
+            ),
+            // alignment: Alignment.center,
+            // padding:const EdgeInsets.only(left: 20),
+            // height:32,
+            // width:160,
             child:DateTimeField(
+              // textAlign:TextAlign.center,
               resetIcon:null,
               initialValue: DateTime.now(),
               format: format,
