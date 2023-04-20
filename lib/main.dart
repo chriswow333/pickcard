@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pickcard/page/cardcontent/cardcontent.dart';
 import 'package:pickcard/page/pickcard/pickcard.dart';
 
 void main() {
@@ -11,15 +12,17 @@ class Pickcard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       title:"Pick card",
-        // initialRoute:'/',
-        // routes:{
-        //   '/':(context)=> const PickCardScreen(),
-        //   // '/card':(context)=> const CardContentScreen(),
-        // }, 
-        home: PickCardScreen(),
-        debugShowCheckedModeBanner: false,
+      initialRoute:'/',
+      routes:{
+        '/': (context)=> PickCardScreen(),
+        '/card':(context)=>  CardContentScreen(),
+      },
+      onUnknownRoute: (settings) { 
+        return MaterialPageRoute(builder: (_) => PickCardScreen());
+      },
+      debugShowCheckedModeBanner: false,
     );
   }
 }
@@ -33,13 +36,47 @@ class PickCardScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title:Text('Title')
+        title:Text('選卡趣')
       ),
       body:Container(
         alignment: Alignment.topCenter,
         padding: const EdgeInsets.only(top:20),
-        child: const SingleChildScrollView(
-          child: PickcardPage(),
+        child: SingleChildScrollView(
+          child:ConstrainedBox(
+            constraints: const BoxConstraints(
+            minWidth: 800,
+            maxWidth: 800,
+          ),
+            child: PickcardPage(),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+
+class CardContentScreen extends StatelessWidget {
+  const CardContentScreen({ Key? key }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title:Text('選卡趣'),
+        backgroundColor: Colors.blueAccent[200],
+      ),
+      body: Container(
+        alignment: Alignment.topCenter,
+        padding: const EdgeInsets.only(top:20),
+        child: SingleChildScrollView(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints( 
+              // minWidth: 720, // not working..
+              maxWidth: 800,
+            ),
+            child:const CardContentPage(),
+          ),
         ),
       ),
     );

@@ -23,6 +23,7 @@ import 'package:pickcard/common/model/evaluate/param.dart';
 import 'package:pickcard/common/model/channels/mobilepay/mobilepay.dart';
 import 'package:pickcard/common/model/channels/travel/travel.dart';
 import 'package:provider/provider.dart';
+import 'package:mobx/mobx.dart';
 
 
 
@@ -33,6 +34,8 @@ class ChannelTypeModel{
 
   ChannelTypeModel(this.channelTypeID, this.channelName);
 }
+
+
 
 
 class ChannelTypeModels {
@@ -799,4 +802,142 @@ class PickcardViewModel extends ChangeNotifier{
   }
 
   
+  List<ChannelModel> evaulateCardItem(BuildContext context, int channelTypeID){
+        
+    late ObservableFuture<ObservableList> future;
+    
+    switch(channelTypeID){
+      case 3:
+        final mobilepayViewModel = Provider.of<MobilepayObserver>(context, listen:false);
+        final mobilepays = mobilepayViewModel.mobilepays!;
+        future = mobilepays;
+        break;
+      case 4:
+        final ecommerceViewModel = Provider.of<EcommerceObserver>(context, listen:false); 
+        final ecommerces = ecommerceViewModel.ecommerces!;
+        future = ecommerces;
+        break;
+      case 5:
+        final supermarketObserver = Provider.of<SupermarketObserver>(context, listen:false); 
+        final supermarkets = supermarketObserver.supermarkets!;
+        future = supermarkets;
+        break;
+      case 6:
+        final onlinegameObserver = Provider.of<OnlinegameObserver>(context, listen:false); 
+        final onlinegames = onlinegameObserver.onlinegames!;
+        future = onlinegames;
+        break;
+      case 7:
+        final streamingObserver = Provider.of<StreamingObserver>(context, listen:false); 
+        final streamings = streamingObserver.streamings!;
+        future = streamings;
+        break;
+      case 8:
+        final foodObserver = Provider.of<FoodObserver>(context, listen:false); 
+        final foods = foodObserver.foods!;
+        future = foods;
+        break;
+      case 9:
+        final transportationObserver = Provider.of<TransportationObserver>(context, listen:false); 
+        final transportations = transportationObserver.transportations!;
+        future = transportations;
+        break;
+      case 10:
+        final travelObserver = Provider.of<TravelObserver>(context, listen:false); 
+        final travels = travelObserver.travels!;
+        future = travels;
+        break;
+      case 11:
+        final deliveryObserver = Provider.of<DeliveryObserver>(context, listen:false); 
+        final deliveries = deliveryObserver.deliveries!;
+        future = deliveries;
+        break;
+      case 12:
+        final insuranceObserver = Provider.of<InsuranceObserver>(context, listen:false); 
+        final insurances = insuranceObserver.insurances!;
+        future = insurances;
+        break;
+      case 13:
+        final mallObserver = Provider.of<MallObserver>(context, listen:false); 
+        final malls = mallObserver.malls!;
+        future = malls;
+        break;
+      case 14:
+        final sportObserver = Provider.of<SportObserver>(context, listen:false); 
+        final sports = sportObserver.sports!;
+        future = sports;
+        break;
+      case 15:
+        final conveniencestoreObserver = Provider.of<ConveniencestoreObserver>(context, listen:false); 
+        final conveniencestores = conveniencestoreObserver.conveniencestores!;
+        future = conveniencestores;
+        break;
+      case 16:
+        final appstoreObserver = Provider.of<AppstoreObserver>(context, listen:false); 
+        final appstores = appstoreObserver.appstores!;
+        future = appstores;
+        break;
+      case 17:
+        final hotelObserver = Provider.of<HotelObserver>(context, listen:false); 
+        final hotels = hotelObserver.hotels!;
+        future = hotels;
+        break;
+      case 18:
+        final amusementObserver = Provider.of<AmusementObserver>(context, listen:false); 
+        final amusements = amusementObserver.amusements!;
+        future = amusements;
+        break;
+      case 19:
+        final cinemaObserver = Provider.of<CinemaObserver>(context, listen:false); 
+        final cinemas = cinemaObserver.cinemas!;
+        future = cinemas;
+        break;
+      case 20:
+        final publicutilityObserver = Provider.of<PublicutilityObserver>(context, listen:false); 
+        final publicutilities = publicutilityObserver.publicutilities!;
+        future = publicutilities;
+        break;
+    }
+
+
+
+    switch(future.status) {
+      case FutureStatus.pending:
+        return [];
+      case FutureStatus.rejected:
+        return [];
+      case FutureStatus.fulfilled:
+        return getChannelModelsByChannelTypeID(context, channelTypeID, future.result);
+      default:
+        return [];       
+    }
+
+  }
+
+
+
+
+  List<ChannelItemStatus> transferChannelItemStatus(BuildContext context, int channelTypeID, List<ChannelModel> channelModels){
+    
+    List<ChannelItemStatus> channelItemStatuses = [];
+
+    for(ChannelModel channelModel in channelModels){
+      
+      bool hasChosen = hasSelectedChannelItemID(context, channelTypeID, channelModel.id);
+
+      channelItemStatuses.add(ChannelItemStatus(id:channelModel.id,name:channelModel.name, hasChosen:hasChosen));
+    }
+    return channelItemStatuses;
+  }
+
+
+}
+
+
+class ChannelItemStatus {
+  final String id;
+  final String name;
+  bool hasChosen;
+
+  ChannelItemStatus({required this.id, required this.name, required this.hasChosen});
 }

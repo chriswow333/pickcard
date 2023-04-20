@@ -5,31 +5,31 @@ import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:intl/intl.dart';
 import 'package:mobx/mobx.dart';
 import 'package:pickcard/common/model/channels/amusement/amusement.dart';
 import 'package:pickcard/common/model/channels/appstore/appstore.dart';
 import 'package:pickcard/common/model/channels/cinema/cinema.dart';
 import 'package:pickcard/common/model/channels/conveniencestore/conveniencestore.dart';
+import 'package:pickcard/common/model/channels/delivery/delivery.dart';
+import 'package:pickcard/common/model/channels/ecommerce/ecommerce.dart';
 import 'package:pickcard/common/model/channels/food/food.dart';
 import 'package:pickcard/common/model/channels/hotel/hotel.dart';
 import 'package:pickcard/common/model/channels/insurance/insurance.dart';
 import 'package:pickcard/common/model/channels/mall/mall.dart';
+import 'package:pickcard/common/model/channels/mobilepay/mobilepay.dart';
 import 'package:pickcard/common/model/channels/onlinegame/onlinegame.dart';
 import 'package:pickcard/common/model/channels/publicutility/publicutility.dart';
 import 'package:pickcard/common/model/channels/sport/sport.dart';
 import 'package:pickcard/common/model/channels/streaming/streaming.dart';
 import 'package:pickcard/common/model/channels/supermarket/supermarket.dart';
 import 'package:pickcard/common/model/channels/transportation/transportation.dart';
-import 'package:pickcard/common/model/channels/delivery/delivery.dart';
-import 'package:pickcard/common/model/channels/ecommerce/ecommerce.dart';
+import 'package:pickcard/common/model/channels/travel/travel.dart';
 import 'package:pickcard/common/model/evaluate/evaluate_resp.dart';
 import 'package:pickcard/common/model/evaluate/param.dart';
-import 'package:pickcard/common/model/channels/mobilepay/mobilepay.dart';
-import 'package:pickcard/common/model/channels/travel/travel.dart';
 import 'package:pickcard/common/repository/storage.dart';
 import 'package:pickcard/page/pickcard/model/pickcard_viewmodel.dart';
 import 'package:provider/provider.dart';
-import 'package:intl/intl.dart';
 
 
 
@@ -104,9 +104,6 @@ class Pickcard extends StatelessWidget {
         SizedBox(height:10),
         Divider(),
         SizedBox(height:10),
-        ChannelItemList(),
-        SizedBox(height:20),
-        Divider(),
         Caculator(),
         Divider(),
         SizedBox(height:20),
@@ -123,8 +120,8 @@ class ChannelBtnList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width:MediaQuery.of(context).size.width ,
+    return SizedBox(
+      width: MediaQuery.of(context).size.width,
       child:SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child:Row(
@@ -164,27 +161,46 @@ class ChannelBtn extends StatelessWidget {
     icon = pickcardViewModel.getIconChannelBtn(context, channelTypeID);
 
     return Container(
-      // width:100,
       padding:const EdgeInsets.symmetric(horizontal:8, vertical:2),
       child:TextButton(
         style: isSelected ? 
           ElevatedButton.styleFrom(
             primary: hasChosen ? Colors.greenAccent[700]!:const Color(0xff2db3ff),
-            // padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 15),
-            // shape: RoundedRectangleBorder( 
-            //   borderRadius: BorderRadius.circular(10.0),
-            // ),
           )
           :ElevatedButton.styleFrom(
             primary: const Color(0xffFFFBFB),
             padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 2),
-            // shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0),),
             // side: BorderSide(width: 0.5, color: hasChosen ? Colors.greenAccent[700]!:const Color(0xff2db3ff),),
           ),
         onPressed: (){
 
           pickcardViewModel.toggleChannelTypeID(channelTypeID);
 
+          ChannelTypeModel channelTypeModel = ChannelTypeModels.getChannelTypeModel(channelTypeID);
+
+          List<ChannelModel> channelModels = pickcardViewModel.evaulateCardItem(context, channelTypeID);
+
+          List<ChannelItemStatus> channelItemStatuses = pickcardViewModel.transferChannelItemStatus(context, channelTypeID, channelModels);
+
+          Future<List<ChannelItemStatus>?> future = showDialog<List<ChannelItemStatus>?>(context: context, builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text(channelTypeModel.channelName),
+              content: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child:ChannelItemListDialog(channelItemStatuses:channelItemStatuses),
+              ),
+            );
+          });
+          if(future != null) {
+            future.then((data){
+              for(ChannelItemStatus channelItemStatus in data!){
+                bool oldHasChosen = pickcardViewModel.hasSelectedChannelItemID(context, channelTypeID, channelItemStatus.id);
+                if(channelItemStatus.hasChosen ^ oldHasChosen){
+                  pickcardViewModel.toggleChannelItemID(context, channelTypeID, channelItemStatus.id);
+                }
+              }
+            });
+          }
         },
         child:Container(
           alignment: Alignment.center,
@@ -223,15 +239,110 @@ class ChannelBtn extends StatelessWidget {
 }
 
 
-class ChannelItemList extends StatelessWidget {
-  const ChannelItemList({ Key? key }) : super(key: key);
+class ChannelItemListDialog extends StatefulWidget {
+  const ChannelItemListDialog({ Key? key, required this.channelItemStatuses }) : super(key: key);
+  
+  final List<ChannelItemStatus> channelItemStatuses;
+  
+  @override
+  _ChannelItemListDialogState createState() => _ChannelItemListDialogState();
+}
+
+class _ChannelItemListDialogState extends State<ChannelItemListDialog> {
+
+  final Set<String> channelIDs = {};
+  
 
   @override
   Widget build(BuildContext context) {
+    return Container(
+      child:Column(
+        children:[
+          ConstrainedBox(
+            constraints: BoxConstraints(
+              maxHeight: MediaQuery.of(context).size.height - 220,
+            ),
+            child:SingleChildScrollView( 
+              child:Column(
+                children:[
+                for(ChannelItemStatus channelItemStatus in widget.channelItemStatuses)
+                  Container(
+                    child:TextButton(
+                      onPressed: (){
+                        setState((){
+                          channelItemStatus.hasChosen = !channelItemStatus.hasChosen;
+                        });
+                      },
+                      child:Container(
+                        alignment:Alignment.center,
+                        decoration: BoxDecoration(
+                          border: channelItemStatus.hasChosen ? 
+                            Border.all(
+                              color: Colors.greenAccent[700]!,
+                              width: 2,
+                            ):
+                            Border.all(
+                              color: Colors.white12,
+                              width: 2,
+                            ),
+                          borderRadius: const BorderRadius.all(
+                            Radius.circular(10),
+                          ),
+                        ),
+                        padding:const EdgeInsets.all(5.0),
+                        child:Text(
+                          channelItemStatus.name,
+                          style: const TextStyle(
+                            fontFamily: "Netflix",
+                            fontWeight: FontWeight.w100,
+                            fontSize: 20,
+                            color:Color.fromARGB(221, 0, 0, 0),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          
+          SizedBox(height:20),
+          TextButton(
+            onPressed: (){
+              Navigator.pop(context, widget.channelItemStatuses);
+            },
+            child:Text('送出')
+          ),
+        ],
+      ),
+    );
 
+    return Container(
+      child:Column(
+        children:[
+          for(ChannelItemStatus channelItemStatus in widget.channelItemStatuses)
+            TextButton(
+              child:Text(channelItemStatus.name),
+              onPressed: (){
+                channelItemStatus.hasChosen = !channelItemStatus.hasChosen;
+              },
+            )
+        ]
+      )
+    );
+  }
+}
+
+
+class ChannelItemList extends StatelessWidget {
+  const ChannelItemList({ Key? key }) : super(key: key);
+
+
+  @override
+  Widget build(BuildContext context) {
     final pickcardViewModel = Provider.of<PickcardViewModel>(context);
     int channelTypeID = pickcardViewModel.getSelectedChannelTypeID();
-
     return SizedBox(
       width:MediaQuery.of(context).size.width,
       child:Column(
@@ -253,11 +364,7 @@ class ChannelTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-    String channelName = ChannelTypeModels.getChannelTypeModel(channelTypeID).channelName;
-
     PickcardViewModel pickcardViewModel = Provider.of<PickcardViewModel>(context, listen: false);
-
     return Container(
       child:Row(
         // alignment: WrapAlignment.center,
@@ -392,12 +499,8 @@ class ChannelItemObserver extends StatelessWidget {
     }
     
     return Container(
-      // constraints:const BoxConstraints(),
-
       child:Observer(builder:(context) {
-
         PickcardViewModel pickcardViewModel = Provider.of<PickcardViewModel>(context, listen:false);
-
         switch(future.status){
           case FutureStatus.pending:
             return const Center(
@@ -410,28 +513,10 @@ class ChannelItemObserver extends StatelessWidget {
           case FutureStatus.fulfilled:
             List<ChannelModel> channelModels = pickcardViewModel.getChannelModelsByChannelTypeID(context, channelTypeID, future.result);
             
-            int channelModelsLength = channelModels.length;
-            
-            int channelRow = (channelModelsLength / 3).toInt();
-
-            if ((channelModelsLength % 3) != 0){
-              channelRow++;
-            }
-            channelRow *= 130;
-
-            return Container(
-              height:channelRow.toDouble(),
+            return SingleChildScrollView(
               child:GridView.count(
                 physics: NeverScrollableScrollPhysics(),
-                 shrinkWrap: true,
-          // gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          //   crossAxisCount: 3,
-          //   childAspectRatio: 1.0,
-          //   mainAxisSpacing: 10.0,
-          //   crossAxisSpacing: 10.0,
-          // ),
-                // primary: false,
-                // padding: const EdgeInsets.all(5),
+                shrinkWrap: true,
                 crossAxisSpacing: 0,
                 mainAxisSpacing: 0,
                 crossAxisCount: 3,
@@ -440,29 +525,6 @@ class ChannelItemObserver extends StatelessWidget {
                     ChannelItem(channelTypeID:channelTypeID, id:c.id, name:c.name,),
                 ],
               ),
-            );
-
-            return Container(
-              height: 200,
-              child: ListView.builder(
-              itemCount: channelModels.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  // leading: Icon(Icons.event_seat),
-                  title: Text('${channelModels[index].name}'),
-                );
-              },
-            ));
-            
-            return Column(
-              children:[
-                Wrap(
-                  children:[
-                    for(ChannelModel c in channelModels) 
-                      ChannelItem(channelTypeID:channelTypeID, id:c.id, name:c.name,),
-                  ]
-                )
-              ]
             );
         }
       }),
@@ -511,7 +573,7 @@ class ChannelItem extends StatelessWidget {
             style: const TextStyle(
               fontFamily: "Netflix",
               fontWeight: FontWeight.w100,
-              fontSize: 15,
+              fontSize: 20,
               color:Color.fromARGB(221, 0, 0, 0),
             ),
           ),
@@ -564,22 +626,26 @@ class SortItem extends StatelessWidget {
       List<String> sortTypeNames =  sortTypeNamesModel.getSortTypeNames();
 
       return Container(
-        child: Wrap(
+        alignment: Alignment.centerLeft,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Container(
-              width:30,
               height:40,
-              alignment: Alignment.center,
-              child:const Icon(Icons.sort_rounded, size:25,),
+              width:80,
+              alignment: Alignment.centerLeft,
+              child:const Text('排序方式')
             ),
             const SizedBox(width:5,),
             Container(
-              height:40,
+              height:80,
               width:100,
+              // alignment: Alignment.centerLeft,
               child: DropdownButtonHideUnderline(
                 child: DropdownButton<String>(
                   style:const TextStyle(
                     fontSize:14,
+                    color:Colors.black,
                   ),
                   isExpanded: true,
                   // Initial Value
@@ -618,44 +684,37 @@ class CashItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     CashViewModel cashViewModel = Provider.of<CashViewModel>(context);
-    return Container(
-      child:Wrap(
-        // direction: Axis.horizontal,
-        children:[
-          Container(
-            width:20,
-            height:40,
-            alignment: Alignment.center,
-            child:const Icon(Icons.attach_money_outlined, size:25,),
-          ),
-          const SizedBox(width:5,),
-          SizedBox(
-            height:32,
-            width:80,
-            child:TextFormField(
-              decoration: const InputDecoration(
-                border: InputBorder.none,
-                focusedBorder: InputBorder.none,
-                enabledBorder: InputBorder.none,
-                errorBorder: InputBorder.none,
-                disabledBorder: InputBorder.none,
-                // contentPadding:EdgeInsets.only(left: 15, bottom: 11, top: 11, right: 15),
-                hintText: "",
-              ),
-              keyboardType: TextInputType.number,
-              inputFormatters: <TextInputFormatter>[
-                FilteringTextInputFormatter.digitsOnly
-              ], 
-              initialValue:'1000',
-              onChanged:(text){
-                var cash = int.parse(text);
-                cashViewModel.changeCash(cash);
-              },
+    return Row(
+      children:[
+        Container(
+          child:const Text("消費金額"),
+        ),
+        const SizedBox(width:5,),
+        SizedBox(
+          // height:40,
+          width:120,
+          child:TextFormField(
+            decoration: const InputDecoration(
+              border: InputBorder.none,
+              focusedBorder: InputBorder.none,
+              enabledBorder: InputBorder.none,
+              errorBorder: InputBorder.none,
+              disabledBorder: InputBorder.none,
+              // contentPadding:EdgeInsets.only(left: 15, bottom: 11, top: 11, right: 15),
+              hintText: "",
             ),
+            keyboardType: TextInputType.number,
+            inputFormatters: <TextInputFormatter>[
+              FilteringTextInputFormatter.digitsOnly
+            ], 
+            initialValue:'1000',
+            onChanged:(text){
+              var cash = int.parse(text);
+              cashViewModel.changeCash(cash);
+            },
           ),
-          
-        ]
-      )
+        ),
+      ]
     );
   }
 }
@@ -762,21 +821,28 @@ class RewardItem extends StatelessWidget {
       List<String> rewardTypeNames =  rewardTypeNamesModel.getRewardNames();
 
       return Container(
-        child: Wrap(
+        child: Row(
           children: [
             Container(
-              width:30,
+              alignment: Alignment.centerLeft,
+              width:80,
               height:40,
-              alignment: Alignment.center,
-              child:const Icon(Icons.card_giftcard_outlined, size:25,),
+              // alignment: Alignment.center,
+              child: Text(
+                '回饋方式',
+                style:TextStyle(
+                  fontSize:15,
+                )
+              ),
             ),
             const SizedBox(width:5,),
             Container(
-              height:40,
+              height:80,
               width:100,
               child: DropdownButtonHideUnderline(
                 child: DropdownButton<String>(
                   style:const TextStyle(
+                    color:Colors.black,
                     fontSize:14,
                   ),
                   isExpanded: true,
@@ -942,9 +1008,9 @@ class CardItem extends StatelessWidget {
         ElevatedButton(
           onPressed:(){
 
-            // CardIDRepository.save(cardID);
+            CardIDRepository.save(cardID);
 
-            // LocalStorageService.setCardID(cardID);
+            LocalStorageService.setCardID(cardID);
 
             Navigator.of(context).pushNamed(
               '/card',

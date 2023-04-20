@@ -59,7 +59,7 @@ dev_dependencies:
   freezed_annotation: ^1.1.0
   freezed: ^1.1.1
   json_annotation: ^4.4.0
-  # localstorage: ^4.0.0+1
+  localstorage: ^4.0.0+1
   datetime_picker_formfield: ^2.0.0
   auto_size_text: ^3.0.0
   percent_indicator: ^4.2.2
@@ -79,7 +79,18 @@ flutter:
   # assets:
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
-
+  assets: 
+    - images/card/sk_c02.png
+    - images/card/sk_c03.png
+    - images/card/sk_c04.png
+    - images/card/sk_c07.png
+    - images/card/cube.png
+    - images/card/sinopac-dual-currency.png
+    - images/card/rose-giving.png
+    - images/card/flygo.png
+    - images/card/jkao.png
+    - images/card/richart-gogo.png
+    - images/card/wang.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 
