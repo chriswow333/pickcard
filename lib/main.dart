@@ -13,7 +13,7 @@ class Pickcard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title:"Pick card",
+      title:"選卡趣",
       initialRoute:'/',
       routes:{
         '/': (context)=> PickCardScreen(),
@@ -36,7 +36,9 @@ class PickCardScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title:Text('選卡趣')
+        title:Text('選卡趣'),        
+        backgroundColor:const Color.fromARGB(255, 58, 133, 255),
+
       ),
       body:Container(
         alignment: Alignment.topCenter,
@@ -64,7 +66,7 @@ class CardContentScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title:Text('選卡趣'),
-        backgroundColor: Colors.blueAccent[200],
+        backgroundColor: const Color(0x0077B6),
       ),
       body: Container(
         alignment: Alignment.topCenter,

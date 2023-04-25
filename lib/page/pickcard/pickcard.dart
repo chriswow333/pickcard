@@ -115,26 +115,146 @@ class Pickcard extends StatelessWidget {
   }
 }
 
-class ChannelBtnList extends StatelessWidget {
+class ChannelBtnList extends StatefulWidget {
   const ChannelBtnList({ Key? key }) : super(key: key);
 
   @override
+  _ChannelBtnListState createState() => _ChannelBtnListState();
+}
+
+class _ChannelBtnListState extends State<ChannelBtnList> {
+
+  bool showMore  = false;
+  
+
+  @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: MediaQuery.of(context).size.width,
-      child:SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child:Row(
+    if(showMore) {
+      return ChannelBtnShowMoreList(onTapShowMore:(){
+        setState(() {
+          showMore = !showMore;
+        });
+      });
+    } else {
+      return ChannelBtnShowLessList(onTapShowMore:(){
+        setState(() {
+          showMore = !showMore;
+        });
+      });
+    }
+  }
+}
+
+
+class ChannelBtnShowLessList extends StatelessWidget {
+  const ChannelBtnShowLessList({ Key? key, required this.onTapShowMore }) : super(key: key);
+
+  final Function() onTapShowMore;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children:[
+        Row(
           children:[
-            for(ChannelTypeModel c in ChannelTypeModels.getChannelTypeModels())
-              ChannelBtn(channelType: c,),
+            ChannelBtn(channelType:ChannelTypeModels.getChannelTypeModel(3)),
+            ChannelBtn(channelType:ChannelTypeModels.getChannelTypeModel(4)),
+            ChannelBtn(channelType:ChannelTypeModels.getChannelTypeModel(5)),
+            ChannelBtn(channelType:ChannelTypeModels.getChannelTypeModel(6)),
+            ChannelBtn(channelType:ChannelTypeModels.getChannelTypeModel(7)),
+            ChannelBtn(channelType:ChannelTypeModels.getChannelTypeModel(8)),
+            ChannelBtn(channelType:ChannelTypeModels.getChannelTypeModel(9)),
+            ChannelBtn(channelType:ChannelTypeModels.getChannelTypeModel(10)),
+            ChannelBtn(channelType:ChannelTypeModels.getChannelTypeModel(11)),
+            ChannelBtnShowTap(onTapShowMore:onTapShowMore),
           ],
+        ),
+        
+      ]
+    );
+  }
+}
+
+class ChannelBtnShowTap extends StatelessWidget {
+  const ChannelBtnShowTap({ Key? key, required this.onTapShowMore }) : super(key: key);
+  final Function() onTapShowMore;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width:50,
+      child:TextButton(
+        onPressed: (){
+          onTapShowMore();
+        }, 
+        child: const Icon(
+          Icons.more_horiz_outlined,
+          color: const Color(0xff2db3ff),
+          size: 30.0,
         ),
       ),
     );
   }
 }
 
+class ChannelBtnEmpty extends StatelessWidget {
+  const ChannelBtnEmpty({ Key? key }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width:50,
+    );
+  }
+}
+
+class ChannelBtnShowMoreList extends StatelessWidget {
+  const ChannelBtnShowMoreList({ Key? key, required this.onTapShowMore }) : super(key: key);
+
+  final Function() onTapShowMore;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children:[
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children:[
+            ChannelBtn(channelType:ChannelTypeModels.getChannelTypeModel(3)),
+            ChannelBtn(channelType:ChannelTypeModels.getChannelTypeModel(4)),
+            ChannelBtn(channelType:ChannelTypeModels.getChannelTypeModel(5)),
+            ChannelBtn(channelType:ChannelTypeModels.getChannelTypeModel(6)),
+            ChannelBtn(channelType:ChannelTypeModels.getChannelTypeModel(7)),
+            ChannelBtn(channelType:ChannelTypeModels.getChannelTypeModel(8)),
+            ChannelBtn(channelType:ChannelTypeModels.getChannelTypeModel(9)),
+            ChannelBtn(channelType:ChannelTypeModels.getChannelTypeModel(10)),
+            ChannelBtn(channelType:ChannelTypeModels.getChannelTypeModel(11)),
+            ChannelBtnShowTap(onTapShowMore:onTapShowMore),
+
+          ],
+        ), 
+        SizedBox(height:20),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children:[
+            ChannelBtn(channelType:ChannelTypeModels.getChannelTypeModel(12)),
+            ChannelBtn(channelType:ChannelTypeModels.getChannelTypeModel(13)),
+            ChannelBtn(channelType:ChannelTypeModels.getChannelTypeModel(14)),
+            ChannelBtn(channelType:ChannelTypeModels.getChannelTypeModel(15)),
+            ChannelBtn(channelType:ChannelTypeModels.getChannelTypeModel(16)),
+            ChannelBtn(channelType:ChannelTypeModels.getChannelTypeModel(17)),
+            ChannelBtn(channelType:ChannelTypeModels.getChannelTypeModel(18)),
+            ChannelBtn(channelType:ChannelTypeModels.getChannelTypeModel(19)),
+            ChannelBtn(channelType:ChannelTypeModels.getChannelTypeModel(20)),
+            ChannelBtnEmpty(),
+          ],
+        ),
+      ]
+    );
+  }
+}
 
 class ChannelBtn extends StatelessWidget {
   const ChannelBtn({ Key? key, required this.channelType, }) : super(key: key);
@@ -148,10 +268,6 @@ class ChannelBtn extends StatelessWidget {
 
     int channelTypeID = channelType.channelTypeID;
 
-    int selectedChannelTypeID = pickcardViewModel.getSelectedChannelTypeID();
-
-    bool isSelected = selectedChannelTypeID == channelTypeID;
-    
     IconData icon = Icons.send_to_mobile_outlined;
  
     String channelName = ChannelTypeModels.getChannelTypeModel(channelTypeID).channelName;
@@ -160,17 +276,14 @@ class ChannelBtn extends StatelessWidget {
     
     icon = pickcardViewModel.getIconChannelBtn(context, channelTypeID);
 
-    return Container(
-      padding:const EdgeInsets.symmetric(horizontal:8, vertical:2),
-      child:TextButton(
-        style: isSelected ? 
-          ElevatedButton.styleFrom(
-            primary: hasChosen ? Colors.greenAccent[700]!:const Color(0xff2db3ff),
-          )
-          :ElevatedButton.styleFrom(
-            primary: const Color(0xffFFFBFB),
+    return Expanded(
+      child:ConstrainedBox(
+        constraints: BoxConstraints(
+          minWidth: 80,
+        ),
+        child:TextButton(
+        style: ElevatedButton.styleFrom(
             padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 2),
-            // side: BorderSide(width: 0.5, color: hasChosen ? Colors.greenAccent[700]!:const Color(0xff2db3ff),),
           ),
         onPressed: (){
 
@@ -184,13 +297,19 @@ class ChannelBtn extends StatelessWidget {
 
           Future<List<ChannelItemStatus>?> future = showDialog<List<ChannelItemStatus>?>(context: context, builder: (BuildContext context) {
             return AlertDialog(
-              title: Text(channelTypeModel.channelName),
+              title: Text(
+                channelTypeModel.channelName,
+                style:const TextStyle(
+                  fontFamily: "NotoSansTC"
+                ),
+              ),
               content: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child:ChannelItemListDialog(channelItemStatuses:channelItemStatuses),
               ),
             );
           });
+
           if(future != null) {
             future.then((data){
               for(ChannelItemStatus channelItemStatus in data!){
@@ -209,30 +328,26 @@ class ChannelBtn extends StatelessWidget {
             children:[
               Icon(
                 icon,
-                color: isSelected ? Colors.white: hasChosen ?  Colors.greenAccent[700]!:const Color(0xff2db3ff),
+                color: hasChosen ? Colors.greenAccent[700]!: const Color(0xff2db3ff),
                 size: 35.0,
               ),
               const SizedBox(height:10),
               Text(
                 channelName,
-                style: isSelected ?
-                  const TextStyle(
-                    fontFamily: "Netflix",
-                    fontWeight: FontWeight.w100,
-                    fontSize: 15,
-                    color:Colors.white,
-                  )
-                  : TextStyle(
-                    fontFamily: "Netflix",
-                    fontWeight: FontWeight.w100,
-                    fontSize: 15,
-                    color: hasChosen ? Colors.greenAccent[700]!: const Color(0xff2db3ff),
-                  ),
+                style: TextStyle(
+                  fontFamily: "NotoSansTC",
+                  fontSize: 15,
+                  color: hasChosen ? Colors.greenAccent[700]!:const Color(0xff2db3ff),
+                ),
               ),
             ],
           ),
         ),
       )
+
+      )
+      
+      
     );
     
   }
