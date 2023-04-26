@@ -44,13 +44,10 @@ class PickCardScreen extends StatelessWidget {
         alignment: Alignment.topCenter,
         padding: const EdgeInsets.only(top:20),
         child: SingleChildScrollView(
-          child:ConstrainedBox(
-            constraints: const BoxConstraints(
-            minWidth: 800,
-            maxWidth: 800,
-          ),
+          child:Container(
+            width:800,
             child: PickcardPage(),
-          ),
+          )
         ),
       ),
     );

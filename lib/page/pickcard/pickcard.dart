@@ -203,7 +203,7 @@ class ChannelBtnEmpty extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    return const SizedBox(
       width:50,
     );
   }
@@ -256,6 +256,8 @@ class ChannelBtnShowMoreList extends StatelessWidget {
   }
 }
 
+
+
 class ChannelBtn extends StatelessWidget {
   const ChannelBtn({ Key? key, required this.channelType, }) : super(key: key);
   
@@ -303,9 +305,9 @@ class ChannelBtn extends StatelessWidget {
                   fontFamily: "NotoSansTC"
                 ),
               ),
-              content: Padding(
+              content: Container(
                 padding: const EdgeInsets.all(8.0),
-                child:ChannelItemListDialog(channelItemStatuses:channelItemStatuses),
+                child:ChannelItemListDialog(channelTypeModel:channelTypeModel, channelItemStatuses:channelItemStatuses),
               ),
             );
           });
@@ -346,19 +348,18 @@ class ChannelBtn extends StatelessWidget {
       )
 
       )
-      
-      
     );
-    
   }
 }
 
 
 class ChannelItemListDialog extends StatefulWidget {
-  const ChannelItemListDialog({ Key? key, required this.channelItemStatuses }) : super(key: key);
-  
+  const ChannelItemListDialog({ Key? key, required this.channelTypeModel, required this.channelItemStatuses }) : super(key: key);
+
+  final ChannelTypeModel channelTypeModel;  
   final List<ChannelItemStatus> channelItemStatuses;
-  
+
+
   @override
   _ChannelItemListDialogState createState() => _ChannelItemListDialogState();
 }
@@ -366,22 +367,26 @@ class ChannelItemListDialog extends StatefulWidget {
 class _ChannelItemListDialogState extends State<ChannelItemListDialog> {
 
   final Set<String> channelIDs = {};
-  
+
 
   @override
   Widget build(BuildContext context) {
     return Container(
       child:Column(
         children:[
-          ConstrainedBox(
-            constraints: BoxConstraints(
-              maxHeight: MediaQuery.of(context).size.height - 220,
-            ),
-            child:SingleChildScrollView( 
+          // ConstrainedBox(
+          //   constraints: BoxConstraints(
+          //     maxHeight: MediaQuery.of(context).size.height - 150,
+          //   ),
+          //   child:
+            Container(
+              height:MediaQuery.of(context).size.height - 250,
+              child:SingleChildScrollView( 
               child:Column(
                 children:[
                 for(ChannelItemStatus channelItemStatus in widget.channelItemStatuses)
                   Container(
+                    padding: const EdgeInsets.only(bottom: 10.0),
                     child:TextButton(
                       onPressed: (){
                         setState((){
@@ -390,29 +395,57 @@ class _ChannelItemListDialogState extends State<ChannelItemListDialog> {
                       },
                       child:Container(
                         alignment:Alignment.center,
-                        decoration: BoxDecoration(
-                          border: channelItemStatus.hasChosen ? 
-                            Border.all(
-                              color: Colors.greenAccent[700]!,
-                              width: 2,
-                            ):
-                            Border.all(
-                              color: Colors.white12,
-                              width: 2,
-                            ),
-                          borderRadius: const BorderRadius.all(
+                        decoration: const BoxDecoration(
+                            borderRadius: BorderRadius.all(
                             Radius.circular(10),
                           ),
                         ),
                         padding:const EdgeInsets.all(5.0),
-                        child:Text(
-                          channelItemStatus.name,
-                          style: const TextStyle(
-                            fontFamily: "Netflix",
-                            fontWeight: FontWeight.w100,
-                            fontSize: 20,
-                            color:Color.fromARGB(221, 0, 0, 0),
-                          ),
+                        child:Row(
+                          children:[
+                            Container(
+                              width: 80,
+                              child:Image(
+                                image: AssetImage('images/channel/' 
+                                + widget.channelTypeModel.channelTypeID.toString() 
+                                + '/' 
+                                + channelItemStatus.id
+                                +'.png'),
+                              ),
+                            ),
+                            SizedBox(width:15),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children:[
+                                Container(
+                                  child:Text(
+                                    channelItemStatus.name,
+                                    style:TextStyle(
+                                      fontFamily: "NotoSansTC",
+                                      fontSize: 20,
+                                      color:Colors.black
+                                    ),
+                                  )
+                                ),
+                                Container(
+                                  child:channelItemStatus.hasChosen?
+                                  const Icon(
+                                    size:25,
+                                    color:Colors.red,
+                                    Icons.favorite
+                                  )
+                                  :
+                                const Icon(
+                                    size:25,
+                                    color:Colors.red,
+                                    Icons.favorite_border_outlined
+                                  )
+                                ),
+
+                              ]
+
+                            )
+                          ]
                         ),
                       ),
                     ),
@@ -421,13 +454,29 @@ class _ChannelItemListDialogState extends State<ChannelItemListDialog> {
               ),
             ),
           ),
+            
+          // ),
           
-          SizedBox(height:20),
-          TextButton(
+          SizedBox(height:40),
+
+            TextButton(
             onPressed: (){
               Navigator.pop(context, widget.channelItemStatuses);
             },
-            child:Text('送出')
+            child:Container(
+              alignment: Alignment.center,
+              width:400,
+              height:40,
+              child:Text(
+              '送出',
+              style:TextStyle(
+                fontFamily: "NotoSansTC",
+                fontSize: 20,
+                color:Colors.black
+              ),
+            ),
+            ),
+            
           ),
         ],
       ),
@@ -638,6 +687,7 @@ class ChannelItemObserver extends StatelessWidget {
                 children: <Widget>[
                   for(ChannelModel c in channelModels) 
                     ChannelItem(channelTypeID:channelTypeID, id:c.id, name:c.name,),
+
                 ],
               ),
             );
@@ -646,6 +696,7 @@ class ChannelItemObserver extends StatelessWidget {
     );
   }
 }
+
 
 class ChannelItem extends StatelessWidget {
   const ChannelItem({ Key? key,required this.channelTypeID, required this.id, required this.name, }) : super(key: key);
