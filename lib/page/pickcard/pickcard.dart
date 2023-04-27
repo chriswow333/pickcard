@@ -177,20 +177,20 @@ class _SearchCardBarState extends State<SearchCardBar> {
       width:200,
       child:TextField(
         textAlign: TextAlign.start,
-        textAlignVertical:TextAlignVertical.top,
+        textAlignVertical:TextAlignVertical.bottom,
         onTap:(){
           print(_searchController.text);
         },
         controller:_searchController,
         decoration: InputDecoration(
-          // hintText: 'Searching...',
+          hintText: '信用卡',
           prefixIcon:const Icon(Icons.search),
           border:OutlineInputBorder(
             borderRadius: BorderRadius.circular(20.0),
           )
         ),
         style:const TextStyle(
-          fontSize:20,
+          fontSize:18,
         ),
       ),
     );
