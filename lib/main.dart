@@ -35,11 +35,11 @@ class PickCardScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title:Text('選卡趣'),        
-        backgroundColor:const Color.fromARGB(255, 58, 133, 255),
+      // appBar: AppBar(
+      //   title:Text('選卡趣'),        
+      //   backgroundColor:const Color.fromARGB(255, 58, 133, 255),
 
-      ),
+      // ),
       body:Container(
         alignment: Alignment.topCenter,
         padding: const EdgeInsets.only(top:20),

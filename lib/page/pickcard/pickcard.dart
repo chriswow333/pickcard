@@ -45,7 +45,6 @@ class PickcardPage extends StatelessWidget {
  
     return MultiProvider(
       providers: [
-
         Provider<MobilepayObserver>(create:(_)=>MobilepayObserver()),
         Provider<EcommerceObserver>(create:(_)=>EcommerceObserver()),
         Provider<SupermarketObserver>(create:(_)=>SupermarketObserver()),
@@ -83,7 +82,6 @@ class InitChannelWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     // init data
     PickcardViewModel pickcardViewModel = Provider.of<PickcardViewModel>(context, listen:false);
     pickcardViewModel.initPickcardViewModel(context);
@@ -100,6 +98,11 @@ class Pickcard extends StatelessWidget {
 
     return Column(
       children:const [
+        
+        TopBar(),
+
+        SizedBox(height:25,),
+
         ChannelBtnList(),
         SizedBox(height:10),
         Divider(),
@@ -114,6 +117,86 @@ class Pickcard extends StatelessWidget {
     );
   }
 }
+
+
+
+class TopBar extends StatelessWidget {
+  const TopBar({ Key? key }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child:Row(
+        children:[
+          TopTitle(),
+          SizedBox(width:20),
+          SearchCardBar(),
+        ]
+      )
+    );
+  }
+}
+
+class TopTitle extends StatelessWidget {
+  const TopTitle({ Key? key }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child:const Text(
+        '選卡趣',
+        style:TextStyle(
+          fontFamily: "NotoSansTC",
+          fontSize: 20,
+        ),
+      )
+    );
+  }
+}
+
+class SearchCardBar extends StatefulWidget {
+  const SearchCardBar({ Key? key }) : super(key: key);
+
+  @override
+  _SearchCardBarState createState() => _SearchCardBarState();
+}
+
+class _SearchCardBarState extends State<SearchCardBar> {
+
+  final TextEditingController _searchController = TextEditingController();
+
+  @override
+  void initState(){
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height:35,
+      width:200,
+      child:TextField(
+        textAlign: TextAlign.start,
+        textAlignVertical:TextAlignVertical.top,
+        onTap:(){
+          print(_searchController.text);
+        },
+        controller:_searchController,
+        decoration: InputDecoration(
+          // hintText: 'Searching...',
+          prefixIcon:const Icon(Icons.search),
+          border:OutlineInputBorder(
+            borderRadius: BorderRadius.circular(20.0),
+          )
+        ),
+        style:const TextStyle(
+          fontSize:20,
+        ),
+      ),
+    );
+  }
+}
+
 
 class ChannelBtnList extends StatefulWidget {
   const ChannelBtnList({ Key? key }) : super(key: key);
@@ -284,74 +367,123 @@ class ChannelBtn extends StatelessWidget {
           minWidth: 80,
         ),
         child:TextButton(
-        style: ElevatedButton.styleFrom(
-            padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 2),
+          style: ElevatedButton.styleFrom(
+              padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 2),
           ),
-        onPressed: (){
+          onPressed: (){
 
-          pickcardViewModel.toggleChannelTypeID(channelTypeID);
+            pickcardViewModel.toggleChannelTypeID(channelTypeID);
 
-          ChannelTypeModel channelTypeModel = ChannelTypeModels.getChannelTypeModel(channelTypeID);
+            ChannelTypeModel channelTypeModel = ChannelTypeModels.getChannelTypeModel(channelTypeID);
 
-          List<ChannelModel> channelModels = pickcardViewModel.evaulateCardItem(context, channelTypeID);
+            List<ChannelModel> channelModels = pickcardViewModel.evaulateCardItem(context, channelTypeID);
 
-          List<ChannelItemStatus> channelItemStatuses = pickcardViewModel.transferChannelItemStatus(context, channelTypeID, channelModels);
+            List<ChannelItemStatus> channelItemStatuses = pickcardViewModel.transferChannelItemStatus(context, channelTypeID, channelModels);
 
-          Future<List<ChannelItemStatus>?> future = showDialog<List<ChannelItemStatus>?>(context: context, builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text(
-                channelTypeModel.channelName,
-                style:const TextStyle(
-                  fontFamily: "NotoSansTC"
+            Future<List<ChannelItemStatus>?> future = showDialog<List<ChannelItemStatus>?>(context: context, builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text(
+                  channelTypeModel.channelName,
+                  style:const TextStyle(
+                    fontFamily: "NotoSansTC"
+                  ),
                 ),
-              ),
-              content: Container(
-                padding: const EdgeInsets.all(8.0),
-                child:ChannelItemListDialog(channelTypeModel:channelTypeModel, channelItemStatuses:channelItemStatuses),
-              ),
-            );
-          });
-
-          if(future != null) {
-            future.then((data){
-              for(ChannelItemStatus channelItemStatus in data!){
-                bool oldHasChosen = pickcardViewModel.hasSelectedChannelItemID(context, channelTypeID, channelItemStatus.id);
-                if(channelItemStatus.hasChosen ^ oldHasChosen){
-                  pickcardViewModel.toggleChannelItemID(context, channelTypeID, channelItemStatus.id);
-                }
-              }
+                content: Container(
+                  padding: const EdgeInsets.all(8.0),
+                  child:ChannelItemListDialog(channelTypeModel:channelTypeModel, channelItemStatuses:channelItemStatuses),
+                ),
+              );
             });
-          }
-        },
-        child:Container(
-          alignment: Alignment.center,
-          child:Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children:[
-              Icon(
-                icon,
-                color: hasChosen ? Colors.greenAccent[700]!: const Color(0xff2db3ff),
-                size: 35.0,
-              ),
-              const SizedBox(height:10),
-              Text(
-                channelName,
-                style: TextStyle(
-                  fontFamily: "NotoSansTC",
-                  fontSize: 15,
-                  color: hasChosen ? Colors.greenAccent[700]!:const Color(0xff2db3ff),
-                ),
-              ),
-            ],
-          ),
-        ),
-      )
 
+            if(future != null) {
+              future.then((data){
+                for(ChannelItemStatus channelItemStatus in data!){
+                  bool oldHasChosen = pickcardViewModel.hasSelectedChannelItemID(context, channelTypeID, channelItemStatus.id);
+                  if(channelItemStatus.hasChosen ^ oldHasChosen){
+                    pickcardViewModel.toggleChannelItemID(context, channelTypeID, channelItemStatus.id);
+                  }
+                }
+              });
+            }
+          },
+          child:Container(
+            alignment: Alignment.center,
+            child:Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children:[
+                Icon(
+                  icon,
+                  color: hasChosen ? Colors.greenAccent[700]!: const Color(0xff2db3ff),
+                  size: 35.0,
+                ),
+                const SizedBox(height:10),
+                Text(
+                  channelName,
+                  style: TextStyle(
+                    fontFamily: "NotoSansTC",
+                    fontSize: 15,
+                    color: hasChosen ? Colors.greenAccent[700]!:const Color(0xff2db3ff),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        )
       )
     );
   }
 }
 
+
+class ChannelItemSearchBar extends StatefulWidget {
+  const ChannelItemSearchBar({ Key? key, required this.changeKeyword }) : super(key: key);
+  
+  final Function(String keyword) changeKeyword;
+
+  @override
+  _ChannelItemSearchBarState createState() => _ChannelItemSearchBarState();
+}
+
+class _ChannelItemSearchBarState extends State<ChannelItemSearchBar> {
+
+ // This controller will store the value of the search bar
+  final TextEditingController _searchController = TextEditingController();
+
+  @override
+  void initState(){
+    super.initState();
+    _searchController.addListener(_listenKeyword);
+  }
+
+  void _listenKeyword(){
+    widget.changeKeyword(_searchController.text);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child:TextField(
+        controller:_searchController,
+        decoration: InputDecoration(
+          hintText: 'Searching...',
+          suffixIcon: IconButton(
+            icon:const Icon(Icons.clear),
+            onPressed: () => _searchController.clear(),
+          ),
+          prefixIcon: IconButton(
+            icon:const Icon(Icons.search),
+            onPressed: (){
+              print(_searchController.text);
+            },
+          ),
+          border:OutlineInputBorder(
+            borderRadius: BorderRadius.circular(20.0),
+          )
+        ),
+      ),
+    );
+  }
+}
 
 class ChannelItemListDialog extends StatefulWidget {
   const ChannelItemListDialog({ Key? key, required this.channelTypeModel, required this.channelItemStatuses }) : super(key: key);
@@ -366,134 +498,140 @@ class ChannelItemListDialog extends StatefulWidget {
 
 class _ChannelItemListDialogState extends State<ChannelItemListDialog> {
 
-  final Set<String> channelIDs = {};
+  late List<ChannelItemStatus> channelItemList;
+
 
 
   @override
+  void initState() {
+    super.initState();
+    channelItemList = widget.channelItemStatuses;
+
+  }
+  void changeKeyword(String keyWord){
+
+    List<ChannelItemStatus> tempChannelItemList = [];
+
+    if(keyWord.isNotEmpty) {
+      final keywordRegxp = RegExp(r".*(" + keyWord+ ").*", caseSensitive:false);
+      for(ChannelItemStatus c in widget.channelItemStatuses) {
+        if(keywordRegxp.hasMatch(c.name)){
+          tempChannelItemList.add(c);
+        }
+      }
+    } else {
+      tempChannelItemList = widget.channelItemStatuses;
+    }
+
+
+    setState((){
+      channelItemList = tempChannelItemList;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+
+
     return Container(
       child:Column(
         children:[
-          // ConstrainedBox(
-          //   constraints: BoxConstraints(
-          //     maxHeight: MediaQuery.of(context).size.height - 150,
-          //   ),
-          //   child:
-            Container(
-              height:MediaQuery.of(context).size.height - 250,
-              child:SingleChildScrollView( 
-              child:Column(
-                children:[
-                for(ChannelItemStatus channelItemStatus in widget.channelItemStatuses)
-                  Container(
-                    padding: const EdgeInsets.only(bottom: 10.0),
-                    child:TextButton(
-                      onPressed: (){
-                        setState((){
-                          channelItemStatus.hasChosen = !channelItemStatus.hasChosen;
-                        });
-                      },
-                      child:Container(
-                        alignment:Alignment.center,
-                        decoration: const BoxDecoration(
-                            borderRadius: BorderRadius.all(
-                            Radius.circular(10),
-                          ),
+          ChannelItemSearchBar(changeKeyword:changeKeyword),
+          SizedBox(height:20,),
+          Container(
+            height:MediaQuery.of(context).size.height - 350,
+            child:SingleChildScrollView( 
+            child:Column(
+              children:[
+              for(ChannelItemStatus channelItemStatus in channelItemList)
+                Container(
+                  padding: const EdgeInsets.only(bottom: 10.0),
+                  child:TextButton(
+                    onPressed: (){
+                      setState((){
+                        channelItemStatus.hasChosen = !channelItemStatus.hasChosen;
+                      });
+                    },
+                    child:Container(
+                      alignment:Alignment.center,
+                      decoration: const BoxDecoration(
+                          borderRadius: BorderRadius.all(
+                          Radius.circular(10),
                         ),
-                        padding:const EdgeInsets.all(5.0),
-                        child:Row(
-                          children:[
-                            Container(
-                              width: 80,
-                              child:Image(
-                                image: AssetImage('images/channel/' 
-                                + widget.channelTypeModel.channelTypeID.toString() 
-                                + '/' 
-                                + channelItemStatus.id
-                                +'.png'),
-                              ),
+                      ),
+                      padding:const EdgeInsets.all(5.0),
+                      child:Row(
+                        children:[
+                          Container(
+                            width: 80,
+                            child:Image(
+                              image: AssetImage('images/channel/' 
+                              + widget.channelTypeModel.channelTypeID.toString() 
+                              + '/' 
+                              + channelItemStatus.id
+                              +'.png'),
                             ),
-                            SizedBox(width:15),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children:[
-                                Container(
-                                  child:Text(
-                                    channelItemStatus.name,
-                                    style:TextStyle(
-                                      fontFamily: "NotoSansTC",
-                                      fontSize: 20,
-                                      color:Colors.black
-                                    ),
-                                  )
-                                ),
-                                Container(
-                                  child:channelItemStatus.hasChosen?
-                                  const Icon(
-                                    size:25,
-                                    color:Colors.red,
-                                    Icons.favorite
-                                  )
-                                  :
+                          ),
+                          SizedBox(width:15),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children:[
+                              Container(
+                                child:Text(
+                                  channelItemStatus.name,
+                                  style:TextStyle(
+                                    fontFamily: "NotoSansTC",
+                                    fontSize: 20,
+                                    color:Colors.black
+                                  ),
+                                )
+                              ),
+                              Container(
+                                child:channelItemStatus.hasChosen?
                                 const Icon(
-                                    size:25,
-                                    color:Colors.red,
-                                    Icons.favorite_border_outlined
-                                  )
-                                ),
-
-                              ]
-
-                            )
-                          ]
-                        ),
+                                  size:25,
+                                  color:Colors.red,
+                                  Icons.favorite
+                                )
+                                :
+                              const Icon(
+                                  size:25,
+                                  color:Colors.red,
+                                  Icons.favorite_border_outlined
+                                )
+                              ),
+                            ]
+                          )
+                        ]
                       ),
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
-            
-          // ),
-          
-          SizedBox(height:40),
-
+        ),
+        SizedBox(height:40),
             TextButton(
-            onPressed: (){
-              Navigator.pop(context, widget.channelItemStatuses);
-            },
-            child:Container(
-              alignment: Alignment.center,
-              width:400,
-              height:40,
-              child:Text(
-              '送出',
-              style:TextStyle(
-                fontFamily: "NotoSansTC",
-                fontSize: 20,
-                color:Colors.black
+              onPressed: (){
+                Navigator.pop(context, widget.channelItemStatuses);
+              },
+              child:Container(
+                alignment: Alignment.center,
+                width:400,
+                height:40,
+                child:Text(
+                '送出',
+                style:TextStyle(
+                  fontFamily: "NotoSansTC",
+                  fontSize: 20,
+                  color:Colors.black
+                ),
               ),
             ),
-            ),
-            
           ),
         ],
       ),
-    );
-
-    return Container(
-      child:Column(
-        children:[
-          for(ChannelItemStatus channelItemStatus in widget.channelItemStatuses)
-            TextButton(
-              child:Text(channelItemStatus.name),
-              onPressed: (){
-                channelItemStatus.hasChosen = !channelItemStatus.hasChosen;
-              },
-            )
-        ]
-      )
     );
   }
 }
@@ -501,7 +639,6 @@ class _ChannelItemListDialogState extends State<ChannelItemListDialog> {
 
 class ChannelItemList extends StatelessWidget {
   const ChannelItemList({ Key? key }) : super(key: key);
-
 
   @override
   Widget build(BuildContext context) {
