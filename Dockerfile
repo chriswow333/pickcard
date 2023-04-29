@@ -27,7 +27,7 @@ RUN mkdir /app
 COPY . /app
 WORKDIR /app
 RUN flutter pub get
-RUN flutter build web --release --dart-define="BASE_URL=http://tsincoco.com/api/v1"
+RUN flutter build web --release --dart-define="BASE_URL=https://tsincoco.com/api/v1"
 
 # Stage 2 - Create the run-time image
 FROM --platform=linux/amd64 nginx:stable-alpine AS runner

@@ -144,7 +144,6 @@ class TopTitle extends StatelessWidget {
       child:const Text(
         '選卡趣',
         style:TextStyle(
-          fontFamily: "NotoSansTC",
           fontSize: 20,
         ),
       )
@@ -404,7 +403,6 @@ class ChannelBtn extends StatelessWidget {
                   title: Text(
                     channelTypeModel.channelName,
                     style:const TextStyle(
-                      fontFamily: "NotoSansTC"
                     ),
                   ),
                   content: Container(
@@ -444,7 +442,6 @@ class ChannelBtn extends StatelessWidget {
                 Text(
                   channelName,
                   style: TextStyle(
-                    fontFamily: "NotoSansTC",
                     fontSize: 15,
                     color: hasChosen ? Colors.greenAccent[700]!:const Color(0xff2db3ff),
                   ),
@@ -598,7 +595,6 @@ class _ChannelItemListDialogState extends State<ChannelItemListDialog> {
                                 child:Text(
                                   channelItemStatus.name,
                                   style:const TextStyle(
-                                    fontFamily: "NotoSansTC",
                                     fontSize: 20,
                                     color:Colors.black
                                   ),
@@ -641,7 +637,6 @@ class _ChannelItemListDialogState extends State<ChannelItemListDialog> {
                 child:Text(
                 '送出',
                 style:TextStyle(
-                  fontFamily: "NotoSansTC",
                   fontSize: 20,
                   color:Colors.black
                 ),
@@ -700,7 +695,6 @@ class _ChannelItemListDialogState extends State<ChannelItemListDialog> {
 //             child:const Text(
 //               "全選",
 //               style: TextStyle(
-//                 fontFamily: "Netflix",
 //                 fontWeight: FontWeight.w100,
 //                 fontSize: 12,
 //                 color:Colors.white,
@@ -892,7 +886,6 @@ class _ChannelItemListDialogState extends State<ChannelItemListDialog> {
 //           child:Text(
 //             name,
 //             style: const TextStyle(
-//               fontFamily: "Netflix",
 //               fontWeight: FontWeight.w100,
 //               fontSize: 20,
 //               color:Color.fromARGB(221, 0, 0, 0),
@@ -1083,7 +1076,6 @@ class DateItem extends StatelessWidget {
             child:const Text(
               '消費日期',
               style: TextStyle(
-                fontFamily: "Netflix",
                 fontWeight: FontWeight.w300,
                 fontSize: 15,
                 // color: Color.fromRGBO(245, 246, 255, 1),
@@ -1286,7 +1278,6 @@ class EvaluateBtnItem extends StatelessWidget {
         child:const Text(
           '送出選卡',
           style: TextStyle(
-            fontFamily: "Netflix",
             fontWeight: FontWeight.w300,
             fontSize: 15,
             color: Color.fromRGBO(245, 246, 255, 1),
@@ -1311,7 +1302,6 @@ class CardListTitle extends StatelessWidget {
           Text(
             '搜尋卡片結果',
             style: TextStyle(
-              fontFamily: "Netflix",
               fontWeight: FontWeight.w300,
               fontSize: 12,
               color: Colors.black54,
@@ -1458,7 +1448,6 @@ class CardUpdatedDate extends StatelessWidget {
       child:Text(
         '更新日期：' + cardUpdatedDate,
         style: const TextStyle(
-          fontFamily: "Netflix",
           fontWeight: FontWeight.w300,
           fontSize: 12,
           letterSpacing: 0.0,
@@ -1483,7 +1472,6 @@ class CardAvailDuration extends StatelessWidget {
       child:Text(
         '$startDate - $endDate',
         style: const TextStyle(
-          fontFamily: "Netflix",
           fontWeight: FontWeight.w300,
           fontSize: 12,
           letterSpacing: 0.0,
@@ -1541,7 +1529,6 @@ class RewardTypeName extends StatelessWidget {
             child:Text(
               rewardTypeName,
               style: const TextStyle(
-                fontFamily: "Netflix",
                 fontWeight: FontWeight.w300,
                 fontSize: 14,
                 letterSpacing: 0.0,
@@ -1600,7 +1587,6 @@ class LimitTypeName extends StatelessWidget {
         child:Text(
           limitTypeName,
           style: const TextStyle(
-            fontFamily: "Netflix",
             fontWeight: FontWeight.w300,
             fontSize: 13,
             letterSpacing: 0.0,
@@ -1648,7 +1634,6 @@ class CardIcon extends StatelessWidget {
           Text(
             cardName,
             style: const TextStyle(
-              fontFamily: "Netflix",
               fontWeight: FontWeight.w300,
               fontSize: 12,
               letterSpacing: 0.0,
@@ -1658,7 +1643,6 @@ class CardIcon extends StatelessWidget {
           Text(
             bankName,
             style: const TextStyle(
-              fontFamily: "Netflix",
               fontWeight: FontWeight.w300,
               fontSize: 12,
               letterSpacing: 0.0,
@@ -1699,7 +1683,6 @@ class RewardReturn extends StatelessWidget {
           Text(
             returnBonus.toString() + '%回饋',
             style: const TextStyle(
-              fontFamily: "Netflix",
               fontWeight: FontWeight.bold,
               fontSize: 16,
               letterSpacing: 0.0,
@@ -1710,7 +1693,6 @@ class RewardReturn extends StatelessWidget {
           Text(
             '現省' + actualBack.toString() +'元',
             style: const TextStyle(
-              fontFamily: "Netflix",
               fontWeight: FontWeight.bold,
               fontSize: 16,
               letterSpacing: 0.0,
@@ -1762,7 +1744,6 @@ class RewardDesc extends StatelessWidget {
     return Text(
       desc,
       style: const TextStyle(
-        fontFamily: "Netflix",
         fontWeight: FontWeight.w300,
         fontSize: 14,
         letterSpacing: 0.0,
