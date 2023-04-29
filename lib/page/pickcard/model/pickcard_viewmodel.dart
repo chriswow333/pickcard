@@ -108,11 +108,8 @@ class ChannelTypeModels {
 class SortTypeNamesModel {
 
    final Map<int, String> _sortTypeNames = {
-    0:"不拘",
-    1:"依符合程度",
-    2:"依獲得回饋",
-    3:"依獲得現金",
-    4:"依預期回饋"
+    0:"符合程度",
+    1:"回饋高低"
   };
 
   String getSortTypeName(int sortType) {

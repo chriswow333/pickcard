@@ -16,11 +16,11 @@ class Pickcard extends StatelessWidget {
       title:"選卡趣",
       initialRoute:'/',
       routes:{
-        '/': (context)=> PickCardScreen(),
-        '/card':(context)=>  CardContentScreen(),
+        '/': (context)=> const PickCardScreen(),
+        '/card':(context)=>  const CardContentScreen(),
       },
       onUnknownRoute: (settings) { 
-        return MaterialPageRoute(builder: (_) => PickCardScreen());
+        return MaterialPageRoute(builder: (_) =>const PickCardScreen());
       },
       debugShowCheckedModeBanner: false,
     );
@@ -35,16 +35,11 @@ class PickCardScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   title:Text('選卡趣'),        
-      //   backgroundColor:const Color.fromARGB(255, 58, 133, 255),
-
-      // ),
       body:Container(
         alignment: Alignment.topCenter,
         padding: const EdgeInsets.only(top:20),
-        child: SingleChildScrollView(
-          child:Container(
+        child: const SingleChildScrollView(
+          child:SizedBox(
             width:800,
             child: PickcardPage(),
           )
@@ -61,20 +56,13 @@ class CardContentScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title:Text('選卡趣'),
-        backgroundColor: const Color(0x0077B6),
-      ),
       body: Container(
         alignment: Alignment.topCenter,
         padding: const EdgeInsets.only(top:20),
-        child: SingleChildScrollView(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints( 
-              // minWidth: 720, // not working..
-              maxWidth: 800,
-            ),
-            child:const CardContentPage(),
+        child: const SingleChildScrollView(
+          child: SizedBox(
+            width:800,
+            child:CardContentPage(),
           ),
         ),
       ),

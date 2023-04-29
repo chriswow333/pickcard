@@ -892,17 +892,13 @@ class Caculator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      // width:MediaQuery.of(context).size.width,
+      width:MediaQuery.of(context).size.width,
       child:Column(
         children:const [
           DateItem(),
-          SizedBox(width:10),
           CashItem(),
-          SizedBox(width:10),
-          RewardItem(),
-          SizedBox(width:10),
-          SortItem(),
-          SizedBox(width:20),
+          RewardItemStf(),
+          SortItemStf(),
           EvaluateBtnItem(),
         ],
       ),
@@ -910,73 +906,88 @@ class Caculator extends StatelessWidget {
   }
 }
 
+class SortItemStf extends StatefulWidget {
+  const SortItemStf({ Key? key }) : super(key: key);
 
-class SortItem extends StatelessWidget {
-  const SortItem({ Key? key }) : super(key: key);
+  @override
+  _SortItemStfState createState() => _SortItemStfState();
+}
+
+class _SortItemStfState extends State<SortItemStf> {
+
+    int _value = 0;
 
   @override
   Widget build(BuildContext context) {
 
-    SortTypeViewModel sortTypeViewModel = Provider.of<SortTypeViewModel>(context);
+    SortTypeViewModel sortTypeViewModel = Provider.of<SortTypeViewModel>(context, listen:false);
 
-    return Observer(builder:(context){
-
-      int selectedSortType = sortTypeViewModel.getSortType();
-
-      String selectedSortTypeName = sortTypeNamesModel.getSortTypeName(selectedSortType);
-
-      // List of items in our dropdown menu
-      List<String> sortTypeNames =  sortTypeNamesModel.getSortTypeNames();
-
-      return Container(
-        alignment: Alignment.centerLeft,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Container(
-              height:40,
-              width:80,
-              alignment: Alignment.centerLeft,
-              child:const Text('排序方式')
-            ),
-            const SizedBox(width:5,),
-            Container(
-              height:80,
-              width:100,
-              // alignment: Alignment.centerLeft,
-              child: DropdownButtonHideUnderline(
-                child: DropdownButton<String>(
-                  style:const TextStyle(
-                    fontSize:14,
-                    color:Colors.black,
+    return Container(
+      child:Row(
+        children: <Widget>[
+          Container(
+            height:40,
+            width:80,
+            alignment: Alignment.centerLeft,
+            child:const Text('排序方式')
+          ),
+          Container(
+            width:110,
+            child:TextButton(
+              onPressed: (){
+                setState((){
+                  _value = 0;
+                  sortTypeViewModel.toggleSortType(0);
+                });
+              },
+              child:Row(
+                children:[
+                  Radio(
+                    value: 0,
+                    groupValue: _value,
+                    onChanged: (int? value){
+                      setState((){
+                        _value = 0;
+                        sortTypeViewModel.toggleSortType(0);
+                      });
+                    },
                   ),
-                  isExpanded: true,
-                  // Initial Value
-                  value: selectedSortTypeName,
-                  // Down Arrow Icon
-                  icon: const Icon(Icons.keyboard_arrow_down),    
-                    
-                  // Array list of items
-                  items: sortTypeNames.map((String item) {
-                    return DropdownMenuItem(
-                      value: item,
-                      child: Text(item),
-                    );
-                  }).toList(),
-                  // After selecting the desired option,it will
-                  // change button value to selected value
-                  onChanged: (String? newValue) {
-                    int newRewardType = sortTypeNamesModel.getSortType(newValue!);
-                    sortTypeViewModel.toggleSortType(newRewardType);
-                  },
-                ),
+                  Text(sortTypeNamesModel.getSortTypeName(0)),
+                ]
               ),
             ),
-          ],
-        ),
-      );
-      
-    });
+          ),
+
+          Container(
+            width:110,
+            child:TextButton(
+              onPressed: (){
+                setState((){
+                  _value = 1;
+                  sortTypeViewModel.toggleSortType(1);
+                });
+              },
+              child:Row(
+                children:[
+                  Radio(
+                    value: 1,
+                    groupValue: _value,
+                    onChanged: (int? value){
+                      setState(() {
+                        _value = 1;
+                        sortTypeViewModel.toggleSortType(1);  
+                      });
+                    },
+                  ),
+                  Text(sortTypeNamesModel.getSortTypeName(1)),
+                ]
+              ),
+            ),
+          ),
+          
+        ],
+      ),
+    );
   }
 }
 
@@ -990,21 +1001,22 @@ class CashItem extends StatelessWidget {
     return Row(
       children:[
         Container(
+          width:80,
           child:const Text("消費金額"),
         ),
-        const SizedBox(width:5,),
+        SizedBox(width:15,),
         SizedBox(
           // height:40,
           width:120,
           child:TextFormField(
             decoration: const InputDecoration(
-              border: InputBorder.none,
-              focusedBorder: InputBorder.none,
-              enabledBorder: InputBorder.none,
-              errorBorder: InputBorder.none,
-              disabledBorder: InputBorder.none,
+              border: UnderlineInputBorder(),
+              // focusedBorder: InputBorder.none,
+              // enabledBorder: InputBorder.none,
+              // errorBorder: InputBorder.none,
+              // disabledBorder: InputBorder.none,
               // contentPadding:EdgeInsets.only(left: 15, bottom: 11, top: 11, right: 15),
-              hintText: "",
+              // hintText: "100",
             ),
             keyboardType: TextInputType.number,
             inputFormatters: <TextInputFormatter>[
@@ -1035,11 +1047,9 @@ class DateItem extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         children:[
           Container(
-            // width:30,
-            // height:40,
-            // alignment: Alignment.center,
+            width:80,
             child:const Text(
-              '日期',
+              '消費日期',
               style: TextStyle(
                 fontFamily: "Netflix",
                 fontWeight: FontWeight.w300,
@@ -1048,15 +1058,9 @@ class DateItem extends StatelessWidget {
               ),
             )//const Icon(Icons.calendar_today, size:25,),
           ),
-          const SizedBox(width:10,),
-          ConstrainedBox(
-            constraints: BoxConstraints(
-              maxWidth: 300,
-            ),
-            // alignment: Alignment.center,
-            // padding:const EdgeInsets.only(left: 20),
-            // height:32,
-            // width:160,
+          SizedBox(width:15),
+          Container(
+            width:180,
             child:DateTimeField(
               // textAlign:TextAlign.center,
               resetIcon:null,
@@ -1105,79 +1109,119 @@ class DateItem extends StatelessWidget {
 }
 
 
+class RewardItemStf extends StatefulWidget {
+  const RewardItemStf({ Key? key }) : super(key: key);
 
-class RewardItem extends StatelessWidget {
-  const RewardItem({ Key? key }) : super(key: key);
+  @override
+  _RewardItemStfState createState() => _RewardItemStfState();
+}
+
+class _RewardItemStfState extends State<RewardItemStf> {
+
+  
+  int _value = 0;
 
   @override
   Widget build(BuildContext context) {
-
+    
     RewardTypeViewModel rewardTypeViewModel = Provider.of<RewardTypeViewModel>(context);
 
-    return Observer(builder:(context){
+    return Container(
+      child:Row(
+        children: <Widget>[
+          Container(
+            height:40,
+            width:80,
+            alignment: Alignment.centerLeft,
+            child:const Text('回饋方式')
+          ),
 
-      int selectedRewardType = rewardTypeViewModel.getRewardType();
-
-      String selectedRewardTypeName = rewardTypeNamesModel.getRewardName(selectedRewardType);
-
-      // List of items in our dropdown menu
-      List<String> rewardTypeNames =  rewardTypeNamesModel.getRewardNames();
-
-      return Container(
-        child: Row(
-          children: [
-            Container(
-              alignment: Alignment.centerLeft,
-              width:80,
-              height:40,
-              // alignment: Alignment.center,
-              child: Text(
-                '回饋方式',
-                style:TextStyle(
-                  fontSize:15,
-                )
-              ),
-            ),
-            const SizedBox(width:5,),
-            Container(
-              height:80,
-              width:100,
-              child: DropdownButtonHideUnderline(
-                child: DropdownButton<String>(
-                  style:const TextStyle(
-                    color:Colors.black,
-                    fontSize:14,
+          Container(
+            width:110,
+            child:TextButton(
+              onPressed: (){
+                setState((){
+                  _value = 0;
+                  rewardTypeViewModel.toggleRewardType(0);
+                });
+              },
+              child:Row(
+                children:[
+                  Radio(
+                    value: 0,
+                    groupValue: _value,
+                    onChanged: (int? value){
+                      setState((){
+                        _value = 0;
+                        rewardTypeViewModel.toggleRewardType(0);
+                      });
+                    },
                   ),
-                  isExpanded: true,
-                  // Initial Value
-                  value: selectedRewardTypeName,
-                  // Down Arrow Icon
-                  icon: const Icon(Icons.keyboard_arrow_down),    
-                    
-                  // Array list of items
-                  items: rewardTypeNames.map((String item) {
-                    return DropdownMenuItem(
-                      value: item,
-                      child: Text(item),
-                    );
-                  }).toList(),
-                  // After selecting the desired option,it will
-                  // change button value to selected value
-                  onChanged: (String? newValue) {
-                    int newRewardType = rewardTypeNamesModel.getRewardType(newValue!);
-                    rewardTypeViewModel.toggleRewardType(newRewardType);
-                  },
-                ),
+                  Text(rewardTypeNamesModel.getRewardName(0)),
+                ]
               ),
             ),
-          ],
-        ),
-      );
-      
-    });
-    
+          ),
+
+          Container(
+            width:110,
+            child:TextButton(
+              onPressed: (){
+                setState((){
+                  _value = 1;
+                  rewardTypeViewModel.toggleRewardType(1);
+                });
+              },
+              child:Row(
+                children:[
+                  Radio(
+                    value: 1,
+                    groupValue: _value,
+                    onChanged: (int? value){
+                      setState(() {
+                        _value = 1;
+                        rewardTypeViewModel.toggleRewardType(1);
+                      });
+                    },
+                  ),
+                  Text(rewardTypeNamesModel.getRewardName(1)),
+                ]
+              ),
+            ),
+          ),
+          Container(
+            width:110,
+            child:TextButton(
+              onPressed: (){
+                setState((){
+                  _value = 2;
+                  rewardTypeViewModel.toggleRewardType(2);
+                });
+              },
+              child:Row(
+                children:[
+                  Radio(
+                    value: 2,
+                    groupValue: _value,
+                    onChanged: (int? value){
+                      setState(() {
+                        _value = 2;
+                        rewardTypeViewModel.toggleRewardType(2);
+                      });
+                    },
+                  ),
+                  Text(rewardTypeNamesModel.getRewardName(2)),
+                ]
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
+
+
 
 
 class EvaluateBtnItem extends StatelessWidget {
