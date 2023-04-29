@@ -896,7 +896,7 @@ class Caculator extends StatelessWidget {
       child:Column(
         children:const [
           DateItem(),
-          CashItem(),
+          CashItemStf(),
           RewardItemStf(),
           SortItemStf(),
           EvaluateBtnItem(),
@@ -992,8 +992,24 @@ class _SortItemStfState extends State<SortItemStf> {
 }
 
 
-class CashItem extends StatelessWidget {
-  const CashItem({ Key? key }) : super(key: key);
+
+class CashItemStf extends StatefulWidget {
+  const CashItemStf({ Key? key }) : super(key: key);
+
+  @override
+  _CashItemStfState createState() => _CashItemStfState();
+}
+
+class _CashItemStfState extends State<CashItemStf> {
+  
+  TextEditingController _controller = new TextEditingController();
+
+
+  @override
+  void initState(){
+    super.initState();
+    _controller.text = '1000';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -1005,24 +1021,22 @@ class CashItem extends StatelessWidget {
           child:const Text("消費金額"),
         ),
         SizedBox(width:15,),
-        SizedBox(
-          // height:40,
+        Container(
+          // height:30,
           width:120,
-          child:TextFormField(
-            decoration: const InputDecoration(
-              border: UnderlineInputBorder(),
-              // focusedBorder: InputBorder.none,
-              // enabledBorder: InputBorder.none,
-              // errorBorder: InputBorder.none,
-              // disabledBorder: InputBorder.none,
-              // contentPadding:EdgeInsets.only(left: 15, bottom: 11, top: 11, right: 15),
-              // hintText: "100",
-            ),
+          // alignment: Alignment.topCenter,
+          child:TextField(
+            controller: _controller,
             keyboardType: TextInputType.number,
             inputFormatters: <TextInputFormatter>[
               FilteringTextInputFormatter.digitsOnly
             ], 
-            initialValue:'1000',
+             decoration: const InputDecoration(  
+              border: InputBorder.none,  
+            ),  
+            style: const TextStyle(
+              fontSize: 15,
+            ),
             onChanged:(text){
               var cash = int.parse(text);
               cashViewModel.changeCash(cash);
