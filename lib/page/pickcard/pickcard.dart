@@ -45,7 +45,7 @@ class PickcardPage extends StatelessWidget {
  
     return MultiProvider(
       providers: [
-        Provider<MobilepayObserver>(create:(_)=>MobilepayObserver()),
+        Provider<MobilepayObserver>(create:(_)=>MobilepayObserver(), lazy:true),
         Provider<EcommerceObserver>(create:(_)=>EcommerceObserver()),
         Provider<SupermarketObserver>(create:(_)=>SupermarketObserver()),
         Provider<OnlinegameObserver>(create:(_)=>OnlinegameObserver()),
@@ -83,9 +83,8 @@ class InitChannelWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // init data
-    PickcardViewModel pickcardViewModel = Provider.of<PickcardViewModel>(context, listen:false);
-    pickcardViewModel.initPickcardViewModel(context);
-    
+    // PickcardViewModel pickcardViewModel = Provider.of<PickcardViewModel>(context, listen:false);
+    // pickcardViewModel.initPickcardViewModel(context);
     return const Pickcard();
   }
 }
@@ -100,7 +99,6 @@ class Pickcard extends StatelessWidget {
       children:const [
         
         TopBar(),
-
         SizedBox(height:25,),
 
         ChannelBtnList(),
@@ -376,23 +374,47 @@ class ChannelBtn extends StatelessWidget {
 
             ChannelTypeModel channelTypeModel = ChannelTypeModels.getChannelTypeModel(channelTypeID);
 
-            List<ChannelModel> channelModels = pickcardViewModel.evaulateCardItem(context, channelTypeID);
 
-            List<ChannelItemStatus> channelItemStatuses = pickcardViewModel.transferChannelItemStatus(context, channelTypeID, channelModels);
+            final _context = context;
 
-            Future<List<ChannelItemStatus>?> future = showDialog<List<ChannelItemStatus>?>(context: context, builder: (BuildContext context) {
-              return AlertDialog(
-                title: Text(
-                  channelTypeModel.channelName,
-                  style:const TextStyle(
-                    fontFamily: "NotoSansTC"
+            Future<List<ChannelItemStatus>?> future = showDialog<List<ChannelItemStatus>?>
+              (context: context, builder: (BuildContext context) {
+              
+
+              return Observer(builder:(context){
+
+                  ObservableFuture<ObservableList<dynamic>>? future = pickcardViewModel.getChannelItemObserver(_context, channelTypeID);
+
+                  if (future == null || future.result == null) {
+                    return Container();
+                  } 
+
+                  List<ChannelModel> channelModels = [];
+                  switch(future.status) {
+                    case FutureStatus.pending:
+                    case FutureStatus.rejected:
+                      break;
+                    case FutureStatus.fulfilled:
+                      channelModels = pickcardViewModel.getChannelModelsByChannelTypeID(context, channelTypeID, future.result);
+                  }
+
+                  List<ChannelItemStatus> channelItemStatuses = pickcardViewModel.transferChannelItemStatus(context, channelTypeID, channelModels);
+
+                return AlertDialog(
+                  title: Text(
+                    channelTypeModel.channelName,
+                    style:const TextStyle(
+                      fontFamily: "NotoSansTC"
+                    ),
                   ),
-                ),
-                content: Container(
-                  padding: const EdgeInsets.all(8.0),
-                  child:ChannelItemListDialog(channelTypeModel:channelTypeModel, channelItemStatuses:channelItemStatuses),
-                ),
-              );
+                  content: Container(
+                    padding: const EdgeInsets.all(8.0),
+                    child:ChannelItemListDialog(channelTypeModel:channelTypeModel, channelItemStatuses:channelItemStatuses),
+                  ),
+                );
+              });
+            
+            
             });
 
             if(future != null) {
@@ -405,6 +427,8 @@ class ChannelBtn extends StatelessWidget {
                 }
               });
             }
+
+            
           },
           child:Container(
             alignment: Alignment.center,
@@ -446,7 +470,6 @@ class ChannelItemSearchBar extends StatefulWidget {
 
 class _ChannelItemSearchBarState extends State<ChannelItemSearchBar> {
 
- // This controller will store the value of the search bar
   final TextEditingController _searchController = TextEditingController();
 
   @override
@@ -470,11 +493,9 @@ class _ChannelItemSearchBarState extends State<ChannelItemSearchBar> {
             icon:const Icon(Icons.clear),
             onPressed: () => _searchController.clear(),
           ),
-          prefixIcon: IconButton(
-            icon:const Icon(Icons.search),
-            onPressed: (){
-              print(_searchController.text);
-            },
+          prefixIcon: const IconButton(
+            icon:Icon(Icons.search),
+            onPressed: null,
           ),
           border:OutlineInputBorder(
             borderRadius: BorderRadius.circular(20.0),
@@ -500,18 +521,16 @@ class _ChannelItemListDialogState extends State<ChannelItemListDialog> {
 
   late List<ChannelItemStatus> channelItemList;
 
-
-
   @override
   void initState() {
     super.initState();
     channelItemList = widget.channelItemStatuses;
 
+
   }
   void changeKeyword(String keyWord){
 
     List<ChannelItemStatus> tempChannelItemList = [];
-
     if(keyWord.isNotEmpty) {
       final keywordRegxp = RegExp(r".*(" + keyWord+ ").*", caseSensitive:false);
       for(ChannelItemStatus c in widget.channelItemStatuses) {
@@ -522,7 +541,6 @@ class _ChannelItemListDialogState extends State<ChannelItemListDialog> {
     } else {
       tempChannelItemList = widget.channelItemStatuses;
     }
-
 
     setState((){
       channelItemList = tempChannelItemList;
@@ -537,7 +555,7 @@ class _ChannelItemListDialogState extends State<ChannelItemListDialog> {
       child:Column(
         children:[
           ChannelItemSearchBar(changeKeyword:changeKeyword),
-          SizedBox(height:20,),
+          const SizedBox(height:20,),
           Container(
             height:MediaQuery.of(context).size.height - 350,
             child:SingleChildScrollView( 
@@ -579,7 +597,7 @@ class _ChannelItemListDialogState extends State<ChannelItemListDialog> {
                               Container(
                                 child:Text(
                                   channelItemStatus.name,
-                                  style:TextStyle(
+                                  style:const TextStyle(
                                     fontFamily: "NotoSansTC",
                                     fontSize: 20,
                                     color:Colors.black
@@ -637,254 +655,254 @@ class _ChannelItemListDialogState extends State<ChannelItemListDialog> {
 }
 
 
-class ChannelItemList extends StatelessWidget {
-  const ChannelItemList({ Key? key }) : super(key: key);
+// class ChannelItemList extends StatelessWidget {
+//   const ChannelItemList({ Key? key }) : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    final pickcardViewModel = Provider.of<PickcardViewModel>(context);
-    int channelTypeID = pickcardViewModel.getSelectedChannelTypeID();
-    return SizedBox(
-      width:MediaQuery.of(context).size.width,
-      child:Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children:[
-          ChannelTitle(channelTypeID:channelTypeID,),
-          const SizedBox(height:10,),
-          ChannelItemObserver(channelTypeID: channelTypeID,),
-        ],
-      )
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     final pickcardViewModel = Provider.of<PickcardViewModel>(context);
+//     int channelTypeID = pickcardViewModel.getSelectedChannelTypeID();
+//     return SizedBox(
+//       width:MediaQuery.of(context).size.width,
+//       child:Column(
+//         crossAxisAlignment: CrossAxisAlignment.start,
+//         children:[
+//           ChannelTitle(channelTypeID:channelTypeID,),
+//           const SizedBox(height:10,),
+//           ChannelItemObserver(channelTypeID: channelTypeID,),
+//         ],
+//       )
+//     );
+//   }
+// }
 
-class ChannelTitle extends StatelessWidget {
-  const ChannelTitle({ Key? key, required this.channelTypeID, }) : super(key: key);
+// class ChannelTitle extends StatelessWidget {
+//   const ChannelTitle({ Key? key, required this.channelTypeID, }) : super(key: key);
 
-  final int channelTypeID;
+//   final int channelTypeID;
 
-  @override
-  Widget build(BuildContext context) {
-    PickcardViewModel pickcardViewModel = Provider.of<PickcardViewModel>(context, listen: false);
-    return Container(
-      child:Row(
-        // alignment: WrapAlignment.center,
-        children:[
-          Text('標籤'),
-          SizedBox(width:10,),
-          TextButton(
-            style:TextButton.styleFrom(
-              backgroundColor: Colors.greenAccent[700],
-            ),
-            onPressed:(){
-              pickcardViewModel.toggleChannelAllItem(context, channelTypeID);
-            },
-            child:const Text(
-              "全選",
-              style: TextStyle(
-                fontFamily: "Netflix",
-                fontWeight: FontWeight.w100,
-                fontSize: 12,
-                color:Colors.white,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     PickcardViewModel pickcardViewModel = Provider.of<PickcardViewModel>(context, listen: false);
+//     return Container(
+//       child:Row(
+//         // alignment: WrapAlignment.center,
+//         children:[
+//           Text('標籤'),
+//           SizedBox(width:10,),
+//           TextButton(
+//             style:TextButton.styleFrom(
+//               backgroundColor: Colors.greenAccent[700],
+//             ),
+//             onPressed:(){
+//               pickcardViewModel.toggleChannelAllItem(context, channelTypeID);
+//             },
+//             child:const Text(
+//               "全選",
+//               style: TextStyle(
+//                 fontFamily: "Netflix",
+//                 fontWeight: FontWeight.w100,
+//                 fontSize: 12,
+//                 color:Colors.white,
+//               ),
+//             ),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }
 
 
-class ChannelItemObserver extends StatelessWidget {
-  const ChannelItemObserver({ Key? key, required this.channelTypeID }) : super(key: key);
+// class ChannelItemObserver extends StatelessWidget {
+//   const ChannelItemObserver({ Key? key, required this.channelTypeID }) : super(key: key);
 
-  final int channelTypeID;
+//   final int channelTypeID;
 
-  @override
-  Widget build(BuildContext context) {
+//   @override
+//   Widget build(BuildContext context) {
     
-    late ObservableFuture<ObservableList> future;
+//     late ObservableFuture<ObservableList> future;
 
-    switch(channelTypeID){
-      case 3:
-        final mobilepayViewModel = Provider.of<MobilepayObserver>(context);
-        final mobilepays = mobilepayViewModel.mobilepays!;
-        future = mobilepays;
-        break;
-      case 4:
-        final ecommerceViewModel = Provider.of<EcommerceObserver>(context); 
-        final ecommerces = ecommerceViewModel.ecommerces!;
-        future = ecommerces;
-        break;
-      case 5:
-        final supermarketObserver = Provider.of<SupermarketObserver>(context); 
-        final supermarkets = supermarketObserver.supermarkets!;
-        future = supermarkets;
-        break;
-      case 6:
-        final onlinegameObserver = Provider.of<OnlinegameObserver>(context); 
-        final onlinegames = onlinegameObserver.onlinegames!;
-        future = onlinegames;
-        break;
-      case 7:
-        final streamingObserver = Provider.of<StreamingObserver>(context); 
-        final streamings = streamingObserver.streamings!;
-        future = streamings;
-        break;
-      case 8:
-        final foodObserver = Provider.of<FoodObserver>(context); 
-        final foods = foodObserver.foods!;
-        future = foods;
-        break;
-      case 9:
-        final transportationObserver = Provider.of<TransportationObserver>(context); 
-        final transportations = transportationObserver.transportations!;
-        future = transportations;
-        break;
-      case 10:
-        final travelObserver = Provider.of<TravelObserver>(context); 
-        final travels = travelObserver.travels!;
-        future = travels;
-        break;
-      case 11:
-        final deliveryObserver = Provider.of<DeliveryObserver>(context); 
-        final deliveries = deliveryObserver.deliveries!;
-        future = deliveries;
-        break;
-      case 12:
-        final insuranceObserver = Provider.of<InsuranceObserver>(context); 
-        final insurances = insuranceObserver.insurances!;
-        future = insurances;
-        break;
-      case 13:
-        final mallObserver = Provider.of<MallObserver>(context); 
-        final malls = mallObserver.malls!;
-        future = malls;
-        break;
-      case 14:
-        final sportObserver = Provider.of<SportObserver>(context); 
-        final sports = sportObserver.sports!;
-        future = sports;
-        break;
-      case 15:
-        final conveniencestoreObserver = Provider.of<ConveniencestoreObserver>(context); 
-        final conveniencestores = conveniencestoreObserver.conveniencestores!;
-        future = conveniencestores;
-        break;
-      case 16:
-        final appstoreObserver = Provider.of<AppstoreObserver>(context); 
-        final appstores = appstoreObserver.appstores!;
-        future = appstores;
-        break;
-      case 17:
-        final hotelObserver = Provider.of<HotelObserver>(context); 
-        final hotels = hotelObserver.hotels!;
-        future = hotels;
-        break;
-      case 18:
-        final amusementObserver = Provider.of<AmusementObserver>(context); 
-        final amusements = amusementObserver.amusements!;
-        future = amusements;
-        break;
-      case 19:
-        final cinemaObserver = Provider.of<CinemaObserver>(context); 
-        final cinemas = cinemaObserver.cinemas!;
-        future = cinemas;
-        break;
-      case 20:
-        final publicutilityObserver = Provider.of<PublicutilityObserver>(context); 
-        final publicutilities = publicutilityObserver.publicutilities!;
-        future = publicutilities;
-        break;
-    }
+//     switch(channelTypeID){
+//       case 3:
+//         final mobilepayViewModel = Provider.of<MobilepayObserver>(context);
+//         final mobilepays = mobilepayViewModel.mobilepays!;
+//         future = mobilepays;
+//         break;
+//       case 4:
+//         final ecommerceViewModel = Provider.of<EcommerceObserver>(context); 
+//         final ecommerces = ecommerceViewModel.ecommerces!;
+//         future = ecommerces;
+//         break;
+//       case 5:
+//         final supermarketObserver = Provider.of<SupermarketObserver>(context); 
+//         final supermarkets = supermarketObserver.supermarkets!;
+//         future = supermarkets;
+//         break;
+//       case 6:
+//         final onlinegameObserver = Provider.of<OnlinegameObserver>(context); 
+//         final onlinegames = onlinegameObserver.onlinegames!;
+//         future = onlinegames;
+//         break;
+//       case 7:
+//         final streamingObserver = Provider.of<StreamingObserver>(context); 
+//         final streamings = streamingObserver.streamings!;
+//         future = streamings;
+//         break;
+//       case 8:
+//         final foodObserver = Provider.of<FoodObserver>(context); 
+//         final foods = foodObserver.foods!;
+//         future = foods;
+//         break;
+//       case 9:
+//         final transportationObserver = Provider.of<TransportationObserver>(context); 
+//         final transportations = transportationObserver.transportations!;
+//         future = transportations;
+//         break;
+//       case 10:
+//         final travelObserver = Provider.of<TravelObserver>(context); 
+//         final travels = travelObserver.travels!;
+//         future = travels;
+//         break;
+//       case 11:
+//         final deliveryObserver = Provider.of<DeliveryObserver>(context); 
+//         final deliveries = deliveryObserver.deliveries!;
+//         future = deliveries;
+//         break;
+//       case 12:
+//         final insuranceObserver = Provider.of<InsuranceObserver>(context); 
+//         final insurances = insuranceObserver.insurances!;
+//         future = insurances;
+//         break;
+//       case 13:
+//         final mallObserver = Provider.of<MallObserver>(context); 
+//         final malls = mallObserver.malls!;
+//         future = malls;
+//         break;
+//       case 14:
+//         final sportObserver = Provider.of<SportObserver>(context); 
+//         final sports = sportObserver.sports!;
+//         future = sports;
+//         break;
+//       case 15:
+//         final conveniencestoreObserver = Provider.of<ConveniencestoreObserver>(context); 
+//         final conveniencestores = conveniencestoreObserver.conveniencestores!;
+//         future = conveniencestores;
+//         break;
+//       case 16:
+//         final appstoreObserver = Provider.of<AppstoreObserver>(context); 
+//         final appstores = appstoreObserver.appstores!;
+//         future = appstores;
+//         break;
+//       case 17:
+//         final hotelObserver = Provider.of<HotelObserver>(context); 
+//         final hotels = hotelObserver.hotels!;
+//         future = hotels;
+//         break;
+//       case 18:
+//         final amusementObserver = Provider.of<AmusementObserver>(context); 
+//         final amusements = amusementObserver.amusements!;
+//         future = amusements;
+//         break;
+//       case 19:
+//         final cinemaObserver = Provider.of<CinemaObserver>(context); 
+//         final cinemas = cinemaObserver.cinemas!;
+//         future = cinemas;
+//         break;
+//       case 20:
+//         final publicutilityObserver = Provider.of<PublicutilityObserver>(context); 
+//         final publicutilities = publicutilityObserver.publicutilities!;
+//         future = publicutilities;
+//         break;
+//     }
     
-    return Container(
-      child:Observer(builder:(context) {
-        PickcardViewModel pickcardViewModel = Provider.of<PickcardViewModel>(context, listen:false);
-        switch(future.status){
-          case FutureStatus.pending:
-            return const Center(
-              child:CircularProgressIndicator(),
-            );
-          case FutureStatus.rejected:
-            return const Center(
-              child:Text('Rejected'),
-            );
-          case FutureStatus.fulfilled:
-            List<ChannelModel> channelModels = pickcardViewModel.getChannelModelsByChannelTypeID(context, channelTypeID, future.result);
+//     return Container(
+//       child:Observer(builder:(context) {
+//         PickcardViewModel pickcardViewModel = Provider.of<PickcardViewModel>(context, listen:false);
+//         switch(future.status){
+//           case FutureStatus.pending:
+//             return const Center(
+//               child:CircularProgressIndicator(),
+//             );
+//           case FutureStatus.rejected:
+//             return const Center(
+//               child:Text('Rejected'),
+//             );
+//           case FutureStatus.fulfilled:
+//             List<ChannelModel> channelModels = pickcardViewModel.getChannelModelsByChannelTypeID(context, channelTypeID, future.result);
             
-            return SingleChildScrollView(
-              child:GridView.count(
-                physics: NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                crossAxisSpacing: 0,
-                mainAxisSpacing: 0,
-                crossAxisCount: 3,
-                children: <Widget>[
-                  for(ChannelModel c in channelModels) 
-                    ChannelItem(channelTypeID:channelTypeID, id:c.id, name:c.name,),
+//             return SingleChildScrollView(
+//               child:GridView.count(
+//                 physics: NeverScrollableScrollPhysics(),
+//                 shrinkWrap: true,
+//                 crossAxisSpacing: 0,
+//                 mainAxisSpacing: 0,
+//                 crossAxisCount: 3,
+//                 children: <Widget>[
+//                   for(ChannelModel c in channelModels) 
+//                     ChannelItem(channelTypeID:channelTypeID, id:c.id, name:c.name,),
 
-                ],
-              ),
-            );
-        }
-      }),
-    );
-  }
-}
+//                 ],
+//               ),
+//             );
+//         }
+//       }),
+//     );
+//   }
+// }
 
 
-class ChannelItem extends StatelessWidget {
-  const ChannelItem({ Key? key,required this.channelTypeID, required this.id, required this.name, }) : super(key: key);
+// class ChannelItem extends StatelessWidget {
+//   const ChannelItem({ Key? key,required this.channelTypeID, required this.id, required this.name, }) : super(key: key);
 
-  final int channelTypeID;
-  final String id;
-  final String name;
+//   final int channelTypeID;
+//   final String id;
+//   final String name;
 
-  @override
-  Widget build(BuildContext context) {
+//   @override
+//   Widget build(BuildContext context) {
 
-    PickcardViewModel pickcardViewModel = Provider.of<PickcardViewModel>(context);
+//     PickcardViewModel pickcardViewModel = Provider.of<PickcardViewModel>(context);
 
-    bool selected = pickcardViewModel.hasSelectedChannelItemID(context, channelTypeID, id);
+//     bool selected = pickcardViewModel.hasSelectedChannelItemID(context, channelTypeID, id);
     
-    return Container(
-      child:TextButton(
-        onPressed: (){
-          pickcardViewModel.toggleChannelItemID(context, channelTypeID, id);
-        },
-        child:Container(
-          alignment:Alignment.center,
-          decoration: BoxDecoration(
-            border: selected ? 
-              Border.all(
-                color: Colors.greenAccent[700]!,
-                width: 2,
-              ):
-              Border.all(
-                color: Colors.white12,
-                width: 2,
-              ),
-            borderRadius: const BorderRadius.all(
-              Radius.circular(10),
-            ),
-          ),
-          padding:const EdgeInsets.all(5.0),
-          child:Text(
-            name,
-            style: const TextStyle(
-              fontFamily: "Netflix",
-              fontWeight: FontWeight.w100,
-              fontSize: 20,
-              color:Color.fromARGB(221, 0, 0, 0),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
+//     return Container(
+//       child:TextButton(
+//         onPressed: (){
+//           pickcardViewModel.toggleChannelItemID(context, channelTypeID, id);
+//         },
+//         child:Container(
+//           alignment:Alignment.center,
+//           decoration: BoxDecoration(
+//             border: selected ? 
+//               Border.all(
+//                 color: Colors.greenAccent[700]!,
+//                 width: 2,
+//               ):
+//               Border.all(
+//                 color: Colors.white12,
+//                 width: 2,
+//               ),
+//             borderRadius: const BorderRadius.all(
+//               Radius.circular(10),
+//             ),
+//           ),
+//           padding:const EdgeInsets.all(5.0),
+//           child:Text(
+//             name,
+//             style: const TextStyle(
+//               fontFamily: "Netflix",
+//               fontWeight: FontWeight.w100,
+//               fontSize: 20,
+//               color:Color.fromARGB(221, 0, 0, 0),
+//             ),
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }
 
 class Caculator extends StatelessWidget {
   const Caculator({ Key? key }) : super(key: key);

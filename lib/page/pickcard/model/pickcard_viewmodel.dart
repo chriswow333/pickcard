@@ -799,15 +799,153 @@ class PickcardViewModel extends ChangeNotifier{
   }
 
   
-  List<ChannelModel> evaulateCardItem(BuildContext context, int channelTypeID){
+
+  ObservableFuture<ObservableList>? getChannelItemObserver(BuildContext context, int channelTypeID){
+    switch(channelTypeID){
+      case 3:
+        final mobilepayViewModel = Provider.of<MobilepayObserver>(context, listen:false);
+        final mobilepays = mobilepayViewModel.mobilepays;
+        if (mobilepays == null || mobilepays.result == null) {
+         mobilepayViewModel.fetchMobilepays();
+        }
+        return mobilepays;
+        
+      case 4:
+        final ecommerceViewModel = Provider.of<EcommerceObserver>(context, listen:false); 
+        final ecommerces = ecommerceViewModel.ecommerces;
+        if (ecommerces == null || ecommerces.result == null) {
+          ecommerceViewModel.fetchEcommerces();
+        }
+        return ecommerces;
+      case 5:
+        final supermarketObserver = Provider.of<SupermarketObserver>(context, listen:false); 
+        final supermarkets = supermarketObserver.supermarkets;
+        if (supermarkets == null || supermarkets.result == null) {
+          supermarketObserver.fetchSupermarkets();
+        }
+        return supermarkets;
+
+      case 6:
+        final onlinegameObserver = Provider.of<OnlinegameObserver>(context, listen:false); 
+        final onlinegames = onlinegameObserver.onlinegames;
+        if (onlinegames == null || onlinegames.result) {
+          onlinegameObserver.fetchOnlinegames();
+        }
+        return onlinegames;
+      case 7:
+        final streamingObserver = Provider.of<StreamingObserver>(context, listen:false); 
+        final streamings = streamingObserver.streamings;
+        if(streamings == null || streamings.result == null) {
+          streamingObserver.fetchStreamings();
+        }
+        return streamings;
+      case 8:
+        final foodObserver = Provider.of<FoodObserver>(context, listen:false); 
+        final foods = foodObserver.foods;
+        if(foods == null || foods.result == null) {
+          foodObserver.fetchFoods();
+        }
+        return foods;
+      case 9:
+        final transportationObserver = Provider.of<TransportationObserver>(context, listen:false); 
+        final transportations = transportationObserver.transportations;
+        if(transportations == null || transportations.result == null) {
+          transportationObserver.fetchTransportations();
+        }
+        return transportations;
+      case 10:
+        final travelObserver = Provider.of<TravelObserver>(context, listen:false); 
+        final travels = travelObserver.travels;
+        if(travels == null || travels.result == null) {
+          travelObserver.fetchTravels();
+        }
+        return travels;
+      case 11:
+        final deliveryObserver = Provider.of<DeliveryObserver>(context, listen:false); 
+        final deliveries = deliveryObserver.deliveries;
+        if(deliveries == null || deliveries.result == null) {
+          deliveryObserver.fetchDeliveries();
+        }
+        return deliveries;
+      case 12:
+        final insuranceObserver = Provider.of<InsuranceObserver>(context, listen:false); 
+        final insurances = insuranceObserver.insurances; 
+        if(insurances == null || insurances.result == null) {
+          insuranceObserver.fetchInsurances();
+        }
+        return insurances;
+      case 13:
+        final mallObserver = Provider.of<MallObserver>(context, listen:false); 
+        final malls = mallObserver.malls;
+        if(malls == null || malls.result == null) {
+          mallObserver.fetchMalls();
+        }
+        return malls;
+      case 14:
+        final sportObserver = Provider.of<SportObserver>(context, listen:false); 
+        final sports = sportObserver.sports;
+        if(sports == null || sports.result == null)  {
+          sportObserver.fetchSports();
+        }
+        return sports;
+      case 15:
+        final conveniencestoreObserver = Provider.of<ConveniencestoreObserver>(context, listen:false); 
+        final conveniencestores = conveniencestoreObserver.conveniencestores;
+        if(conveniencestores == null || conveniencestores.result == null) {
+          conveniencestoreObserver.fetchConveniencestores();
+        }
+        return conveniencestores;
+      case 16:
+        final appstoreObserver = Provider.of<AppstoreObserver>(context, listen:false); 
+        final appstores = appstoreObserver.appstores;
+        if(appstores == null || appstores.result == null) {
+          appstoreObserver.fetchAppstores();
+        }
+        return appstores;
+      case 17:
+        final hotelObserver = Provider.of<HotelObserver>(context, listen:false); 
+        final hotels = hotelObserver.hotels;
+        if(hotels == null || hotels.result == null) {
+          hotelObserver.fetchHotels();
+        }
+        return hotels;
+      case 18:
+        final amusementObserver = Provider.of<AmusementObserver>(context, listen:false); 
+        final amusements = amusementObserver.amusements;
+        if(amusements == null || amusements.result == null) {
+          amusementObserver.fetchAmusements();
+        }
+        return amusements;
+      case 19:
+        final cinemaObserver = Provider.of<CinemaObserver>(context, listen:false); 
+        final cinemas = cinemaObserver.cinemas;
+        if(cinemas == null || cinemas.result == null) {
+          cinemaObserver.fetchCinemas();
+        }
+        return cinemas;
+      case 20:
+        final publicutilityObserver = Provider.of<PublicutilityObserver>(context, listen:false); 
+        final publicutilities = publicutilityObserver.publicutilities;
+        if(publicutilities == null || publicutilities.result == null) {
+          publicutilityObserver.fetchPublicutilities();
+        }
+        return publicutilities;
+    }
+  }
+
+  List<ChannelModel> getCardItem(BuildContext context, int channelTypeID){
         
     late ObservableFuture<ObservableList> future;
     
     switch(channelTypeID){
       case 3:
         final mobilepayViewModel = Provider.of<MobilepayObserver>(context, listen:false);
-        final mobilepays = mobilepayViewModel.mobilepays!;
-        future = mobilepays;
+        final mobilepays = mobilepayViewModel.mobilepays;
+        if (mobilepays == null) {
+          future = mobilepayViewModel.fetchMobilepays() as ObservableFuture<ObservableList>;
+        }else {
+          future = mobilepays;
+        } 
         break;
       case 4:
         final ecommerceViewModel = Provider.of<EcommerceObserver>(context, listen:false); 
@@ -895,7 +1033,6 @@ class PickcardViewModel extends ChangeNotifier{
         future = publicutilities;
         break;
     }
-
 
 
     switch(future.status) {
