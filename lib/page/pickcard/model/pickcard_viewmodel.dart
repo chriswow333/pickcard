@@ -809,7 +809,6 @@ class PickcardViewModel extends ChangeNotifier{
          mobilepayViewModel.fetchMobilepays();
         }
         return mobilepays;
-        
       case 4:
         final ecommerceViewModel = Provider.of<EcommerceObserver>(context, listen:false); 
         final ecommerces = ecommerceViewModel.ecommerces;
@@ -828,7 +827,7 @@ class PickcardViewModel extends ChangeNotifier{
       case 6:
         final onlinegameObserver = Provider.of<OnlinegameObserver>(context, listen:false); 
         final onlinegames = onlinegameObserver.onlinegames;
-        if (onlinegames == null || onlinegames.result) {
+        if (onlinegames == null || onlinegames.result == null) {
           onlinegameObserver.fetchOnlinegames();
         }
         return onlinegames;

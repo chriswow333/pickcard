@@ -373,7 +373,6 @@ class ChannelBtn extends StatelessWidget {
 
             ChannelTypeModel channelTypeModel = ChannelTypeModels.getChannelTypeModel(channelTypeID);
 
-
             final _context = context;
 
             Future<List<ChannelItemStatus>?> future = showDialog<List<ChannelItemStatus>?>
