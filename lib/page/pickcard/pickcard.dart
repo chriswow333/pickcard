@@ -258,30 +258,20 @@ class ChannelBtnShowTap extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width:80,
-      // height:60,
+      height:70,
       alignment: Alignment.center,
       child:TextButton(
         onPressed: (){
           onTapShowMore();
         }, 
-        child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children:[
-              Icon(
-                Icons.more_horiz_outlined,
-                color: const Color(0xff2db3ff),
-                size: 35.0,
-              ),
-              const SizedBox(height:10),
-              Text(
-                '',
-                style: TextStyle(
-                  fontSize: 15,
-                  color: const Color(0xff2db3ff),
-                ),
-              ),
-            ],
+        child: Container(
+          padding:const EdgeInsets.only(top:15),
+          child:const Icon(
+            Icons.more_horiz_outlined,
+            color: Color(0xff2db3ff),
+            size: 35.0,
           ),
+        ),
       ),
     );
   }
@@ -568,25 +558,33 @@ class _ChannelItemListDialogState extends State<ChannelItemListDialog> {
                     },
                     child:Container(
                       alignment:Alignment.center,
-                      decoration: const BoxDecoration(
-                          borderRadius: BorderRadius.all(
+                      decoration: BoxDecoration(
+                        borderRadius: const BorderRadius.all(
                           Radius.circular(10),
                         ),
+                        boxShadow: <BoxShadow>[
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.1),
+                            blurRadius: 1,
+                            offset: Offset(0, 3),
+                          ),
+                        ],
+                        color:Colors.white,
+                        // color:Colors.grey.withOpacity(0.1),
                       ),
                       padding:const EdgeInsets.all(5.0),
                       child:Row(
                         children:[
-                            Container(
-                              width: 50,
-                              child:Image(
-                                image: AssetImage('images/channel/' 
-                                + widget.channelTypeModel.channelTypeID.toString() 
-                                + '/' 
-                                + channelItemStatus.id
-                                +'.png'),
-                              ),
+                          Container(
+                            width: 50,
+                            child:Image(
+                              image: AssetImage('images/channel/' 
+                              + widget.channelTypeModel.channelTypeID.toString() 
+                              + '/' 
+                              + channelItemStatus.id
+                              +'.png'),
                             ),
-                          
+                          ),
                           SizedBox(width:15),
                           Expanded(
                             child:Column(
@@ -633,15 +631,22 @@ class _ChannelItemListDialogState extends State<ChannelItemListDialog> {
               onPressed: (){
                 Navigator.pop(context, widget.channelItemStatuses);
               },
+              style:ElevatedButton.styleFrom(
+                primary: const Color(0xff2db3ff),
+                shape: RoundedRectangleBorder( 
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+              ),
               child:Container(
                 alignment: Alignment.center,
                 width:400,
                 height:40,
+                
                 child:Text(
                 '送出',
                 style:TextStyle(
                   fontSize: 20,
-                  color:Colors.black
+                  color:Colors.white
                 ),
               ),
             ),
@@ -652,253 +657,6 @@ class _ChannelItemListDialogState extends State<ChannelItemListDialog> {
   }
 }
 
-
-// class ChannelItemList extends StatelessWidget {
-//   const ChannelItemList({ Key? key }) : super(key: key);
-
-//   @override
-//   Widget build(BuildContext context) {
-//     final pickcardViewModel = Provider.of<PickcardViewModel>(context);
-//     int channelTypeID = pickcardViewModel.getSelectedChannelTypeID();
-//     return SizedBox(
-//       width:MediaQuery.of(context).size.width,
-//       child:Column(
-//         crossAxisAlignment: CrossAxisAlignment.start,
-//         children:[
-//           ChannelTitle(channelTypeID:channelTypeID,),
-//           const SizedBox(height:10,),
-//           ChannelItemObserver(channelTypeID: channelTypeID,),
-//         ],
-//       )
-//     );
-//   }
-// }
-
-// class ChannelTitle extends StatelessWidget {
-//   const ChannelTitle({ Key? key, required this.channelTypeID, }) : super(key: key);
-
-//   final int channelTypeID;
-
-//   @override
-//   Widget build(BuildContext context) {
-//     PickcardViewModel pickcardViewModel = Provider.of<PickcardViewModel>(context, listen: false);
-//     return Container(
-//       child:Row(
-//         // alignment: WrapAlignment.center,
-//         children:[
-//           Text('標籤'),
-//           SizedBox(width:10,),
-//           TextButton(
-//             style:TextButton.styleFrom(
-//               backgroundColor: Colors.greenAccent[700],
-//             ),
-//             onPressed:(){
-//               pickcardViewModel.toggleChannelAllItem(context, channelTypeID);
-//             },
-//             child:const Text(
-//               "全選",
-//               style: TextStyle(
-//                 fontWeight: FontWeight.w100,
-//                 fontSize: 12,
-//                 color:Colors.white,
-//               ),
-//             ),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }
-
-
-// class ChannelItemObserver extends StatelessWidget {
-//   const ChannelItemObserver({ Key? key, required this.channelTypeID }) : super(key: key);
-
-//   final int channelTypeID;
-
-//   @override
-//   Widget build(BuildContext context) {
-    
-//     late ObservableFuture<ObservableList> future;
-
-//     switch(channelTypeID){
-//       case 3:
-//         final mobilepayViewModel = Provider.of<MobilepayObserver>(context);
-//         final mobilepays = mobilepayViewModel.mobilepays!;
-//         future = mobilepays;
-//         break;
-//       case 4:
-//         final ecommerceViewModel = Provider.of<EcommerceObserver>(context); 
-//         final ecommerces = ecommerceViewModel.ecommerces!;
-//         future = ecommerces;
-//         break;
-//       case 5:
-//         final supermarketObserver = Provider.of<SupermarketObserver>(context); 
-//         final supermarkets = supermarketObserver.supermarkets!;
-//         future = supermarkets;
-//         break;
-//       case 6:
-//         final onlinegameObserver = Provider.of<OnlinegameObserver>(context); 
-//         final onlinegames = onlinegameObserver.onlinegames!;
-//         future = onlinegames;
-//         break;
-//       case 7:
-//         final streamingObserver = Provider.of<StreamingObserver>(context); 
-//         final streamings = streamingObserver.streamings!;
-//         future = streamings;
-//         break;
-//       case 8:
-//         final foodObserver = Provider.of<FoodObserver>(context); 
-//         final foods = foodObserver.foods!;
-//         future = foods;
-//         break;
-//       case 9:
-//         final transportationObserver = Provider.of<TransportationObserver>(context); 
-//         final transportations = transportationObserver.transportations!;
-//         future = transportations;
-//         break;
-//       case 10:
-//         final travelObserver = Provider.of<TravelObserver>(context); 
-//         final travels = travelObserver.travels!;
-//         future = travels;
-//         break;
-//       case 11:
-//         final deliveryObserver = Provider.of<DeliveryObserver>(context); 
-//         final deliveries = deliveryObserver.deliveries!;
-//         future = deliveries;
-//         break;
-//       case 12:
-//         final insuranceObserver = Provider.of<InsuranceObserver>(context); 
-//         final insurances = insuranceObserver.insurances!;
-//         future = insurances;
-//         break;
-//       case 13:
-//         final mallObserver = Provider.of<MallObserver>(context); 
-//         final malls = mallObserver.malls!;
-//         future = malls;
-//         break;
-//       case 14:
-//         final sportObserver = Provider.of<SportObserver>(context); 
-//         final sports = sportObserver.sports!;
-//         future = sports;
-//         break;
-//       case 15:
-//         final conveniencestoreObserver = Provider.of<ConveniencestoreObserver>(context); 
-//         final conveniencestores = conveniencestoreObserver.conveniencestores!;
-//         future = conveniencestores;
-//         break;
-//       case 16:
-//         final appstoreObserver = Provider.of<AppstoreObserver>(context); 
-//         final appstores = appstoreObserver.appstores!;
-//         future = appstores;
-//         break;
-//       case 17:
-//         final hotelObserver = Provider.of<HotelObserver>(context); 
-//         final hotels = hotelObserver.hotels!;
-//         future = hotels;
-//         break;
-//       case 18:
-//         final amusementObserver = Provider.of<AmusementObserver>(context); 
-//         final amusements = amusementObserver.amusements!;
-//         future = amusements;
-//         break;
-//       case 19:
-//         final cinemaObserver = Provider.of<CinemaObserver>(context); 
-//         final cinemas = cinemaObserver.cinemas!;
-//         future = cinemas;
-//         break;
-//       case 20:
-//         final publicutilityObserver = Provider.of<PublicutilityObserver>(context); 
-//         final publicutilities = publicutilityObserver.publicutilities!;
-//         future = publicutilities;
-//         break;
-//     }
-    
-//     return Container(
-//       child:Observer(builder:(context) {
-//         PickcardViewModel pickcardViewModel = Provider.of<PickcardViewModel>(context, listen:false);
-//         switch(future.status){
-//           case FutureStatus.pending:
-//             return const Center(
-//               child:CircularProgressIndicator(),
-//             );
-//           case FutureStatus.rejected:
-//             return const Center(
-//               child:Text('Rejected'),
-//             );
-//           case FutureStatus.fulfilled:
-//             List<ChannelModel> channelModels = pickcardViewModel.getChannelModelsByChannelTypeID(context, channelTypeID, future.result);
-            
-//             return SingleChildScrollView(
-//               child:GridView.count(
-//                 physics: NeverScrollableScrollPhysics(),
-//                 shrinkWrap: true,
-//                 crossAxisSpacing: 0,
-//                 mainAxisSpacing: 0,
-//                 crossAxisCount: 3,
-//                 children: <Widget>[
-//                   for(ChannelModel c in channelModels) 
-//                     ChannelItem(channelTypeID:channelTypeID, id:c.id, name:c.name,),
-
-//                 ],
-//               ),
-//             );
-//         }
-//       }),
-//     );
-//   }
-// }
-
-
-// class ChannelItem extends StatelessWidget {
-//   const ChannelItem({ Key? key,required this.channelTypeID, required this.id, required this.name, }) : super(key: key);
-
-//   final int channelTypeID;
-//   final String id;
-//   final String name;
-
-//   @override
-//   Widget build(BuildContext context) {
-
-//     PickcardViewModel pickcardViewModel = Provider.of<PickcardViewModel>(context);
-
-//     bool selected = pickcardViewModel.hasSelectedChannelItemID(context, channelTypeID, id);
-    
-//     return Container(
-//       child:TextButton(
-//         onPressed: (){
-//           pickcardViewModel.toggleChannelItemID(context, channelTypeID, id);
-//         },
-//         child:Container(
-//           alignment:Alignment.center,
-//           decoration: BoxDecoration(
-//             border: selected ? 
-//               Border.all(
-//                 color: Colors.greenAccent[700]!,
-//                 width: 2,
-//               ):
-//               Border.all(
-//                 color: Colors.white12,
-//                 width: 2,
-//               ),
-//             borderRadius: const BorderRadius.all(
-//               Radius.circular(10),
-//             ),
-//           ),
-//           padding:const EdgeInsets.all(5.0),
-//           child:Text(
-//             name,
-//             style: const TextStyle(
-//               fontWeight: FontWeight.w100,
-//               fontSize: 20,
-//               color:Color.fromARGB(221, 0, 0, 0),
-//             ),
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
 
 class Caculator extends StatelessWidget {
   const Caculator({ Key? key }) : super(key: key);
@@ -1004,8 +762,6 @@ class _SortItemStfState extends State<SortItemStf> {
     );
   }
 }
-
-
 
 class CashItemStf extends StatefulWidget {
   const CashItemStf({ Key? key }) : super(key: key);
@@ -1382,14 +1138,9 @@ class CardItem extends StatelessWidget {
       children:[
         ElevatedButton(
           onPressed:(){
-
             CardIDRepository.save(cardID);
-
             LocalStorageService.setCardID(cardID);
-
-            Navigator.of(context).pushNamed(
-              '/card',
-            );
+            Navigator.of(context).pushNamed('/card',);
           },
           style:ElevatedButton.styleFrom(
             shadowColor: Colors.grey.withOpacity(0.1),
@@ -1420,12 +1171,28 @@ class CardItem extends StatelessWidget {
                     child:Container(
                       padding:const EdgeInsets.only(left:20),
                       alignment: Alignment.centerLeft,
-                      child:Wrap(
+                      child:Row(
+                        
                         children:[
-                          CardIcon(imagePath:imagePath, bankName:bankName,cardName: cardName, startDate:maxReturnEventResp.startDate?? "", endDate:maxReturnEventResp.endDate ?? ""),
-                          RewardReturn(feedReturn:maxReturnEventResp.feedReturn!, rewardType:maxReturnEventResp.rewardType!),
-                          RewardTypeName(cardRewardEventResp: maxReturnEventResp,limitTypeNames: limitTypeNames,),
-                          RewardList(title:maxReturnEventResp.title!,),
+                          Expanded(
+                            flex:2,
+                            child:CardIcon(imagePath:imagePath, bankName:bankName,cardName: cardName, startDate:maxReturnEventResp.startDate?? "", endDate:maxReturnEventResp.endDate ?? ""),
+                          ),
+                          SizedBox(width:5.0),
+                          Expanded(
+                            flex:3,
+                            child:Wrap(
+                              children:[
+                                RewardTypeName(cardRewardEventResp: maxReturnEventResp,limitTypeNames: limitTypeNames,),
+                                RewardReturn(feedReturn:maxReturnEventResp.feedReturn!, rewardType:maxReturnEventResp.rewardType!),
+                              ],
+                            ),
+                          ),
+                          Expanded(
+                            flex:5,
+                            child: RewardList(title:maxReturnEventResp.title!,),
+                          ),
+                          
                           
                         ], 
                       ),
@@ -1517,10 +1284,11 @@ class RewardTypeName extends StatelessWidget {
     Color rewardTypeNameColor = pickcardViewModel.getRewardTypeNameColor(rewardType);
 
     return Container(
-      alignment: Alignment.centerLeft,
+      alignment: Alignment.center,
       width:100,
-      padding:const EdgeInsets.only(top:20),
+      // padding:const EdgeInsets.only(top:20,),
       child:Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children:[
           Container(
             alignment: Alignment.center,
@@ -1681,8 +1449,7 @@ class RewardReturn extends StatelessWidget {
 
     return Container(
       alignment: Alignment.center,
-      width:130,
-      padding:const EdgeInsets.only(top:20, left:5, right:5,),
+      width:100,
       child:Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children:[
@@ -1724,12 +1491,8 @@ class RewardList extends StatelessWidget {
   Widget build(BuildContext context) {
 
     return Container(
-      padding:const EdgeInsets.only(left:20.0, right:10.0, top:20),
       alignment: Alignment.centerLeft,
-      width:250,
       child:Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.center,
         children:[
           RewardDesc(desc:title),
         ],
