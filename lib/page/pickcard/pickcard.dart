@@ -233,25 +233,20 @@ class ChannelBtnShowLessList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
+    return Wrap(
+      runSpacing: 10.0,
       children:[
-        Row(
-          children:[
-            ChannelBtn(channelType:ChannelTypeModels.getChannelTypeModel(3)),
-            ChannelBtn(channelType:ChannelTypeModels.getChannelTypeModel(4)),
-            ChannelBtn(channelType:ChannelTypeModels.getChannelTypeModel(5)),
-            ChannelBtn(channelType:ChannelTypeModels.getChannelTypeModel(6)),
-            ChannelBtn(channelType:ChannelTypeModels.getChannelTypeModel(7)),
-            ChannelBtn(channelType:ChannelTypeModels.getChannelTypeModel(8)),
-            ChannelBtn(channelType:ChannelTypeModels.getChannelTypeModel(9)),
-            ChannelBtn(channelType:ChannelTypeModels.getChannelTypeModel(10)),
-            ChannelBtn(channelType:ChannelTypeModels.getChannelTypeModel(11)),
-            ChannelBtnShowTap(onTapShowMore:onTapShowMore),
-          ],
-        ),
-        
-      ]
+        ChannelBtn(channelType:ChannelTypeModels.getChannelTypeModel(3)),
+        ChannelBtn(channelType:ChannelTypeModels.getChannelTypeModel(4)),
+        ChannelBtn(channelType:ChannelTypeModels.getChannelTypeModel(5)),
+        ChannelBtn(channelType:ChannelTypeModels.getChannelTypeModel(6)),
+        ChannelBtn(channelType:ChannelTypeModels.getChannelTypeModel(7)),
+        ChannelBtn(channelType:ChannelTypeModels.getChannelTypeModel(8)),
+        ChannelBtn(channelType:ChannelTypeModels.getChannelTypeModel(9)),
+        ChannelBtn(channelType:ChannelTypeModels.getChannelTypeModel(10)),
+        ChannelBtn(channelType:ChannelTypeModels.getChannelTypeModel(11)),
+        ChannelBtnShowTap(onTapShowMore:onTapShowMore),
+      ],
     );
   }
 }
@@ -263,16 +258,31 @@ class ChannelBtnShowTap extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width:50,
+      width:80,
+      // height:60,
+      alignment: Alignment.center,
       child:TextButton(
         onPressed: (){
           onTapShowMore();
         }, 
-        child: const Icon(
-          Icons.more_horiz_outlined,
-          color: const Color(0xff2db3ff),
-          size: 30.0,
-        ),
+        child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children:[
+              Icon(
+                Icons.more_horiz_outlined,
+                color: const Color(0xff2db3ff),
+                size: 35.0,
+              ),
+              const SizedBox(height:10),
+              Text(
+                '',
+                style: TextStyle(
+                  fontSize: 15,
+                  color: const Color(0xff2db3ff),
+                ),
+              ),
+            ],
+          ),
       ),
     );
   }
@@ -299,8 +309,8 @@ class ChannelBtnShowMoreList extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children:[
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
+        Wrap(
+          runSpacing: 10.0,
           children:[
             ChannelBtn(channelType:ChannelTypeModels.getChannelTypeModel(3)),
             ChannelBtn(channelType:ChannelTypeModels.getChannelTypeModel(4)),
@@ -311,14 +321,6 @@ class ChannelBtnShowMoreList extends StatelessWidget {
             ChannelBtn(channelType:ChannelTypeModels.getChannelTypeModel(9)),
             ChannelBtn(channelType:ChannelTypeModels.getChannelTypeModel(10)),
             ChannelBtn(channelType:ChannelTypeModels.getChannelTypeModel(11)),
-            ChannelBtnShowTap(onTapShowMore:onTapShowMore),
-
-          ],
-        ), 
-        SizedBox(height:20),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children:[
             ChannelBtn(channelType:ChannelTypeModels.getChannelTypeModel(12)),
             ChannelBtn(channelType:ChannelTypeModels.getChannelTypeModel(13)),
             ChannelBtn(channelType:ChannelTypeModels.getChannelTypeModel(14)),
@@ -328,9 +330,10 @@ class ChannelBtnShowMoreList extends StatelessWidget {
             ChannelBtn(channelType:ChannelTypeModels.getChannelTypeModel(18)),
             ChannelBtn(channelType:ChannelTypeModels.getChannelTypeModel(19)),
             ChannelBtn(channelType:ChannelTypeModels.getChannelTypeModel(20)),
-            ChannelBtnEmpty(),
+            ChannelBtnShowTap(onTapShowMore:onTapShowMore),
+
           ],
-        ),
+        ), 
       ]
     );
   }
@@ -358,97 +361,95 @@ class ChannelBtn extends StatelessWidget {
     
     icon = pickcardViewModel.getIconChannelBtn(context, channelTypeID);
 
-    return Expanded(
-      child:ConstrainedBox(
-        constraints: BoxConstraints(
-          minWidth: 80,
+    return ConstrainedBox(
+      constraints: BoxConstraints(
+        maxWidth: 80,
+      ),
+      child:TextButton(
+        style: ElevatedButton.styleFrom(
+            padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 2),
         ),
-        child:TextButton(
-          style: ElevatedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 2),
-          ),
-          onPressed: (){
+        onPressed: (){
 
-            pickcardViewModel.toggleChannelTypeID(channelTypeID);
+          pickcardViewModel.toggleChannelTypeID(channelTypeID);
 
-            ChannelTypeModel channelTypeModel = ChannelTypeModels.getChannelTypeModel(channelTypeID);
+          ChannelTypeModel channelTypeModel = ChannelTypeModels.getChannelTypeModel(channelTypeID);
 
-            final _context = context;
+          final _context = context;
 
-            Future<List<ChannelItemStatus>?> future = showDialog<List<ChannelItemStatus>?>
-              (context: context, builder: (BuildContext context) {
-              
-
-              return Observer(builder:(context){
-
-                  ObservableFuture<ObservableList<dynamic>>? future = pickcardViewModel.getChannelItemObserver(_context, channelTypeID);
-
-                  if (future == null || future.result == null) {
-                    return Container();
-                  } 
-
-                  List<ChannelModel> channelModels = [];
-                  switch(future.status) {
-                    case FutureStatus.pending:
-                    case FutureStatus.rejected:
-                      break;
-                    case FutureStatus.fulfilled:
-                      channelModels = pickcardViewModel.getChannelModelsByChannelTypeID(context, channelTypeID, future.result);
-                  }
-
-                  List<ChannelItemStatus> channelItemStatuses = pickcardViewModel.transferChannelItemStatus(context, channelTypeID, channelModels);
-
-                return AlertDialog(
-                  title: Text(
-                    channelTypeModel.channelName,
-                    style:const TextStyle(
-                    ),
-                  ),
-                  content: Container(
-                    padding: const EdgeInsets.all(8.0),
-                    child:ChannelItemListDialog(channelTypeModel:channelTypeModel, channelItemStatuses:channelItemStatuses),
-                  ),
-                );
-              });
+          Future<List<ChannelItemStatus>?> future = showDialog<List<ChannelItemStatus>?>
+            (context: context, builder: (BuildContext context) {
             
-            
-            });
 
-            if(future != null) {
-              future.then((data){
-                for(ChannelItemStatus channelItemStatus in data!){
-                  bool oldHasChosen = pickcardViewModel.hasSelectedChannelItemID(context, channelTypeID, channelItemStatus.id);
-                  if(channelItemStatus.hasChosen ^ oldHasChosen){
-                    pickcardViewModel.toggleChannelItemID(context, channelTypeID, channelItemStatus.id);
-                  }
+            return Observer(builder:(context){
+
+                ObservableFuture<ObservableList<dynamic>>? future = pickcardViewModel.getChannelItemObserver(_context, channelTypeID);
+
+                if (future == null || future.result == null) {
+                  return Container();
+                } 
+
+                List<ChannelModel> channelModels = [];
+                switch(future.status) {
+                  case FutureStatus.pending:
+                  case FutureStatus.rejected:
+                    break;
+                  case FutureStatus.fulfilled:
+                    channelModels = pickcardViewModel.getChannelModelsByChannelTypeID(context, channelTypeID, future.result);
                 }
-              });
-            }
 
-            
-          },
-          child:Container(
-            alignment: Alignment.center,
-            child:Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children:[
-                Icon(
-                  icon,
-                  color: hasChosen ? Colors.greenAccent[700]!: const Color(0xff2db3ff),
-                  size: 35.0,
-                ),
-                const SizedBox(height:10),
-                Text(
-                  channelName,
-                  style: TextStyle(
-                    fontSize: 15,
-                    color: hasChosen ? Colors.greenAccent[700]!:const Color(0xff2db3ff),
+                List<ChannelItemStatus> channelItemStatuses = pickcardViewModel.transferChannelItemStatus(context, channelTypeID, channelModels);
+
+              return AlertDialog(
+                title: Text(
+                  channelTypeModel.channelName,
+                  style:const TextStyle(
                   ),
                 ),
-              ],
-            ),
+                content: Container(
+                  padding: const EdgeInsets.all(8.0),
+                  child:ChannelItemListDialog(channelTypeModel:channelTypeModel, channelItemStatuses:channelItemStatuses),
+                ),
+              );
+            });
+          
+          
+          });
+
+          if(future != null) {
+            future.then((data){
+              for(ChannelItemStatus channelItemStatus in data!){
+                bool oldHasChosen = pickcardViewModel.hasSelectedChannelItemID(context, channelTypeID, channelItemStatus.id);
+                if(channelItemStatus.hasChosen ^ oldHasChosen){
+                  pickcardViewModel.toggleChannelItemID(context, channelTypeID, channelItemStatus.id);
+                }
+              }
+            });
+          }
+
+          
+        },
+        child:Container(
+          alignment: Alignment.center,
+          child:Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children:[
+              Icon(
+                icon,
+                color: hasChosen ? Colors.greenAccent[700]!: const Color(0xff2db3ff),
+                size: 35.0,
+              ),
+              const SizedBox(height:10),
+              Text(
+                channelName,
+                style: TextStyle(
+                  fontSize: 15,
+                  color: hasChosen ? Colors.greenAccent[700]!:const Color(0xff2db3ff),
+                ),
+              ),
+            ],
           ),
-        )
+        ),
       )
     );
   }
@@ -937,7 +938,7 @@ class _SortItemStfState extends State<SortItemStf> {
         children: <Widget>[
           Container(
             height:40,
-            width:80,
+            width:60,
             alignment: Alignment.centerLeft,
             child:const Text('排序方式')
           ),
@@ -1027,7 +1028,7 @@ class _CashItemStfState extends State<CashItemStf> {
     return Row(
       children:[
         Container(
-          width:80,
+          width:60,
           child:const Text("消費金額"),
         ),
         SizedBox(width:15,),
@@ -1071,7 +1072,7 @@ class DateItem extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         children:[
           Container(
-            width:80,
+            width:60,
             child:const Text(
               '消費日期',
               style: TextStyle(
@@ -1154,88 +1155,93 @@ class _RewardItemStfState extends State<RewardItemStf> {
         children: <Widget>[
           Container(
             height:40,
-            width:80,
+            width:60,
             alignment: Alignment.centerLeft,
             child:const Text('回饋方式')
           ),
-
-          Container(
-            width:110,
-            child:TextButton(
-              onPressed: (){
-                setState((){
-                  _value = 0;
-                  rewardTypeViewModel.toggleRewardType(0);
-                });
-              },
-              child:Row(
-                children:[
-                  Radio(
-                    value: 0,
-                    groupValue: _value,
-                    onChanged: (int? value){
+          Expanded(
+            child:Wrap(
+              children:[
+                Container(
+                  width:110,
+                  child:TextButton(
+                    onPressed: (){
                       setState((){
                         _value = 0;
                         rewardTypeViewModel.toggleRewardType(0);
                       });
                     },
+                    child:Row(
+                      children:[
+                        Radio(
+                          value: 0,
+                          groupValue: _value,
+                          onChanged: (int? value){
+                            setState((){
+                              _value = 0;
+                              rewardTypeViewModel.toggleRewardType(0);
+                            });
+                          },
+                        ),
+                        Text(rewardTypeNamesModel.getRewardName(0)),
+                      ]
+                    ),
                   ),
-                  Text(rewardTypeNamesModel.getRewardName(0)),
-                ]
-              ),
-            ),
-          ),
+                ),
 
-          Container(
-            width:110,
-            child:TextButton(
-              onPressed: (){
-                setState((){
-                  _value = 1;
-                  rewardTypeViewModel.toggleRewardType(1);
-                });
-              },
-              child:Row(
-                children:[
-                  Radio(
-                    value: 1,
-                    groupValue: _value,
-                    onChanged: (int? value){
-                      setState(() {
+                Container(
+                  width:110,
+                  child:TextButton(
+                    onPressed: (){
+                      setState((){
                         _value = 1;
                         rewardTypeViewModel.toggleRewardType(1);
                       });
                     },
+                    child:Row(
+                      children:[
+                        Radio(
+                          value: 1,
+                          groupValue: _value,
+                          onChanged: (int? value){
+                            setState(() {
+                              _value = 1;
+                              rewardTypeViewModel.toggleRewardType(1);
+                            });
+                          },
+                        ),
+                        Text(rewardTypeNamesModel.getRewardName(1)),
+                      ]
+                    ),
                   ),
-                  Text(rewardTypeNamesModel.getRewardName(1)),
-                ]
-              ),
-            ),
-          ),
-          Container(
-            width:110,
-            child:TextButton(
-              onPressed: (){
-                setState((){
-                  _value = 2;
-                  rewardTypeViewModel.toggleRewardType(2);
-                });
-              },
-              child:Row(
-                children:[
-                  Radio(
-                    value: 2,
-                    groupValue: _value,
-                    onChanged: (int? value){
-                      setState(() {
+                ),
+                Container(
+                  width:110,
+                  child:TextButton(
+                    onPressed: (){
+                      setState((){
                         _value = 2;
                         rewardTypeViewModel.toggleRewardType(2);
                       });
                     },
+                    child:Row(
+                      children:[
+                        Radio(
+                          value: 2,
+                          groupValue: _value,
+                          onChanged: (int? value){
+                            setState(() {
+                              _value = 2;
+                              rewardTypeViewModel.toggleRewardType(2);
+                            });
+                          },
+                        ),
+                        Text(rewardTypeNamesModel.getRewardName(2)),
+                      ]
+                    ),
                   ),
-                  Text(rewardTypeNamesModel.getRewardName(2)),
-                ]
-              ),
+                ),
+              ],
             ),
           ),
         ],
