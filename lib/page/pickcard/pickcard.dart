@@ -176,7 +176,6 @@ class _SearchCardBarState extends State<SearchCardBar> {
         textAlign: TextAlign.start,
         textAlignVertical:TextAlignVertical.bottom,
         onTap:(){
-          print(_searchController.text);
         },
         controller:_searchController,
         decoration: InputDecoration(
@@ -577,45 +576,49 @@ class _ChannelItemListDialogState extends State<ChannelItemListDialog> {
                       padding:const EdgeInsets.all(5.0),
                       child:Row(
                         children:[
-                          Container(
-                            width: 80,
-                            child:Image(
-                              image: AssetImage('images/channel/' 
-                              + widget.channelTypeModel.channelTypeID.toString() 
-                              + '/' 
-                              + channelItemStatus.id
-                              +'.png'),
+                            Container(
+                              width: 50,
+                              child:Image(
+                                image: AssetImage('images/channel/' 
+                                + widget.channelTypeModel.channelTypeID.toString() 
+                                + '/' 
+                                + channelItemStatus.id
+                                +'.png'),
+                              ),
                             ),
-                          ),
+                          
                           SizedBox(width:15),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children:[
-                              Container(
-                                child:Text(
-                                  channelItemStatus.name,
-                                  style:const TextStyle(
-                                    fontSize: 20,
-                                    color:Colors.black
-                                  ),
-                                )
-                              ),
-                              Container(
-                                child:channelItemStatus.hasChosen?
+                          Expanded(
+                            child:Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children:[
+                                Container(
+                                  child:Text(
+                                    channelItemStatus.name,
+                                    style:const TextStyle(
+                                      fontSize: 20,
+                                      color:Colors.black
+                                    ),
+                                  )
+                                ),
+                                Container(
+                                  child:channelItemStatus.hasChosen?
+                                  const Icon(
+                                    size:25,
+                                    color:Colors.red,
+                                    Icons.favorite
+                                  )
+                                  :
                                 const Icon(
-                                  size:25,
-                                  color:Colors.red,
-                                  Icons.favorite
-                                )
-                                :
-                              const Icon(
-                                  size:25,
-                                  color:Colors.red,
-                                  Icons.favorite_border_outlined
-                                )
-                              ),
-                            ]
-                          )
+                                    size:25,
+                                    color:Colors.red,
+                                    Icons.favorite_border_outlined
+                                  )
+                                ),
+                              ]
+                            )
+                          ),
+                          
                         ]
                       ),
                     ),
@@ -1262,8 +1265,6 @@ class EvaluateBtnItem extends StatelessWidget {
     PickcardViewModel pickcardViewModel  = Provider.of<PickcardViewModel>(context);
   
     EvaluateRespObserver evaluateRespViewModel = Provider.of<EvaluateRespObserver>(context, listen:false);
-
-
     return Container(
       height:40,
       width:100,
