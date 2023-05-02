@@ -127,19 +127,23 @@ class CardInfo extends StatelessWidget {
     String bankName = cardRewardViewModel.getBankName();
     String cardName = cardRewardViewModel.getCardName();
     String imagePath = cardRewardViewModel.getImagePath();
-    String linkURL = cardRewardViewModel.getLinkURL();
     
     List<String> descs = cardRewardViewModel.getDescs();
 
     return Container(
       alignment: Alignment.centerLeft,
-      child:Wrap(
-        spacing: 15,
+      child:Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children:[
-          CardIcon(imagePath: imagePath,),
-          CardTitle(bankName: bankName,cardName: cardName,),
+          Column(
+            children:[
+              CardIcon(imagePath: imagePath,),
+              CardTitle(bankName: bankName,cardName: cardName,),
+            ],
+          ),
+          const SizedBox(width:20,),
           CardDescs(descs:descs),
-          LinkURL(linkURL: linkURL,),
         ],
       ),
     );
@@ -171,36 +175,27 @@ class CardTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding:const EdgeInsets.only(top:20,),
-      child:ConstrainedBox(
-        constraints:const BoxConstraints(maxWidth:150),
-        child:Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children:[
-            Text(
-              bankName,
-              style: const TextStyle(
-                fontFamily: "Netflix",
-                fontWeight: FontWeight.w300,
-                fontSize: 20,
-                color: Colors.black87,
-              ),
+      child:Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children:[
+          Text(
+            cardName,
+            style: const TextStyle(
+              fontWeight: FontWeight.w300,
+              fontSize: 20,
+              color: Colors.black87,
             ),
-            
-            const SizedBox(height:15,),
-
-            Text(
-              cardName,
-              style: const TextStyle(
-                fontFamily: "Netflix",
-                fontWeight: FontWeight.w300,
-                fontSize: 20,
-                color: Colors.black87,
-              ),
+          ),
+          Text(
+            bankName,
+            style: const TextStyle(
+              fontWeight: FontWeight.w300,
+              fontSize: 20,
+              color: Colors.black87,
             ),
-          ],
-        ),
-      )
+          ),
+        ],
+      ),
     );
   }
 }
@@ -212,15 +207,16 @@ class CardDescs extends StatelessWidget {
 final List<String> descs;
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding:const EdgeInsets.only(top:20,),
-      child:ConstrainedBox(
-        constraints:const BoxConstraints(maxWidth:300),
+    return Expanded(
+      // padding:const EdgeInsets.only(top:20,),
+      child:Container(
+        padding:const EdgeInsets.only(top:10),
         child:Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children:[
-          for (String desc in descs) 
-            CardDesc(desc:desc),
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children:[
+            for (String desc in descs) 
+              CardDesc(desc:desc),
           ],
         ),
       ),
@@ -235,22 +231,31 @@ class CardDesc extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child:Column(
-        children:[
-           Text(
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children:[
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children:[
+            Container(
+              padding:const EdgeInsets.only(top:2),
+              child:const Icon(Icons.arrow_right_outlined,),
+            ),
+            Expanded(
+              child:Text(
               desc,
               style: TextStyle(
-                fontFamily: "Netflix",
                 fontWeight: FontWeight.w300,
-                fontSize: 15,
-                letterSpacing: 0.0,
+                fontSize: 20,
                 color: Colors.black87,
               ),
             ),
-            const SizedBox(height:5),
-        ]
-      )
+            ),
+            ],
+          ),
+          
+          const SizedBox(height:5),
+      ]
     );
   }
 }
@@ -264,7 +269,7 @@ class LinkURL extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding:const EdgeInsets.only(top:40,),
+      // padding:const EdgeInsets.only(top:40,),
       alignment: Alignment.centerLeft,
       width:120,
       child:
@@ -302,15 +307,14 @@ class CardFeatures extends StatelessWidget {
  
   @override
   Widget build(BuildContext context) {
-    
-    CardFeatureViewModel cardFeatureViewModel = Provider.of<CardFeatureViewModel>(context);
-    String selectedFeature = cardFeatureViewModel.getSelectedFeature();
-
+    CardRewardViewModel cardRewardViewModel = Provider.of<CardRewardViewModel>(context);
+    String linkURL = cardRewardViewModel.getLinkURL();
     return Container(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children:[
-          CardFeatureTitles(),
+          const CardFeatureTitles(),
+          LinkURL(linkURL: linkURL),
          
         ],
       ),
@@ -598,10 +602,12 @@ class CardRewardItem extends StatelessWidget {
             children:[
               CardRewardTitleWrapper(title:title, rewardType: rewardType, feedbackTypeName: feedbackTypeName,limitTypeNames: limitTypeNames,),
               CardRewardDurationWrapper(startDate: startDate, endDate: endDate),
-              CardRewardDescs(descs:descs),
-              const Divider(),
+                            const Divider(),
+
+              
               CardRewardChannelBtnWrapper(cardRewardID: cardRewardID, totalBonus: totalBonus, calculateType:calculateType),
               ChannelList(cardRewardID:cardRewardID),
+              CardRewardDescs(descs:descs),
             ],
           ),
         ),

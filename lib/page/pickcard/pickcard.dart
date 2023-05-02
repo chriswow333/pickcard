@@ -319,7 +319,6 @@ class ChannelBtnShowMoreList extends StatelessWidget {
             ChannelBtn(channelType:ChannelTypeModels.getChannelTypeModel(18)),
             ChannelBtn(channelType:ChannelTypeModels.getChannelTypeModel(19)),
             ChannelBtn(channelType:ChannelTypeModels.getChannelTypeModel(20)),
-            ChannelBtnShowTap(onTapShowMore:onTapShowMore),
 
           ],
         ), 
