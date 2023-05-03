@@ -97,10 +97,8 @@ class Pickcard extends StatelessWidget {
 
     return Column(
       children:const [
-        
         TopBar(),
         SizedBox(height:25,),
-
         ChannelBtnList(),
         SizedBox(height:10),
         Divider(),
