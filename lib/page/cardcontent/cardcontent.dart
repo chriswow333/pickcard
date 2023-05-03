@@ -823,8 +823,13 @@ class CardRewardChannelBtnWrapper extends StatelessWidget {
 
           CardRewardChannelBtnList(cardRewardID:cardRewardID, channelTypes:channelTypes),
           
+
+
           const SizedBox(height:10,),
           
+          ChannelListStf(),
+
+          const SizedBox(height:10,),
           if(hasTaskType)
             const CardRewardTaskBtnTitle(),
           
@@ -848,6 +853,71 @@ class CardRewardChannelBtnWrapper extends StatelessWidget {
     );
   }
 }
+
+
+class ChannelListStf extends StatefulWidget {
+  const ChannelListStf({ Key? key }) : super(key: key);
+
+  @override
+  _ChannelListStfState createState() => _ChannelListStfState();
+}
+
+class _ChannelListStfState extends State<ChannelListStf> {
+  @override
+  Widget build(BuildContext context) {
+    final ScrollController _scrollController = ScrollController();
+    
+    return Container(
+
+      height:200,
+      child:Column(
+        children:[
+          SingleChildScrollView(
+            controller: _scrollController,
+            scrollDirection:Axis.horizontal,
+            child:Row(
+              children:[
+                for(int i = 0; i < 20; i++)
+                Container(
+                  child:Column(
+                    children:[
+                      Container(
+                        width:50,
+                        child:Image(image: AssetImage('images/channel/3/9bcb1ac1-d19c-4eb2-a6e9-a3fca799cbbd.png')),
+                      ),
+                      const SizedBox(height:10),
+                      Text(
+                        '好吃的餐廳',
+                        style: TextStyle(
+                          fontSize: 15,
+                        ),
+                      ),
+                    ]
+                  ),
+                )
+              ]
+            )
+          ),
+          TextButton(
+            onPressed: (){
+              setState((){
+                _scrollController.animateTo(
+                  _scrollController.offset+100, 
+                  curve: Curves.ease, 
+                  duration: Duration(milliseconds:100),
+                );
+              });
+              
+            },
+            child:Text('OKOKOKOK')
+          )
+        ]
+      )
+    );
+  }
+}
+
+
 
 class EvaluationCardRewardTitle extends StatelessWidget {
   const EvaluationCardRewardTitle({ Key? key }) : super(key: key);
@@ -994,16 +1064,12 @@ class CardRewardTaskBtn extends StatelessWidget {
           side: BorderSide(width: 0.5, color: hasChosen ? Colors.greenAccent[700]!:const Color(0xff2db3ff),),
         ),
       onPressed: (){
-  
         cardRewardViewModel.toggleSelectedCardRewardTask(cardRewardID, taskID);
-        // cardRewardViewModel.getCallbackPosition()(taskID);
-
       },
       child:Text(
         name,
         style: isSelected ?
           const TextStyle(
-            fontFamily: "Netflix",
             fontWeight: FontWeight.w100,
             fontSize: 12,
             color:Colors.white,
