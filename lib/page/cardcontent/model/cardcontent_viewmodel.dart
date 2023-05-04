@@ -127,12 +127,12 @@ class RewardTypeLimitTypeName {
 }
 
 
-class ChannelModel {
+class CardContentChannelModel {
 
   final String id;
   final String name;
 
-  ChannelModel({required this.id, required this.name});
+  CardContentChannelModel({required this.id, required this.name});
 }
 
 
@@ -249,13 +249,13 @@ class CardModel {
   }
 
 
-  List<ChannelModel> getCardRewardChannelsByChannelType(String cardRewardID, int channelType){
+  List<CardContentChannelModel> getCardRewardChannelsByChannelType(String cardRewardID, int channelType){
     
     if(!_cardRewardModels.containsKey(cardRewardID))return [];
     
     if(!_cardRewardModels[cardRewardID]!.getCardRewardChannels().containsKey(channelType))return [];
     
-    return _cardRewardModels[cardRewardID]!.getCardRewardChannels()[channelType]! as List<ChannelModel>;
+    return _cardRewardModels[cardRewardID]!.getCardRewardChannels()[channelType]! as List<CardContentChannelModel>;
 
   }
 
@@ -391,9 +391,9 @@ class CardRewardModel {
         case 3:
           
           List<Mobilepay>  mobilepays = channelResp.mobilepays!;
-          List<ChannelModel> channelModels = [];
+          List<CardContentChannelModel> channelModels = [];
           for(Mobilepay mobilepay in mobilepays){
-            channelModels.add(ChannelModel(id:mobilepay.id!, name:mobilepay.name!));
+            channelModels.add(CardContentChannelModel(id:mobilepay.id!, name:mobilepay.name!));
           }
           _rewardChannels[channelType] = channelModels;
           break;
@@ -401,20 +401,20 @@ class CardRewardModel {
         case 4:
 
           List<Ecommerce> ecommerces = channelResp.ecommerces!;
-          List<ChannelModel> channelModels = [];
+          List<CardContentChannelModel> channelModels = [];
 
           for(Ecommerce ecommerce in ecommerces){
-            channelModels.add(ChannelModel(id:ecommerce.id!, name:ecommerce.name!));
+            channelModels.add(CardContentChannelModel(id:ecommerce.id!, name:ecommerce.name!));
           }
           _rewardChannels[channelType] = channelModels;
           break;
 
         case 5:
           List<Supermarket> supermarkets = channelResp.supermarkets!;
-          List<ChannelModel> channelModels = [];
+          List<CardContentChannelModel> channelModels = [];
 
           for(Supermarket supermarket in supermarkets){
-            channelModels.add(ChannelModel(id:supermarket.id!, name:supermarket.name!));
+            channelModels.add(CardContentChannelModel(id:supermarket.id!, name:supermarket.name!));
           }
           _rewardChannels[channelType] = channelModels;
 
@@ -423,10 +423,10 @@ class CardRewardModel {
         case 6:
           
           List<Onlinegame> onlinegames = channelResp.onlinegames!;
-          List<ChannelModel> channelModels = [];
+          List<CardContentChannelModel> channelModels = [];
 
           for(Onlinegame onlinegame in onlinegames){
-            channelModels.add(ChannelModel(id:onlinegame.id!, name:onlinegame.name!));
+            channelModels.add(CardContentChannelModel(id:onlinegame.id!, name:onlinegame.name!));
           }
           _rewardChannels[channelType] = channelModels;
 
@@ -435,10 +435,10 @@ class CardRewardModel {
         case 7:
           
           List<Streaming> streamings = channelResp.streamings!;
-          List<ChannelModel> channelModels = [];
+          List<CardContentChannelModel> channelModels = [];
 
           for(Streaming streaming in streamings){
-            channelModels.add(ChannelModel(id:streaming.id!, name:streaming.name!));
+            channelModels.add(CardContentChannelModel(id:streaming.id!, name:streaming.name!));
           }
           _rewardChannels[channelType] = channelModels;
 
@@ -447,10 +447,10 @@ class CardRewardModel {
         case 8:
           
           List<Food> foods = channelResp.foods!;
-          List<ChannelModel> channelModels = [];
+          List<CardContentChannelModel> channelModels = [];
 
           for(Food food in foods){
-            channelModels.add(ChannelModel(id:food.id!, name:food.name!));
+            channelModels.add(CardContentChannelModel(id:food.id!, name:food.name!));
           }
           _rewardChannels[channelType] = channelModels;
 
@@ -458,10 +458,10 @@ class CardRewardModel {
 
         case 9:
           List<Transportation> transportations = channelResp.transportations!;
-          List<ChannelModel> channelModels = [];
+          List<CardContentChannelModel> channelModels = [];
 
           for(Transportation transportation in transportations){
-            channelModels.add(ChannelModel(id:transportation.id!, name:transportation.name!));
+            channelModels.add(CardContentChannelModel(id:transportation.id!, name:transportation.name!));
           }
           _rewardChannels[channelType] = channelModels;
 
@@ -470,20 +470,20 @@ class CardRewardModel {
         case 10:
 
           List<Travel> travels = channelResp.travels!;
-          List<ChannelModel> channelModels = [];
+          List<CardContentChannelModel> channelModels = [];
 
           for(Travel travel in travels){
-            channelModels.add(ChannelModel(id:travel.id!, name:travel.name!));
+            channelModels.add(CardContentChannelModel(id:travel.id!, name:travel.name!));
           }
           _rewardChannels[channelType] = channelModels;
           break;
 
         case 11:
           List<Delivery> deliveries = channelResp.deliveries!;
-          List<ChannelModel> channelModels = [];
+          List<CardContentChannelModel> channelModels = [];
 
           for(Delivery delivery in deliveries){
-            channelModels.add(ChannelModel(id:delivery.id!, name:delivery.name!));
+            channelModels.add(CardContentChannelModel(id:delivery.id!, name:delivery.name!));
           }
           _rewardChannels[channelType] = channelModels;
           break;
@@ -492,10 +492,10 @@ class CardRewardModel {
         case 12:
 
           List<Insurance> insurances = channelResp.insurances!;
-          List<ChannelModel> channelModels = [];
+          List<CardContentChannelModel> channelModels = [];
 
           for(Insurance insurance in insurances){
-            channelModels.add(ChannelModel(id:insurance.id!, name:insurance.name!));
+            channelModels.add(CardContentChannelModel(id:insurance.id!, name:insurance.name!));
           }
           _rewardChannels[channelType] = channelModels;
           break;
@@ -503,10 +503,10 @@ class CardRewardModel {
         case 13:
 
           List<Mall> malls = channelResp.malls!;
-          List<ChannelModel> channelModels = [];
+          List<CardContentChannelModel> channelModels = [];
 
           for(Mall mall in malls){
-            channelModels.add(ChannelModel(id:mall.id!, name:mall.name!));
+            channelModels.add(CardContentChannelModel(id:mall.id!, name:mall.name!));
           }
           _rewardChannels[channelType] = channelModels;
           break;
@@ -515,10 +515,10 @@ class CardRewardModel {
         case 14:
 
           List<Sport> sports = channelResp.sports!;
-          List<ChannelModel> channelModels = [];
+          List<CardContentChannelModel> channelModels = [];
 
           for(Sport sport in sports){
-            channelModels.add(ChannelModel(id:sport.id!, name:sport.name!));
+            channelModels.add(CardContentChannelModel(id:sport.id!, name:sport.name!));
           }
           _rewardChannels[channelType] = channelModels;
           break;
@@ -526,10 +526,10 @@ class CardRewardModel {
         case 15:
           
           List<Conveniencestore> conveniencestores = channelResp.conveniencestores!;
-          List<ChannelModel> channelModels = [];
+          List<CardContentChannelModel> channelModels = [];
 
           for(Conveniencestore conveniencestore in conveniencestores){
-            channelModels.add(ChannelModel(id:conveniencestore.id!, name:conveniencestore.name!));
+            channelModels.add(CardContentChannelModel(id:conveniencestore.id!, name:conveniencestore.name!));
           }
           _rewardChannels[channelType] = channelModels;
 
@@ -537,10 +537,10 @@ class CardRewardModel {
         case 16:
           
           List<Appstore> appstores = channelResp.appstores!;
-          List<ChannelModel> channelModels = [];
+          List<CardContentChannelModel> channelModels = [];
 
           for(Appstore appstore in appstores){
-            channelModels.add(ChannelModel(id:appstore.id!, name:appstore.name!));
+            channelModels.add(CardContentChannelModel(id:appstore.id!, name:appstore.name!));
           }
           _rewardChannels[channelType] = channelModels;
 
@@ -549,10 +549,10 @@ class CardRewardModel {
         case 17:
           
           List<Hotel> hotels = channelResp.hotels!;
-          List<ChannelModel> channelModels = [];
+          List<CardContentChannelModel> channelModels = [];
 
           for(Hotel hotel in hotels){
-            channelModels.add(ChannelModel(id:hotel.id!, name:hotel.name!));
+            channelModels.add(CardContentChannelModel(id:hotel.id!, name:hotel.name!));
           }
           _rewardChannels[channelType] = channelModels;
 
@@ -560,10 +560,10 @@ class CardRewardModel {
 
         case 18:
           List<Amusement> amusements = channelResp.amusements!;
-          List<ChannelModel> channelModels = [];
+          List<CardContentChannelModel> channelModels = [];
 
           for(Amusement amusement in amusements){
-            channelModels.add(ChannelModel(id:amusement.id!, name:amusement.name!));
+            channelModels.add(CardContentChannelModel(id:amusement.id!, name:amusement.name!));
           }
           _rewardChannels[channelType] = channelModels;
 
@@ -572,10 +572,10 @@ class CardRewardModel {
 
         case 19:
           List<Cinema> cinemas = channelResp.cinemas!;
-          List<ChannelModel> channelModels = [];
+          List<CardContentChannelModel> channelModels = [];
 
           for(Cinema cinema in cinemas){
-            channelModels.add(ChannelModel(id:cinema.id!, name:cinema.name!));
+            channelModels.add(CardContentChannelModel(id:cinema.id!, name:cinema.name!));
           }
           _rewardChannels[channelType] = channelModels;
 
@@ -583,10 +583,10 @@ class CardRewardModel {
 
         case 20:
           List<Publicutility> publicutilities = channelResp.publicutilities!;
-          List<ChannelModel> channelModels = [];
+          List<CardContentChannelModel> channelModels = [];
 
           for(Publicutility publicutility in publicutilities){
-            channelModels.add(ChannelModel(id:publicutility.id!, name:publicutility.name!));
+            channelModels.add(CardContentChannelModel(id:publicutility.id!, name:publicutility.name!));
           }
           _rewardChannels[channelType] = channelModels;
           break;
@@ -753,9 +753,9 @@ class CardRewardViewModel extends ChangeNotifier {
 
     if(chosenChannelType != 2) {
       
-      List<ChannelModel> channelModels = _cardModel.getCardRewardChannelsByChannelType(selectedCardRewardID, chosenChannelType);
+      List<CardContentChannelModel> channelModels = _cardModel.getCardRewardChannelsByChannelType(selectedCardRewardID, chosenChannelType);
       
-      for(ChannelModel channelModel in channelModels) {
+      for(CardContentChannelModel channelModel in channelModels) {
         channelIDSet.add(channelModel.id);
       }
 

@@ -484,7 +484,6 @@ class CardRewardItem extends StatelessWidget {
               CardRewardDescs(descs:descs),
               
               const Divider(),
-              
 
               CardRewardChannelBtnWrapper(cardRewardID: cardRewardID, totalBonus: totalBonus, calculateType:calculateType),
               
@@ -524,7 +523,6 @@ class CardRewardTitleWrapper extends StatelessWidget {
       child:Row(
         // runSpacing: 10.0,
         children:[
-
           Container(
             padding:const EdgeInsets.only(top:5, bottom: 5, left:10, right:10),
             decoration: BoxDecoration(
@@ -556,7 +554,6 @@ class CardRewardTitleWrapper extends StatelessWidget {
             flex:1,
             child:CardRewardDuration(startDate: startDate, endDate: endDate,),
           ),
-
 
           // const SizedBox(width:10),
           // for(String limitTypeName in limitTypeNames)
@@ -702,7 +699,6 @@ class _CardRewardDescsState extends State<CardRewardDescs> {
     setState((){
 
       if(length <= 1){
-
         show = true;
         needCollapse = false;
 
@@ -822,12 +818,10 @@ class CardRewardChannelBtnWrapper extends StatelessWidget {
           const CardRewardChannelBtnTitle(),
 
           CardRewardChannelBtnList(cardRewardID:cardRewardID, channelTypes:channelTypes),
-          
-
 
           const SizedBox(height:10,),
           
-          ChannelListStf(),
+           ChannelListStf(cardRewardID:cardRewardID),
 
           const SizedBox(height:10,),
           if(hasTaskType)
@@ -856,8 +850,10 @@ class CardRewardChannelBtnWrapper extends StatelessWidget {
 
 
 class ChannelListStf extends StatefulWidget {
-  const ChannelListStf({ Key? key }) : super(key: key);
-
+  const ChannelListStf({ Key? key, required this.cardRewardID, }) : super(key: key);
+  
+  final String cardRewardID;
+  
   @override
   _ChannelListStfState createState() => _ChannelListStfState();
 }
@@ -865,10 +861,24 @@ class ChannelListStf extends StatefulWidget {
 class _ChannelListStfState extends State<ChannelListStf> {
   @override
   Widget build(BuildContext context) {
+    
     final ScrollController _scrollController = ScrollController();
     
-    return Container(
+    CardRewardViewModel cardRewardViewModel = Provider.of<CardRewardViewModel>(context);
+    String selectedCardRewardID = cardRewardViewModel.getSelectedCardRewardID();
+    int selectedChannelType = cardRewardViewModel.getSelectedChannelType();
 
+    List<CardContentChannelModel> channelModels = cardRewardViewModel.getCardModel().getCardRewardChannelsByChannelType(selectedCardRewardID, selectedChannelType);
+
+    double channelListWidth = channelModels.length * 120; 
+
+    double windowWidth = MediaQuery.of(context).size.width < 800 ? MediaQuery.of(context).size.width:800;
+
+
+    if (widget.cardRewardID != selectedCardRewardID)return Container();
+
+
+    return Container(
       height:200,
       child:Column(
         children:[
@@ -877,40 +887,116 @@ class _ChannelListStfState extends State<ChannelListStf> {
             scrollDirection:Axis.horizontal,
             child:Row(
               children:[
-                for(int i = 0; i < 20; i++)
-                Container(
-                  child:Column(
-                    children:[
-                      Container(
-                        width:50,
-                        child:Image(image: AssetImage('images/channel/3/9bcb1ac1-d19c-4eb2-a6e9-a3fca799cbbd.png')),
+                for(CardContentChannelModel channelModel in channelModels)
+                  Container(
+                    padding:const EdgeInsets.only(right: 20),
+                    child:TextButton(
+                      onPressed: (){
+                        cardRewardViewModel.toggleCardRewardChannel(selectedCardRewardID, selectedChannelType, channelModel.id);
+                      },
+                      child:Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children:[
+                          Container(
+                            width:70,
+                            height:70,
+                            child:Image(
+                              image: AssetImage('images/channel/'+selectedChannelType.toString() + 
+                              '/'+channelModel.id +'.png')),
+                          ),
+                          SizedBox(height:5),
+                          Container(
+                            width:100,
+                            height:40,
+                            child:Row(
+                            children: [
+                              Container(
+                                child:cardRewardViewModel.hasChosenCardRewardChannel(
+                                      selectedCardRewardID, 
+                                      selectedChannelType,
+                                      channelModel.id)
+                                      ?
+                                const Icon(
+                                  size:20,
+                                  color:Colors.red,
+                                  Icons.favorite
+                                )
+                                :
+                              const Icon(
+                                  size:20,
+                                  color:Colors.red,
+                                  Icons.favorite_border_outlined
+                                )
+                              ),
+                             Container(
+                                  alignment: Alignment.centerLeft,
+                                  width:70,
+                                  height:40,
+                                  child:Text(
+                                    channelModel.name,
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                    ),
+                                  ),
+                                ),
+                              
+                              
+                            ],
+                          )
+                          ),
+                          
+                          
+
+                        ]
                       ),
-                      const SizedBox(height:10),
-                      Text(
-                        '好吃的餐廳',
-                        style: TextStyle(
-                          fontSize: 15,
-                        ),
-                      ),
-                    ]
-                  ),
-                )
+                    ),
+                    
+                    
+                  )
               ]
             )
           ),
-          TextButton(
-            onPressed: (){
-              setState((){
-                _scrollController.animateTo(
-                  _scrollController.offset+100, 
-                  curve: Curves.ease, 
-                  duration: Duration(milliseconds:100),
-                );
-              });
-              
-            },
-            child:Text('OKOKOKOK')
-          )
+          if(windowWidth < channelListWidth)
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children:[
+                TextButton(
+                  onPressed: (){
+                    setState((){
+                      if(_scrollController.offset > 0) {
+                        _scrollController.animateTo(
+                          _scrollController.offset - 200,
+                          curve: Curves.ease, 
+                          duration: Duration(milliseconds:100),
+                        );
+                      }
+                    });
+                  },
+                  child:Icon(
+                    size:50,
+                    Icons.arrow_left,
+                  ),
+                ),
+                TextButton(
+                  onPressed: (){
+                    setState((){
+                      if(_scrollController.offset < channelListWidth) {
+                        _scrollController.animateTo(
+                        _scrollController.offset + 200,
+                        curve: Curves.ease, 
+                        duration: Duration(milliseconds:100),
+                      );
+                      }
+                      
+                    });
+                  },
+                  child:Icon(
+                    size:50,
+                    Icons.arrow_right
+                  ),
+                )
+              ],
+            ),
         ]
       )
     );
@@ -1105,6 +1191,7 @@ class CardRewardChannelBtn extends StatelessWidget {
     bool hasChosen = cardRewardViewModel.hasChosenCardRewardChannelType(cardRewardID, channelType);
 
     ChannelTypeModel channelTypeModel = ChannelTypeModels.getChannelTypeModel(channelType);
+
     IconData icon = ChannelTypeModels.getChannelTypeIconModels()[channelType]!;
 
     return TextButton(
@@ -1229,9 +1316,7 @@ class _CashItemStfState extends State<CashItemStf> {
           ),
           const SizedBox(width:15,),
           Container(
-          // height:30,
           width:120,
-          // alignment: Alignment.topCenter,
           child:TextField(
             controller: _controller,
             keyboardType: TextInputType.number,
@@ -1282,7 +1367,7 @@ class DateItem extends StatelessWidget {
               ),
             )
           ),
-          SizedBox(width:15),
+          const SizedBox(width:15),
           SizedBox(
             height:32,
             width:160,
