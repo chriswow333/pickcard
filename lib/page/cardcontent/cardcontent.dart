@@ -821,7 +821,7 @@ class CardRewardChannelBtnWrapper extends StatelessWidget {
 
           const SizedBox(height:10,),
           
-           ChannelListStf(cardRewardID:cardRewardID),
+          ChannelListStf(cardRewardID:cardRewardID),
 
           const SizedBox(height:10,),
           if(hasTaskType)
@@ -838,7 +838,6 @@ class CardRewardChannelBtnWrapper extends StatelessWidget {
 
           const SizedBox(height:20),
 
-         
           const SizedBox(height:10),
           
           const Divider(),
@@ -862,7 +861,7 @@ class _ChannelListStfState extends State<ChannelListStf> {
   @override
   Widget build(BuildContext context) {
     
-    final ScrollController _scrollController = ScrollController();
+    final ScrollController scrollController = ScrollController();
     
     CardRewardViewModel cardRewardViewModel = Provider.of<CardRewardViewModel>(context);
     String selectedCardRewardID = cardRewardViewModel.getSelectedCardRewardID();
@@ -883,7 +882,7 @@ class _ChannelListStfState extends State<ChannelListStf> {
       child:Column(
         children:[
           SingleChildScrollView(
-            controller: _scrollController,
+            controller: scrollController,
             scrollDirection:Axis.horizontal,
             child:Row(
               children:[
@@ -895,7 +894,6 @@ class _ChannelListStfState extends State<ChannelListStf> {
                         cardRewardViewModel.toggleCardRewardChannel(selectedCardRewardID, selectedChannelType, channelModel.id);
                       },
                       child:Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
                         children:[
                           Container(
                             width:70,
@@ -904,54 +902,49 @@ class _ChannelListStfState extends State<ChannelListStf> {
                               image: AssetImage('images/channel/'+selectedChannelType.toString() + 
                               '/'+channelModel.id +'.png')),
                           ),
-                          SizedBox(height:5),
+                          const SizedBox(height:5),
                           Container(
                             width:100,
                             height:40,
                             child:Row(
-                            children: [
-                              Container(
-                                child:cardRewardViewModel.hasChosenCardRewardChannel(
-                                      selectedCardRewardID, 
-                                      selectedChannelType,
-                                      channelModel.id)
-                                      ?
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Container(
+                                  child:cardRewardViewModel.hasChosenCardRewardChannel(
+                                        selectedCardRewardID, 
+                                        selectedChannelType,
+                                        channelModel.id)
+                                        ?
+                                  const Icon(
+                                    size:20,
+                                    color:Colors.red,
+                                    Icons.favorite
+                                  )
+                                  :
                                 const Icon(
-                                  size:20,
-                                  color:Colors.red,
-                                  Icons.favorite
-                                )
-                                :
-                              const Icon(
-                                  size:20,
-                                  color:Colors.red,
-                                  Icons.favorite_border_outlined
-                                )
-                              ),
-                             Container(
-                                  alignment: Alignment.centerLeft,
-                                  width:70,
-                                  height:40,
-                                  child:Text(
-                                    channelModel.name,
-                                    style: TextStyle(
-                                      fontSize: 15,
+                                    size:20,
+                                    color:Colors.red,
+                                    Icons.favorite_border_outlined
+                                  )
+                                ),
+                                  ConstrainedBox(
+                                    constraints: BoxConstraints(
+                                      maxWidth:70,
+                                    ),
+                                    child:Text(
+                                      channelModel.name,
+                                      style: TextStyle(
+                                        fontSize: 15,
+                                      ),
                                     ),
                                   ),
-                                ),
-                              
-                              
-                            ],
-                          )
+                              ],
+                            )
                           ),
-                          
-                          
-
                         ]
                       ),
                     ),
-                    
-                    
                   )
               ]
             )
@@ -963,9 +956,9 @@ class _ChannelListStfState extends State<ChannelListStf> {
                 TextButton(
                   onPressed: (){
                     setState((){
-                      if(_scrollController.offset > 0) {
-                        _scrollController.animateTo(
-                          _scrollController.offset - 200,
+                      if(scrollController.offset > 0) {
+                        scrollController.animateTo(
+                          scrollController.offset - 200,
                           curve: Curves.ease, 
                           duration: Duration(milliseconds:100),
                         );
@@ -980,9 +973,9 @@ class _ChannelListStfState extends State<ChannelListStf> {
                 TextButton(
                   onPressed: (){
                     setState((){
-                      if(_scrollController.offset < channelListWidth) {
-                        _scrollController.animateTo(
-                        _scrollController.offset + 200,
+                      if(scrollController.offset < channelListWidth) {
+                        scrollController.animateTo(
+                        scrollController.offset + 200,
                         curve: Curves.ease, 
                         duration: Duration(milliseconds:100),
                       );
