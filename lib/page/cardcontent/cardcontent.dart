@@ -831,6 +831,8 @@ class CardRewardChannelBtnWrapper extends StatelessWidget {
             CardRewardTaskBtnList(cardRewardID:cardRewardID, ),
           
 
+          TaskList(),
+
           // ChannelList(cardRewardID:cardRewardID),
 
 
@@ -867,15 +869,16 @@ class _ChannelListStfState extends State<ChannelListStf> {
     String selectedCardRewardID = cardRewardViewModel.getSelectedCardRewardID();
     int selectedChannelType = cardRewardViewModel.getSelectedChannelType();
 
+    if(selectedChannelType == 2)return Container();
+    if (widget.cardRewardID != selectedCardRewardID)return Container();
+    
     List<CardContentChannelModel> channelModels = cardRewardViewModel.getCardModel().getCardRewardChannelsByChannelType(selectedCardRewardID, selectedChannelType);
 
     double channelListWidth = channelModels.length * 120; 
 
     double windowWidth = MediaQuery.of(context).size.width < 800 ? MediaQuery.of(context).size.width:800;
 
-
-    if (widget.cardRewardID != selectedCardRewardID)return Container();
-
+    
 
     return Container(
       height:200,
@@ -929,12 +932,12 @@ class _ChannelListStfState extends State<ChannelListStf> {
                                   )
                                 ),
                                   ConstrainedBox(
-                                    constraints: BoxConstraints(
+                                    constraints: const BoxConstraints(
                                       maxWidth:70,
                                     ),
                                     child:Text(
                                       channelModel.name,
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         fontSize: 15,
                                       ),
                                     ),
@@ -965,7 +968,7 @@ class _ChannelListStfState extends State<ChannelListStf> {
                       }
                     });
                   },
-                  child:Icon(
+                  child:const Icon(
                     size:50,
                     Icons.arrow_left,
                   ),
@@ -975,15 +978,14 @@ class _ChannelListStfState extends State<ChannelListStf> {
                     setState((){
                       if(scrollController.offset < channelListWidth) {
                         scrollController.animateTo(
-                        scrollController.offset + 200,
-                        curve: Curves.ease, 
-                        duration: Duration(milliseconds:100),
-                      );
+                          scrollController.offset + 200,
+                          curve: Curves.ease, 
+                          duration: const Duration(milliseconds:100),
+                        );
                       }
-                      
                     });
                   },
-                  child:Icon(
+                  child:const Icon(
                     size:50,
                     Icons.arrow_right
                   ),
@@ -996,6 +998,24 @@ class _ChannelListStfState extends State<ChannelListStf> {
   }
 }
 
+
+
+class TaskList extends StatelessWidget {
+  const TaskList({ Key? key }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+
+      CardRewardViewModel cardRewardViewModel = Provider.of<CardRewardViewModel>(context);
+      String selectedCardRewardID = cardRewardViewModel.getSelectedCardRewardID();
+      String selectedTaskID = cardRewardViewModel.getSelectedTaskID();  
+
+      return Container(
+        alignment: Alignment.centerLeft,
+        child:ChannelTaskWrapper(cardRewardID: selectedCardRewardID, selectedTaskID: selectedTaskID,),
+      ); 
+  }
+}
 
 
 class EvaluationCardRewardTitle extends StatelessWidget {
