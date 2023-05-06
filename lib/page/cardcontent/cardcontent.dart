@@ -329,9 +329,7 @@ class CardFeatureTitles extends StatelessWidget {
   
   @override
   Widget build(BuildContext context) {
-
     CardFeatureViewModel cardFeatureViewModel = Provider.of<CardFeatureViewModel>(context);
-
     List<String> featureTitles = cardFeatureViewModel.getFeatures();
 
     return Container(
@@ -469,6 +467,7 @@ class CardRewardItem extends StatelessWidget {
           child:Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children:[
+              
               CardRewardTitleWrapper(
                 title:title, 
                 rewardType: rewardType, 
@@ -478,9 +477,7 @@ class CardRewardItem extends StatelessWidget {
                 endDate: endDate,
               ),
               
-              const SizedBox(height:20),
-              const Divider(),
-              
+              const SizedBox(height:5),
               CardRewardDescs(descs:descs),
               
               const Divider(),
@@ -521,7 +518,6 @@ class CardRewardTitleWrapper extends StatelessWidget {
 
     return Container(
       child:Row(
-        // runSpacing: 10.0,
         children:[
           Container(
             padding:const EdgeInsets.only(top:5, bottom: 5, left:10, right:10),
@@ -554,34 +550,6 @@ class CardRewardTitleWrapper extends StatelessWidget {
             flex:1,
             child:CardRewardDuration(startDate: startDate, endDate: endDate,),
           ),
-
-          // const SizedBox(width:10),
-          // for(String limitTypeName in limitTypeNames)
-          //   Container(
-          //     padding:const EdgeInsets.only(right:5,),
-          //     child:Container(
-          //       // alignment: Alignment.center,
-          //       // width:50,
-          //       // height:30,
-          //       padding:const EdgeInsets.only(top:5, bottom: 5, left:10, right:10),
-          //       decoration: BoxDecoration(
-          //         borderRadius: const BorderRadius.all(
-          //             Radius.circular(10.0),
-          //         ),
-          //         color:Colors.deepOrange[500],
-          //       ),
-          //       child:Text(
-          //         limitTypeName,
-          //         style: const TextStyle(
-          //           fontFamily: "Netflix",
-          //           fontWeight: FontWeight.w300,
-          //           fontSize: 13,
-          //           letterSpacing: 0.0,
-          //           color: Colors.white,
-          //         ),
-          //       ),
-          //     ),
-          //   )
         ]
       ),
       
@@ -611,30 +579,6 @@ class CardRewardTitle extends StatelessWidget {
 
 
 
-// class CardRewardDurationWrapper extends StatelessWidget {
-//   const CardRewardDurationWrapper({
-//     Key? key, required this.startDate, required this.endDate,
-//   }) : super(key: key);
-
-//   final String startDate;
-//   final String endDate;
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       // padding:const EdgeInsets.only(top:20,),
-//       child:Row(
-//         // mainAxisAlignment: MainAxisAlignment.end,
-//         children:[
-//           // const CardRewardDurationTitle(),
-//           // SizedBox(width:5),
-//           CardRewardDutaion(startDate: startDate, endDate: endDate,),
-//         ]
-//       ),
-//     );
-//   }
-// }
-
 class CardRewardDuration extends StatelessWidget {
   const CardRewardDuration({ Key? key, required this.startDate, required this.endDate, }) : super(key: key);
 
@@ -657,94 +601,28 @@ class CardRewardDuration extends StatelessWidget {
 }
 
 
-// class CardRewardDurationTitle extends StatelessWidget {
-//   const CardRewardDurationTitle({ Key? key }) : super(key: key);
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       child:const Text(
-//         '優惠期間',
-//         style: TextStyle(
-//           fontWeight: FontWeight.w300,
-//           fontSize: 14,
-//           color: Colors.black87,
-//         ),
-//       ),
-//     );
-//   }
-// }
-
-
-
-class CardRewardDescs extends StatefulWidget {
-  const CardRewardDescs({ Key? key, required this.descs }) : super(key: key);
+class CardRewardDescs extends StatelessWidget {
+  const CardRewardDescs({ Key? key, required this.descs, }) : super(key: key);
 
   final List<String> descs;
-
-  @override
-  _CardRewardDescsState createState() => _CardRewardDescsState();
-}
-
-class _CardRewardDescsState extends State<CardRewardDescs> {
-  
-  bool needCollapse = false;
-  bool show = false;
-
-  @override
-  void initState(){
-    
-    int length = widget.descs.length;
-
-    setState((){
-
-      if(length <= 1){
-        show = true;
-        needCollapse = false;
-
-      }else {
-
-        show = false;
-        needCollapse = true;
-
-      }
-    }); 
-
-    super.initState();
-
-  }
-
   @override
   Widget build(BuildContext context) {
-    
-    List<String> showDescs = widget.descs;
-
-    // if(!show){
-    //   for(int i = 0; i < widget.descs.length; i++){  
-    //     if(i == 1)break;
-    //     showDescs.add(widget.descs[i]);
-    //   }
-    // }else {
-    //   showDescs = widget.descs;
-    // }
-
     return Container(
-      alignment: Alignment.centerLeft,
-      padding:const EdgeInsets.only(top:10,),
+      padding:const EdgeInsets.only(top:10),
       child:Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children:[
           const Text(
             "詳細說明",
              style: TextStyle(
-              fontFamily: "Netflix",
               fontWeight: FontWeight.w300,
-              fontSize: 14,
+              fontSize: 15,
               color: Colors.black87,
             ),
           ),
         
-          for(String desc in showDescs)
+          for(String desc in descs)
             CardRewardDesc(desc:desc),
         ],
       ),
@@ -752,27 +630,19 @@ class _CardRewardDescsState extends State<CardRewardDescs> {
   }
 }
 
-class CardRewardDesc extends StatelessWidget {
-  const CardRewardDesc({ Key? key, required this.desc, }) : super(key: key);
-  
-  final String desc;
 
+class CardRewardDesc extends StatelessWidget {
+  const CardRewardDesc({ Key? key, required this.desc }) : super(key: key);
+
+  final String desc;
   @override
   Widget build(BuildContext context) {
     return Container(
-      child:Text(
-        desc,
-        style: const TextStyle(
-          fontFamily: "Netflix",
-          fontWeight: FontWeight.w300,
-          fontSize: 14,
-          color: Colors.black87,
-        ),
-      ),
+      padding:const EdgeInsets.only(bottom:5, left:5),
+      child:Text(desc)
     );
   }
 }
-
 
 class CardRewardChannelBtnWrapper extends StatelessWidget {
   const CardRewardChannelBtnWrapper({ 
@@ -816,6 +686,12 @@ class CardRewardChannelBtnWrapper extends StatelessWidget {
           const SizedBox(height:10),
 
           const CardRewardChannelBtnTitle(),
+          
+          CardRewardReturnWrapper(cardRewardID: cardRewardID, totalBonus: totalBonus, calculateType:calculateType,),
+
+          const SizedBox(height:10,),
+
+          Divider(),
 
           CardRewardChannelBtnList(cardRewardID:cardRewardID, channelTypes:channelTypes),
 
@@ -824,21 +700,17 @@ class CardRewardChannelBtnWrapper extends StatelessWidget {
           ChannelListStf(cardRewardID:cardRewardID),
 
           const SizedBox(height:10,),
+
+
+
           if(hasTaskType)
             const CardRewardTaskBtnTitle(),
           
           if(hasTaskType)
-            CardRewardTaskBtnList(cardRewardID:cardRewardID, ),
-          
-
-          TaskList(),
-
-          // ChannelList(cardRewardID:cardRewardID),
+            CardRewardTaskList(cardRewardID: cardRewardID,),
 
 
-          CardRewardReturnWrapper(cardRewardID: cardRewardID, totalBonus: totalBonus, calculateType:calculateType,),
 
-          const SizedBox(height:20),
 
           const SizedBox(height:10),
           
@@ -848,6 +720,7 @@ class CardRewardChannelBtnWrapper extends StatelessWidget {
     );
   }
 }
+
 
 
 class ChannelListStf extends StatefulWidget {
@@ -877,8 +750,6 @@ class _ChannelListStfState extends State<ChannelListStf> {
     double channelListWidth = channelModels.length * 120; 
 
     double windowWidth = MediaQuery.of(context).size.width < 800 ? MediaQuery.of(context).size.width:800;
-
-    
 
     return Container(
       height:200,
@@ -1000,23 +871,6 @@ class _ChannelListStfState extends State<ChannelListStf> {
 
 
 
-class TaskList extends StatelessWidget {
-  const TaskList({ Key? key }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-
-      CardRewardViewModel cardRewardViewModel = Provider.of<CardRewardViewModel>(context);
-      String selectedCardRewardID = cardRewardViewModel.getSelectedCardRewardID();
-      String selectedTaskID = cardRewardViewModel.getSelectedTaskID();  
-
-      return Container(
-        alignment: Alignment.centerLeft,
-        child:ChannelTaskWrapper(cardRewardID: selectedCardRewardID, selectedTaskID: selectedTaskID,),
-      ); 
-  }
-}
-
 
 class EvaluationCardRewardTitle extends StatelessWidget {
   const EvaluationCardRewardTitle({ Key? key }) : super(key: key);
@@ -1082,6 +936,97 @@ class CardRewardChannelBtnList extends StatelessWidget {
 
 
 
+class CardRewardTaskList extends StatelessWidget {
+  const CardRewardTaskList({ Key? key, required this.cardRewardID }) : super(key: key);
+
+  final String cardRewardID;
+
+
+  @override
+  Widget build(BuildContext context) {
+    
+    CardRewardViewModel cardRewardViewModel = Provider.of<CardRewardViewModel>(context);
+
+    List<Task> tasks = cardRewardViewModel.getCardModel().getCardRewardTasksByChannelType(cardRewardID, 2);
+    
+
+    return Container(
+      child:Column(
+        children:[
+          
+          for(Task task in tasks)
+            CardRewardTask(task:task)
+        ]
+      )
+    );
+  }
+}
+
+
+class CardRewardTask extends StatelessWidget {
+  const CardRewardTask({ Key? key, required this.task }) : super(key: key);
+
+  final Task task;
+
+  @override
+  Widget build(BuildContext context) {
+    CardRewardViewModel cardRewardViewModel = Provider.of<CardRewardViewModel>(context);
+
+    String cardRewardID = cardRewardViewModel.getSelectedCardRewardID();
+
+    bool hasChosen = cardRewardViewModel.hasChosenCardRewardTaskID(cardRewardID, task.id!);
+
+    return Container(
+      child:Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children:[
+          Row(
+              children:[
+                if(hasChosen) 
+                  const Icon(
+                    size:20,
+                    color:Colors.red,
+                    Icons.favorite
+                  ),
+                if(!hasChosen) 
+                  const Icon(
+                    size:20,
+                    color:Colors.black,
+                    Icons.arrow_right
+                  ),
+                TextButton(
+                  onPressed: (){
+                    cardRewardViewModel.toggleChosenCardRewardTask(cardRewardID, task.id!);
+                  },
+                  child:Text(
+                    task.name!,
+                    style:const TextStyle(
+                      fontSize:20,
+                      fontWeight:FontWeight.w300,
+                    ),
+                  ),
+                )
+                
+              ]
+          ),
+          
+          for(String desc in task.descs!)
+            Container(
+              child:Text(
+                desc
+              ),
+              padding:const EdgeInsets.only(left:25,bottom:10,),
+            ),
+            
+          SizedBox(height:10,)
+        ]
+      )
+      
+    );
+  }
+}
+
+
 
 class CardRewardTaskBtnTitle extends StatelessWidget {
   const CardRewardTaskBtnTitle({ Key? key }) : super(key: key);
@@ -1102,88 +1047,6 @@ class CardRewardTaskBtnTitle extends StatelessWidget {
     );
   }
 }
-
-class CardRewardTaskBtnList extends StatelessWidget {
-  const CardRewardTaskBtnList({ Key? key, required this.cardRewardID, }) : super(key: key);
-
-  final String cardRewardID;
-
-  @override
-  Widget build(BuildContext context) {
-    
-    CardRewardViewModel cardRewardViewModel = Provider.of<CardRewardViewModel>(context);
-
-    List<Task> tasks = cardRewardViewModel.getCardModel().getCardRewardTasksByChannelType(cardRewardID, 2);
-    
-    return Container(
-      padding:const EdgeInsets.only(top:10),
-      alignment: Alignment.centerLeft,
-      child:Wrap(
-        spacing: 10,
-        runSpacing: 20,
-        children:[
-          for(Task t in tasks)
-            CardRewardTaskBtn(cardRewardID:cardRewardID, taskID:t.id ?? "", name:t.name ?? "")
-        ]
-      ),
-    );
-  }
-}
-
-
-
-
-class CardRewardTaskBtn extends StatelessWidget {
-  const CardRewardTaskBtn({ Key? key, required this.cardRewardID, required this.taskID, required this.name, }) : super(key: key);
-  
-  final String cardRewardID;
-  final String taskID;
-  final String name;
-
-  @override
-  Widget build(BuildContext context) {
-    
-    CardRewardViewModel cardRewardViewModel = Provider.of<CardRewardViewModel>(context);
-  
-    bool isSelected = cardRewardViewModel.hasSelectedTaskID(cardRewardID, taskID);
-    
-    bool hasChosen = cardRewardViewModel.hasChosenCardRewardTaskID(cardRewardID, taskID);
-    
-    return ElevatedButton(
-      style: isSelected ? 
-        ElevatedButton.styleFrom(
-          primary: hasChosen ? Colors.greenAccent[700]!:const Color(0xff2db3ff),
-          shape: RoundedRectangleBorder( 
-            borderRadius: BorderRadius.circular(10.0),
-          ),
-        )
-        :ElevatedButton.styleFrom(
-          primary: const Color(0xffFFFBFB),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0),),
-          side: BorderSide(width: 0.5, color: hasChosen ? Colors.greenAccent[700]!:const Color(0xff2db3ff),),
-        ),
-      onPressed: (){
-        cardRewardViewModel.toggleSelectedCardRewardTask(cardRewardID, taskID);
-      },
-      child:Text(
-        name,
-        style: isSelected ?
-          const TextStyle(
-            fontWeight: FontWeight.w100,
-            fontSize: 12,
-            color:Colors.white,
-          )
-          : TextStyle(
-            fontFamily: "Netflix",
-            fontWeight: FontWeight.w100,
-            fontSize: 12,
-            color: hasChosen ? Colors.greenAccent[700]!: const Color(0xff2db3ff),
-          ),
-      ),
-    );
-  }
-}
-
 
 
 class CardRewardChannelBtn extends StatelessWidget {
@@ -1433,9 +1296,6 @@ class DateItem extends StatelessWidget {
     );
   }
 }
-
-
-
 
 
 class EvaluateRewardReturnBtn extends StatelessWidget {
@@ -1689,291 +1549,11 @@ class ChannelToggleAllWidget extends StatelessWidget {
   }
 }
 
-// class ChannelItemList extends StatelessWidget {
-//   const ChannelItemList({ Key? key }) : super(key: key);
-
-//   @override
-//   Widget build(BuildContext context) {
-    
-//     CardRewardViewModel cardRewardViewModel = Provider.of<CardRewardViewModel>(context);
-
-//     int selectedChannelType = cardRewardViewModel.getSelectedChannelType();
-//     String selectedCardRewardID = cardRewardViewModel.getSelectedCardRewardID();
-    
-//     if(selectedChannelType == 2) {
-
-//       String selectedTaskID = cardRewardViewModel.getSelectedTaskID();  
-
-//       return Container(
-//         alignment: Alignment.centerLeft,
-//         child:ChannelTaskWrapper(cardRewardID: selectedCardRewardID, selectedTaskID: selectedTaskID,),
-//       );    
-
-//     }else {
-    
-//       List<ChannelModel> channelModels = cardRewardViewModel.getCardModel().getCardRewardChannelsByChannelType(selectedCardRewardID, selectedChannelType);
-
-//       return Container(
-//         alignment: Alignment.centerLeft,
-//         child:Wrap(
-//           children:[
-//             for(ChannelModel channelModel in channelModels)
-//               ChannelItem(channelModel:channelModel),
-//           ],
-//         ),
-//       );
-//     }
-//   }
-// }
 
 
 
-class ChannelTaskWrapper extends StatelessWidget {
-  const ChannelTaskWrapper({ Key? key, required this.cardRewardID, required this.selectedTaskID, }) : super(key: key);
-
-  final String cardRewardID;
-  final String selectedTaskID;
-
-  @override
-  Widget build(BuildContext context) {
-
-    CardRewardViewModel cardRewardViewModel = Provider.of<CardRewardViewModel>(context);
-    CardModel cardModel = cardRewardViewModel.getCardModel();
-    Task? task = cardModel.getSelectedTaskByID(cardRewardID, selectedTaskID);
-
-    if (task == null) {
-      return Container();
-    }else {
-
-      String name = task.name!;
-      List<String> descs = task.descs!;
-
-      return Column(
-        crossAxisAlignment:CrossAxisAlignment.start,
-        children:[
-          const SizedBox(height:10),
-          ChannelTaskTitle(taskID:task.id!, title:name),
-          const SizedBox(height:10),
-          ChannelTaskDesc(descs: descs,)
-        ]
-      );
-    }
-  }
-}
 
 
-class ChannelTaskDesc extends StatelessWidget {
-  const ChannelTaskDesc({ Key? key, required this.descs, }) : super(key: key);
-
-  final List<String> descs;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      alignment: Alignment.centerLeft,
-      padding:const EdgeInsets.only(left:10),
-      child:Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children:[
-          for(String desc in descs)
-            Text(desc)
-        ]
-      )
-    );
-  }
-}
-
-
-
-// class ChannelTaskList extends StatelessWidget {
-//   ChannelTaskList({ Key? key, required this.tasks, }) : super(key: key);
-
-//   final List<Task> tasks;
-
-//   final ScrollController _controller = ScrollController();
-//   late List _keys;
-
-//   void callbackPosition(String taskID){
-    
-//     double totalLength = 0.0;
-//     double currentLength = 0.0;
-    
-//     for(int i = 0; i < tasks.length; i++) {
-//         RenderBox box = _keys[i].currentContext.findRenderObject();
-//         totalLength += box.size.height;
-//     }
-
-//     for(int i = 0; i < tasks.length; i++) {
-//         if (tasks[i].id == taskID){
-//           break;
-//         }
-//         RenderBox box =_keys[i].currentContext.findRenderObject();
-//         currentLength += box.size.height;
-//       }
-      
-//       if(totalLength < 400){
-//         currentLength = 0;
-//       }else if(currentLength > (totalLength - 400)){
-//         currentLength = totalLength - 400;
-//       }
-
-//       _controller.animateTo(currentLength, duration:const Duration(milliseconds:500), curve: Curves.decelerate);
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-
-//     CardRewardViewModel cardRewardViewModel = Provider.of<CardRewardViewModel>(context);
-
-//     int size = tasks.length;
-//     _keys = [for (var i = 0; i < size; ++i) GlobalKey()];
-//     cardRewardViewModel.setCallbackPosition(callbackPosition);
-
-//     return Container(
-//       height:200,
-//       child:SingleChildScrollView(
-//         controller: _controller,
-//         child:Column(
-//           children:[
-//             for(int i = 0; i < tasks.length; i++)
-//               ChannelTask(key:_keys[i], task:tasks[i])
-//           ]
-//         ),
-//       )
-//     );
-//   }
-// }
-// class ChannelTask extends StatelessWidget {
-//   const ChannelTask({ Key? key, required this.task, }) : super(key: key);
-
-//   final Task task;
-
-//   @override
-//   Widget build(BuildContext context) {
-
-//     String name = task.name ?? "";
-//     List<String> descs = task.descs ?? [];
-    
-//     return Container(
-//       alignment: Alignment.centerLeft,
-//       child:Column(
-//         crossAxisAlignment: CrossAxisAlignment.start,
-//         children:[
-//           ChannelTaskTitle(taskID:task.id!, title:name),
-//           for(String desc in descs)
-//             Text(desc)  
-//         ]
-//       )
-//     );
-//   }
-// }
-
-class ChannelTaskTitle extends StatelessWidget {
-  const ChannelTaskTitle({ Key? key,required this.taskID, required this.title, }) : super(key: key);
-  
-  final String taskID;
-  final String title;
-  
-  @override
-  Widget build(BuildContext context) {
-
-    CardRewardViewModel cardRewardViewModel = Provider.of<CardRewardViewModel>(context);
-
-    String selectedCardRewardID = cardRewardViewModel.getSelectedCardRewardID();
-
-    bool hasChosenTaskID = cardRewardViewModel.hasChosenCardRewardTaskID(selectedCardRewardID, taskID);
-
-    return Container(
-      
-      child:TextButton(
-        onPressed: (){
-          cardRewardViewModel.toggleChosenCardRewardTask(selectedCardRewardID, taskID);
-        },
-        child:Container(
-          decoration: BoxDecoration(
-            border: hasChosenTaskID ? 
-              Border.all(
-                color: Colors.greenAccent[700]!,
-                width: 2,
-              ):
-              Border.all(
-                color: Colors.white12,
-                width: 2,
-              ),
-            borderRadius: const BorderRadius.all(
-              Radius.circular(10),
-            ),
-          ),
-          padding:const EdgeInsets.all(5.0),
-          child:Text(
-            title,
-            style: const TextStyle(
-              fontFamily: "Netflix",
-              fontWeight: FontWeight.w100,
-              fontSize: 20,
-              color:Colors.black87,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-// class ChannelItem extends StatelessWidget {
-//   const ChannelItem({ Key? key, required this.channelModel, }) : super(key: key);
-  
-//   final ChannelModel channelModel;
-
-//   @override
-//   Widget build(BuildContext context) {
-
-//     CardRewardViewModel cardRewardViewModel = Provider.of<CardRewardViewModel>(context);
-
-//     String cardRewardID = cardRewardViewModel.getSelectedCardRewardID();
-//     int channelType = cardRewardViewModel.getSelectedChannelType();
-
-//     String channelID = channelModel.id;
-//     String name = channelModel.name;
-
-//     bool hasChosenChannelID = cardRewardViewModel.hasChosenCardRewardChannel(cardRewardID, channelType, channelID);
-
-//     return Container(
-//       padding:const EdgeInsets.only(top:20,),
-//       child:TextButton(
-//         onPressed: (){
-//           cardRewardViewModel.toggleCardRewardChannel(cardRewardID, channelType, channelID);
-//         },
-//         child:Container(
-//           decoration: BoxDecoration(
-//             border: hasChosenChannelID ? 
-//               Border.all(
-//                 color: Colors.greenAccent[700]!,
-//                 width: 2,
-//               ):
-//               Border.all(
-//                 color: Colors.white12,
-//                 width: 2,
-//               ),
-//             borderRadius: const BorderRadius.all(
-//               Radius.circular(10),
-//             ),
-//           ),
-//           padding:const EdgeInsets.all(10.0),
-//           child:Text(
-//             name,
-//             style: const TextStyle(
-//               fontFamily: "Netflix",
-//               fontWeight: FontWeight.w100,
-//               fontSize: 12,
-//               color:Colors.black87,
-//             ),
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
 
 
 class CardOtherRewardWrapper extends StatelessWidget {
