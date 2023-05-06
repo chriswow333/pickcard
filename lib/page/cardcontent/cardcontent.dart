@@ -102,10 +102,14 @@ class CardRewardWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
+    bool showDetail = false;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: const [
         CardInfo(),
+        SizedBox(height:20),
+        CardFeatures(),
         SizedBox(height:20),
         CardFeatures(),
         CardRewardList(),
@@ -114,6 +118,7 @@ class CardRewardWrapper extends StatelessWidget {
     );
   }
 }
+
 
 class CardInfo extends StatelessWidget {
   const CardInfo({ 
@@ -440,6 +445,9 @@ class CardRewardItem extends StatelessWidget {
     }
 
 
+    bool showDetail = false;
+
+
     return Container(
       padding:const EdgeInsets.only(bottom:20),
       child:Container(
@@ -477,18 +485,62 @@ class CardRewardItem extends StatelessWidget {
                 endDate: endDate,
               ),
               
-              const SizedBox(height:5),
-              CardRewardDescs(descs:descs),
-              
-              const Divider(),
-
-              CardRewardChannelBtnWrapper(cardRewardID: cardRewardID, totalBonus: totalBonus, calculateType:calculateType),
-              
+              CardRewardDetailWrapper(
+                cardRewardID: cardRewardID,
+                totalBonus: totalBonus,
+                calculateType: calculateType,
+                descs: descs,
+                showDetail: showDetail,
+              ),
             ],
           ),
         ),
       ),
     );
+  }
+}
+
+class CardRewardDetailWrapper extends StatefulWidget {
+  const CardRewardDetailWrapper({ 
+    Key? key, 
+    this.cardRewardID, 
+    this.totalBonus, 
+    this.calculateType, 
+    this.descs,
+    this.showDetail
+   }) : super(key: key);
+  final cardRewardID;
+  final totalBonus;
+  final calculateType;
+  final descs;
+  final showDetail;
+
+
+  @override
+  _CardRewardDetailWrapperState createState() => _CardRewardDetailWrapperState();
+}
+
+class _CardRewardDetailWrapperState extends State<CardRewardDetailWrapper> {
+
+  @override
+  Widget build(BuildContext context) {
+    if(widget.showDetail) {
+      return Column(
+        children:[
+          const SizedBox(height:5),
+          CardRewardDescs(descs:widget.descs),
+          const Divider(),
+          CardRewardChannelBtnWrapper(
+            cardRewardID: widget.cardRewardID, 
+            totalBonus: widget.totalBonus, 
+            calculateType:widget.calculateType
+          ),
+        ]
+      );
+    }else{
+      return Container();
+    }
+    
   }
 }
 
