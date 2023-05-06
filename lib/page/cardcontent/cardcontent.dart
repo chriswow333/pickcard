@@ -110,8 +110,6 @@ class CardRewardWrapper extends StatelessWidget {
         CardInfo(),
         SizedBox(height:20),
         CardFeatures(),
-        SizedBox(height:20),
-        CardFeatures(),
         CardRewardList(),
         SizedBox(height:50),
       ], 
@@ -326,9 +324,6 @@ class CardFeatures extends StatelessWidget {
 
 
 
-
-
-
 class CardFeatureTitles extends StatelessWidget {
   const CardFeatureTitles({ Key? key, }) : super(key: key);
   
@@ -398,7 +393,7 @@ class CardRewardList extends StatelessWidget {
       child:Column(
         children:[
           for(CardRewardModel cardRewardModel in cardRewardModels) 
-            CardRewardItem(cardRewardModel:cardRewardModel),
+            CardRewardItemStf(cardRewardModel:cardRewardModel),
         ],
       ),
     );
@@ -406,37 +401,50 @@ class CardRewardList extends StatelessWidget {
 }
 
 
-class CardRewardItem extends StatelessWidget {
-  
-  const CardRewardItem({ 
-    Key? key, 
+class CardRewardItemStf extends StatefulWidget {
+  const CardRewardItemStf({ 
+    Key? key,
     required this.cardRewardModel, 
   }) : super(key: key);
 
   final CardRewardModel cardRewardModel;
 
   @override
+  _CardRewardItemStfState createState() => _CardRewardItemStfState();
+}
+
+class _CardRewardItemStfState extends State<CardRewardItemStf> {
+
+  late bool showDetail;
+
+  @override
+  initState(){
+    super.initState();
+    showDetail = false;
+  }
+
+  @override
   Widget build(BuildContext context) {
+
+    String title = widget.cardRewardModel.getTitle();
+
+    String cardRewardID = widget.cardRewardModel.getID();
+
+    List<String> descs = widget.cardRewardModel.getDescs();
     
-    String title = cardRewardModel.getTitle();
+    String startDate = widget.cardRewardModel.getStartDate();
+    String endDate = widget.cardRewardModel.getEndDate();
 
-    String cardRewardID = cardRewardModel.getID();
+    double totalBonus = widget.cardRewardModel.getTotalBonus();
 
-    List<String> descs = cardRewardModel.getDescs();
-    
-    String startDate = cardRewardModel.getStartDate();
-    String endDate = cardRewardModel.getEndDate();
+    int calculateType = widget.cardRewardModel.getCalculateType();
 
-    double totalBonus = cardRewardModel.getTotalBonus();
+    int rewardType = widget.cardRewardModel.getRewardType();
 
-    int calculateType = cardRewardModel.getCalculateType();
-
-    int rewardType = cardRewardModel.getRewardType();
-
-    List<int> limitTypes = cardRewardModel.getLimitTypes();
+    List<int> limitTypes = widget.cardRewardModel.getLimitTypes();
 
 
-    String feedbackTypeName = cardRewardModel.getFeedbackTypeName();
+    String feedbackTypeName = widget.cardRewardModel.getFeedbackTypeName();
 
     List<String> limitTypeNames = [];
 
@@ -445,7 +453,7 @@ class CardRewardItem extends StatelessWidget {
     }
 
 
-    bool showDetail = false;
+
 
 
     return Container(
@@ -468,7 +476,7 @@ class CardRewardItem extends StatelessWidget {
           ),
         ],
       ),
-        padding:const EdgeInsets.all(20.0),
+        // padding:const EdgeInsets.only(bottom:20.0),
         alignment: Alignment.centerLeft,
         width:MediaQuery.of(context).size.width,
         child:SingleChildScrollView(
@@ -483,15 +491,19 @@ class CardRewardItem extends StatelessWidget {
                 limitTypeNames: limitTypeNames,
                 startDate: startDate,
                 endDate: endDate,
+                onTapShowMore:(){
+                  setState(() {
+                    showDetail = !showDetail;  
+                  });
+                }
               ),
-              
-              CardRewardDetailWrapper(
-                cardRewardID: cardRewardID,
-                totalBonus: totalBonus,
-                calculateType: calculateType,
-                descs: descs,
-                showDetail: showDetail,
-              ),
+              if(showDetail)
+                  CardRewardDetailWrapper(
+                  cardRewardID: cardRewardID,
+                  totalBonus: totalBonus,
+                  calculateType: calculateType,
+                  descs: descs,
+                ),
             ],
           ),
         ),
@@ -500,47 +512,129 @@ class CardRewardItem extends StatelessWidget {
   }
 }
 
-class CardRewardDetailWrapper extends StatefulWidget {
-  const CardRewardDetailWrapper({ 
-    Key? key, 
-    this.cardRewardID, 
-    this.totalBonus, 
-    this.calculateType, 
-    this.descs,
-    this.showDetail
-   }) : super(key: key);
+// class CardRewardItem extends StatelessWidget {
+  
+//   const CardRewardItem({ 
+//     Key? key, 
+//     required this.cardRewardModel, 
+//   }) : super(key: key);
+
+//   final CardRewardModel cardRewardModel;
+
+//   @override
+//   Widget build(BuildContext context) {
+    
+//     String title = cardRewardModel.getTitle();
+
+//     String cardRewardID = cardRewardModel.getID();
+
+//     List<String> descs = cardRewardModel.getDescs();
+    
+//     String startDate = cardRewardModel.getStartDate();
+//     String endDate = cardRewardModel.getEndDate();
+
+//     double totalBonus = cardRewardModel.getTotalBonus();
+
+//     int calculateType = cardRewardModel.getCalculateType();
+
+//     int rewardType = cardRewardModel.getRewardType();
+
+//     List<int> limitTypes = cardRewardModel.getLimitTypes();
+
+
+//     String feedbackTypeName = cardRewardModel.getFeedbackTypeName();
+
+//     List<String> limitTypeNames = [];
+
+//     for(int limitType in limitTypes) {
+//       limitTypeNames.add(RewardTypeLimitTypeName.getRewardTypeLimitName(limitType));
+//     }
+
+
+//     bool showDetail = true;
+
+
+//     return Container(
+//       padding:const EdgeInsets.only(bottom:20),
+//       child:Container(
+//         decoration: BoxDecoration(
+//         color: Colors.white,
+//         borderRadius: const BorderRadius.only(
+//           topLeft: Radius.circular(10),
+//             topRight: Radius.circular(10),
+//             bottomLeft: Radius.circular(10),
+//             bottomRight: Radius.circular(10)
+//         ),
+//         boxShadow: [
+//           BoxShadow(
+//             color: Colors.grey.withOpacity(0.01),
+//             spreadRadius: 5,
+//             blurRadius: 7,
+//             offset: const Offset(0, 1), // changes position of shadow
+//           ),
+//         ],
+//       ),
+//         // padding:const EdgeInsets.only(bottom:20.0),
+//         alignment: Alignment.centerLeft,
+//         width:MediaQuery.of(context).size.width,
+//         child:SingleChildScrollView(
+//           child:Column(
+//             crossAxisAlignment: CrossAxisAlignment.start,
+//             children:[
+              
+//               CardRewardTitleWrapper(
+//                 title:title, 
+//                 rewardType: rewardType, 
+//                 feedbackTypeName: feedbackTypeName,
+//                 limitTypeNames: limitTypeNames,
+//                 startDate: startDate,
+//                 endDate: endDate,
+//                 onTapShowMore:(){
+//                   showDetail = !showDetail;
+//                 }
+//               ),
+              
+//               CardRewardDetailWrapper(
+//                 cardRewardID: cardRewardID,
+//                 totalBonus: totalBonus,
+//                 calculateType: calculateType,
+//                 descs: descs,
+//                 showDetail: showDetail,
+//               ),
+//             ],
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }
+
+
+class CardRewardDetailWrapper extends StatelessWidget {
+  const CardRewardDetailWrapper({ Key? key, this.cardRewardID, this.totalBonus, this.calculateType, this.descs }) : super(key: key);
+
   final cardRewardID;
   final totalBonus;
   final calculateType;
   final descs;
-  final showDetail;
-
-
-  @override
-  _CardRewardDetailWrapperState createState() => _CardRewardDetailWrapperState();
-}
-
-class _CardRewardDetailWrapperState extends State<CardRewardDetailWrapper> {
 
   @override
   Widget build(BuildContext context) {
-    if(widget.showDetail) {
-      return Column(
+    return Container(
+      padding:const EdgeInsets.only(left:20, right:20, bottom:20),
+      child:Column(
         children:[
           const SizedBox(height:5),
-          CardRewardDescs(descs:widget.descs),
+          CardRewardDescs(descs:descs),
           const Divider(),
           CardRewardChannelBtnWrapper(
-            cardRewardID: widget.cardRewardID, 
-            totalBonus: widget.totalBonus, 
-            calculateType:widget.calculateType
+            cardRewardID:cardRewardID, 
+            totalBonus: totalBonus, 
+            calculateType:calculateType
           ),
         ]
-      );
-    }else{
-      return Container();
-    }
-    
+      )
+    );
   }
 }
 
@@ -553,7 +647,8 @@ class CardRewardTitleWrapper extends StatelessWidget {
     required this.feedbackTypeName, 
     required this.limitTypeNames,
     required this.startDate,
-    required this.endDate,
+    required this.endDate, 
+    required this.onTapShowMore,
   }) : super(key: key);
 
   final String title;
@@ -563,47 +658,58 @@ class CardRewardTitleWrapper extends StatelessWidget {
   final String startDate;
   final String endDate;
 
+  final Function() onTapShowMore;
+
+
   @override
   Widget build(BuildContext context) {
 
     Color rewardTypeColor = RewardTypes.getRewardTypeColor(rewardType);
 
-    return Container(
-      child:Row(
-        children:[
-          Container(
-            padding:const EdgeInsets.only(top:5, bottom: 5, left:10, right:10),
-            decoration: BoxDecoration(
-              borderRadius: const BorderRadius.all(
-                 Radius.circular(10.0),
+    return TextButton(
+      onPressed: (){
+        onTapShowMore();
+      },
+      child:
+      Container(
+        padding:const EdgeInsets.all(10),
+        child:Row(
+          children:[
+            Container(
+              padding:const EdgeInsets.only(top:5, bottom: 5, left:10, right:10),
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.all(
+                  Radius.circular(10.0),
+                ),
+                color: rewardTypeColor,
               ),
-              color: rewardTypeColor,
+              
+              child:Text(
+                feedbackTypeName,
+                style: const TextStyle(
+                  fontWeight: FontWeight.w300,
+                  fontSize: 14,
+                  letterSpacing: 0.0,
+                  color: Colors.white,
+                ),
+              ), 
             ),
             
-            child:Text(
-              feedbackTypeName,
-              style: const TextStyle(
-                fontWeight: FontWeight.w300,
-                fontSize: 14,
-                letterSpacing: 0.0,
-                color: Colors.white,
-              ),
-            ), 
-          ),
-          
-          const SizedBox(width:15),
+            const SizedBox(width:15),
 
-          Expanded(
-            flex:3,
-            child:CardRewardTitle(title:title),
-          ),
-          
-          Expanded(
-            flex:1,
-            child:CardRewardDuration(startDate: startDate, endDate: endDate,),
-          ),
-        ]
-      ),
+            Expanded(
+              flex:3,
+              child:CardRewardTitle(title:title),
+            ),
+            
+            Expanded(
+              flex:1,
+              child:CardRewardDuration(startDate: startDate, endDate: endDate,),
+            ),
+          ]
+        ),
+      )
+      
       
     );
   }
