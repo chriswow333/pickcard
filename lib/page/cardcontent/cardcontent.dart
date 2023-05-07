@@ -828,10 +828,8 @@ class _ChannelListStfState extends State<ChannelListStf> {
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
-
 
     CardRewardViewModel cardRewardViewModel = Provider.of<CardRewardViewModel>(context);
     String selectedCardRewardID = cardRewardViewModel.getSelectedCardRewardID();
@@ -840,7 +838,7 @@ class _ChannelListStfState extends State<ChannelListStf> {
     if(selectedChannelType == 2)return Container();
     if (widget.cardRewardID != selectedCardRewardID)return Container();
     
-    if(originChannelModels.isEmpty){
+    if(originChannelModels.isEmpty || _selectedChannelType != selectedChannelType){
       originChannelModels = cardRewardViewModel.getCardModel().getCardRewardChannelsByChannelType(selectedCardRewardID, selectedChannelType);
       channelModels = originChannelModels;
     }
@@ -1001,10 +999,14 @@ class ChannelItemtitle extends StatefulWidget {
 class _ChannelItemtitleState extends State<ChannelItemtitle> {
 
   final TextEditingController _searchController = TextEditingController();
+  
+  int _selectedChannelType = 0;
+
 
   @override
   void initState(){
     super.initState();
+    _selectedChannelType = widget.selectedChannelType;
     _searchController.addListener(_listenKeyword);
   }
 
@@ -1016,6 +1018,11 @@ class _ChannelItemtitleState extends State<ChannelItemtitle> {
 
   @override
   Widget build(BuildContext context) {
+
+    if (_selectedChannelType != widget.selectedChannelType) {
+      _searchController.text = "";
+      _selectedChannelType = widget.selectedChannelType;
+    }
     return Container(
       padding:const EdgeInsets.only(top:15, bottom:15),
       child:Row(
