@@ -752,8 +752,23 @@ class CardRewardChannelBtnWrapper extends StatelessWidget {
     });
 
     return Container(
-      padding:const EdgeInsets.only(top:10),
+      padding:const EdgeInsets.all(10),
       alignment: Alignment.centerLeft,
+      decoration: BoxDecoration(
+        borderRadius: const BorderRadius.all(
+          Radius.circular(10),
+        ),
+        boxShadow: <BoxShadow>[
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.1),
+            blurRadius: 2,
+            // spreadRadius: 1,
+            offset: Offset(0, 3),
+          ),
+        ],
+        color:Colors.white,
+        // color:Colors.grey.withOpacity(0.1),
+      ),
       child:Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children:[
@@ -766,22 +781,17 @@ class CardRewardChannelBtnWrapper extends StatelessWidget {
           
           ChannelListStf(cardRewardID:cardRewardID),
           
-          const Divider(height:20,),
-
           if(hasTaskType)
             const CardRewardTaskBtnTitle(),
           
           if(hasTaskType)
             CardRewardTaskList(cardRewardID: cardRewardID,),
           
-          if(hasTaskType)
-            const Divider(height:20,),
-
-          const EvaluationCardRewardTitle(),
           
           CardRewardReturnWrapper(cardRewardID: cardRewardID, totalBonus: totalBonus, calculateType:calculateType,),
 
-          const Divider(height:20,),
+          SizedBox(height:20),
+
         ],
       ),
     );
@@ -918,10 +928,12 @@ class _ChannelListStfState extends State<ChannelListStf> {
                                   constraints: const BoxConstraints(
                                     maxWidth:70,
                                   ),
-                                  child:Text(
-                                    channelModel.name,
-                                    style: const TextStyle(
-                                      fontSize: 15,
+                                  child:FittedBox(
+                                    child:Text(
+                                      channelModel.name,
+                                      style: const TextStyle(
+                                        fontSize: 15,
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -1064,24 +1076,6 @@ class _ChannelItemtitleState extends State<ChannelItemtitle> {
 }
 
 
-class EvaluationCardRewardTitle extends StatelessWidget {
-  const EvaluationCardRewardTitle({ Key? key }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child:Text(
-        '回饋試算',
-        style: const TextStyle(
-          fontWeight: FontWeight.w300,
-          fontSize: 20,
-          letterSpacing: 0.0,
-          color: Colors.black87,
-        )
-      ),
-    );
-  }
-}
 
 class CardRewardChannelBtnTitle extends StatelessWidget {
   const CardRewardChannelBtnTitle({ Key? key }) : super(key: key);
@@ -1089,8 +1083,9 @@ class CardRewardChannelBtnTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      padding:const EdgeInsets.only(bottom:10),
       child:Text(
-        '精選通路',
+        '選通路',
         style: const TextStyle(
           fontFamily: "Netflix",
           fontWeight: FontWeight.w300,
@@ -1243,15 +1238,15 @@ class _CardRewardTaskStfState extends State<CardRewardTaskStf> {
               ),
             ]
           ),
+          const SizedBox(height:10),
           if(expand)
             for(String desc in widget.task.descs!)
               Container(
+                padding:const EdgeInsets.only(left:55,bottom:10,),
                 child:Text(
                   desc
                 ),
-                padding:const EdgeInsets.only(left:30,bottom:10,),
               ),
-          SizedBox(height:10,)
         ]
       )
       
@@ -1267,8 +1262,9 @@ class CardRewardTaskBtnTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      padding:const EdgeInsets.only(top:10, bottom:10),
       child:Text(
-        '優惠任務',
+        '選任務',
         style: const TextStyle(
           fontFamily: "Netflix",
           fontWeight: FontWeight.w300,
@@ -1349,11 +1345,11 @@ class CardRewardReturnWrapper extends StatelessWidget {
 
     bool initRewardReturn = cardRewardEvaluationViewModel.hasInitCardRewardEvaluation(cardRewardID);
 
-    String percentageDesc = "點我試算";
+    // String percentageDesc = "試算回饋金";
 
-    if(initRewardReturn){
-      percentageDesc = "${backBonusPercentage.roundToDouble()}%";
-    }
+    // if(initRewardReturn){
+    //   percentageDesc = "${backBonusPercentage.roundToDouble()}%";
+    // }
 
     return Container(
       child:Column(
@@ -1416,11 +1412,11 @@ class _CashItemStfState extends State<CashItemStf> {
       child:Row(
         children:[
           Container(
-            width:60,
+            width:80,
             child:Text(
               '消費金額',
               style: TextStyle(
-                fontSize: 15,
+                fontSize: 20,
               ),
             )
           ),
@@ -1437,7 +1433,7 @@ class _CashItemStfState extends State<CashItemStf> {
               border: InputBorder.none,  
             ),  
             style: const TextStyle(
-              fontSize: 15,
+              fontSize: 20,
             ),
             onChanged:(text){
               var cash = int.parse(text);
@@ -1466,18 +1462,18 @@ class DateItem extends StatelessWidget {
       child:Row(
         children:[
           SizedBox(
-            width:60,
+            width:80,
             child:const Text(
               '消費日期',
               style: TextStyle(
                 fontWeight: FontWeight.w300,
-                fontSize: 15,
+                fontSize: 20,
               ),
             )
           ),
           const SizedBox(width:15),
           Container(
-            width:160,
+            width:200,
             child:DateTimeField(
               resetIcon:null,
               initialValue: DateTime.now(),
@@ -1489,6 +1485,9 @@ class DateItem extends StatelessWidget {
                 errorBorder: InputBorder.none,
                 disabledBorder: InputBorder.none,
                 hintText: "",
+              ),
+              style: TextStyle(
+                fontSize: 20,
               ),
               onShowPicker: (context, currentValue) async {
                 
@@ -1541,7 +1540,7 @@ class EvaluateRewardReturnBtn extends StatelessWidget {
 
     return Container(
       height:40,
-      width:100,
+      width:120,
       child:ElevatedButton(
         style:ElevatedButton.styleFrom(
           primary: const Color(0xff2db3ff),
@@ -1552,7 +1551,7 @@ class EvaluateRewardReturnBtn extends StatelessWidget {
           cardRewardEvaluationViewModel.evaluateSpecifiedCardReward(context, cardRewardID);
         },
         child:const Text(
-        '點我試算',
+        '試算回饋金',
         style: TextStyle(
           fontWeight: FontWeight.w300,
           fontSize: 15,
@@ -1646,7 +1645,7 @@ class RewardReturnDesc extends StatelessWidget {
 
     String actualBackDesc = cardRewardEvaluationViewModel.getActualBackDesc(cardRewardID);
 
-    return Container(
+    return FittedBox(
       child:Text(
         actualBackDesc,
         style: const TextStyle(

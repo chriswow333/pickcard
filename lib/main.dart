@@ -35,11 +35,11 @@ class PickCardScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body:Container(
-        alignment: Alignment.topCenter,
-        padding: const EdgeInsets.only(top:20),
-        child: const SingleChildScrollView(
-          child:SizedBox(
+      body:SingleChildScrollView(
+        child: Container(
+          alignment: Alignment.topCenter,
+          padding: const EdgeInsets.only(top:20),
+          child:const SizedBox(
             width:800,
             child: PickcardPage(),
           )
@@ -56,11 +56,11 @@ class CardContentScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        alignment: Alignment.topCenter,
-        padding: const EdgeInsets.only(top:20),
-        child: const SingleChildScrollView(
-          child: SizedBox(
+      body:SingleChildScrollView(
+        child:Container(
+          alignment: Alignment.topCenter,
+          padding: const EdgeInsets.only(top:20),
+          child: const SizedBox(
             width:800,
             child:CardContentPage(),
           ),
