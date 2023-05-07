@@ -774,7 +774,8 @@ class CardRewardChannelBtnWrapper extends StatelessWidget {
           if(hasTaskType)
             CardRewardTaskList(cardRewardID: cardRewardID,),
           
-          const Divider(height:20,),
+          if(hasTaskType)
+            const Divider(height:20,),
 
           const EvaluationCardRewardTitle(),
           
