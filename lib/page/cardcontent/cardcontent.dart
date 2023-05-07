@@ -472,34 +472,32 @@ class _CardRewardItemStfState extends State<CardRewardItemStf> {
           ),
         ],
       ),
-        // padding:const EdgeInsets.only(bottom:20.0),
-        alignment: Alignment.centerLeft,
-        width:MediaQuery.of(context).size.width,
-        child:SingleChildScrollView(
-          child:Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children:[
-              
-              CardRewardTitleWrapperStf(
-                title:title, 
-                rewardType: rewardType, 
-                feedbackTypeName: feedbackTypeName,
-                limitTypeNames: limitTypeNames,
-                startDate: startDate,
-                endDate: endDate,
-                onTapShowMore:(){
-                  setState(() {
-                    showDetail = !showDetail;  
-                  });
-                }
+      alignment: Alignment.centerLeft,
+      width:MediaQuery.of(context).size.width,
+      child:SingleChildScrollView(
+        child:Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children:[
+            CardRewardTitleWrapperStf(
+              title:title, 
+              rewardType: rewardType, 
+              feedbackTypeName: feedbackTypeName,
+              limitTypeNames: limitTypeNames,
+              startDate: startDate,
+              endDate: endDate,
+              onTapShowMore:(){
+                setState(() {
+                  showDetail = !showDetail;  
+                });
+              }
+            ),
+            if(showDetail)
+                CardRewardDetailWrapper(
+                cardRewardID: cardRewardID,
+                totalBonus: totalBonus,
+                calculateType: calculateType,
+                descs: descs,
               ),
-              if(showDetail)
-                  CardRewardDetailWrapper(
-                  cardRewardID: cardRewardID,
-                  totalBonus: totalBonus,
-                  calculateType: calculateType,
-                  descs: descs,
-                ),
             ],
           ),
         ),
@@ -524,7 +522,6 @@ class CardRewardDetailWrapper extends StatelessWidget {
       child:Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children:[
-          const Divider(),
           CardRewardChannelBtnWrapper(
             cardRewardID:cardRewardID, 
             totalBonus: totalBonus, 
@@ -583,17 +580,17 @@ class _CardRewardTitleWrapperStfState extends State<CardRewardTitleWrapperStf> {
         child:Row(
           children:[
             if(!arrowExpand)
-              Icon(
+              const Icon(
                 Icons.arrow_right,
                 color: Colors.black,
               ),
             if(arrowExpand) 
-              Icon(
+              const Icon(
                 Icons.arrow_drop_down,
                 color:Colors.black,
               ),
 
-            SizedBox(width:5),
+            const SizedBox(width:5),
             Container(
               padding:const EdgeInsets.only(top:5, bottom: 5, left:10, right:10),
               decoration: BoxDecoration(
@@ -696,7 +693,7 @@ class CardRewardDescs extends StatelessWidget {
             "詳細說明",
              style: TextStyle(
               fontWeight: FontWeight.w300,
-              fontSize: 15,
+              fontSize: 20,
               color: Colors.black87,
             ),
           ),
@@ -755,29 +752,18 @@ class CardRewardChannelBtnWrapper extends StatelessWidget {
     });
 
     return Container(
+      padding:const EdgeInsets.only(top:10),
       alignment: Alignment.centerLeft,
       child:Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children:[
-
-          const EvaluationCardRewardTitle(),
-
-          const SizedBox(height:10),
-
           
-          CardRewardReturnWrapper(cardRewardID: cardRewardID, totalBonus: totalBonus, calculateType:calculateType,),
-
-          const SizedBox(height:10,),
-
-          const Divider(),
-
           const CardRewardChannelBtnTitle(),
 
           CardRewardChannelBtnList(cardRewardID:cardRewardID, channelTypes:channelTypes),
 
-          const SizedBox(height:10,),
+          const SizedBox(height:20,),
           
-
           ChannelListStf(cardRewardID:cardRewardID),
 
           const SizedBox(height:10,),
@@ -788,8 +774,11 @@ class CardRewardChannelBtnWrapper extends StatelessWidget {
           if(hasTaskType)
             CardRewardTaskList(cardRewardID: cardRewardID,),
 
+          const EvaluationCardRewardTitle(),
 
-
+          const SizedBox(height:10),
+          
+          CardRewardReturnWrapper(cardRewardID: cardRewardID, totalBonus: totalBonus, calculateType:calculateType,),
 
           const SizedBox(height:10),
           
@@ -812,11 +801,15 @@ class ChannelListStf extends StatefulWidget {
 }
 
 class _ChannelListStfState extends State<ChannelListStf> {
+
+  int _selectedChannelType = 0; 
+  
+  ScrollController scrollController = ScrollController();
+
   @override
   Widget build(BuildContext context) {
-    
-    final ScrollController scrollController = ScrollController();
-    
+
+
     CardRewardViewModel cardRewardViewModel = Provider.of<CardRewardViewModel>(context);
     String selectedCardRewardID = cardRewardViewModel.getSelectedCardRewardID();
     int selectedChannelType = cardRewardViewModel.getSelectedChannelType();
@@ -830,9 +823,27 @@ class _ChannelListStfState extends State<ChannelListStf> {
 
     double windowWidth = MediaQuery.of(context).size.width < 800 ? MediaQuery.of(context).size.width:800;
 
+    if( _selectedChannelType != 0 && _selectedChannelType != selectedChannelType) {
+      scrollController.jumpTo(0);  
+    }
+
+    _selectedChannelType = selectedChannelType;
+
     return Container(
       child:Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children:[
+          Container(
+            padding:const EdgeInsets.only(bottom:10, left:20,),
+            child:Text(
+              Channels.getChannelTypeName(_selectedChannelType),
+              style: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w300,
+              ),
+            ),
+          ), 
+          
           SingleChildScrollView(
             controller: scrollController,
             scrollDirection:Axis.horizontal,
@@ -851,8 +862,11 @@ class _ChannelListStfState extends State<ChannelListStf> {
                             width:70,
                             height:70,
                             child:Image(
-                              image: AssetImage('images/channel/'+selectedChannelType.toString() + 
-                              '/'+channelModel.id +'.png')),
+                              image: AssetImage(
+                                'images/channel/'+selectedChannelType.toString() + 
+                                '/'+channelModel.id +'.png'
+                              )
+                            ),
                           ),
                           const SizedBox(height:5),
                           Container(
@@ -880,17 +894,17 @@ class _ChannelListStfState extends State<ChannelListStf> {
                                     Icons.favorite_border_outlined
                                   )
                                 ),
-                                  ConstrainedBox(
-                                    constraints: const BoxConstraints(
-                                      maxWidth:70,
-                                    ),
-                                    child:Text(
-                                      channelModel.name,
-                                      style: const TextStyle(
-                                        fontSize: 15,
-                                      ),
+                                ConstrainedBox(
+                                  constraints: const BoxConstraints(
+                                    maxWidth:70,
+                                  ),
+                                  child:Text(
+                                    channelModel.name,
+                                    style: const TextStyle(
+                                      fontSize: 15,
                                     ),
                                   ),
+                                ),
                               ],
                             )
                           ),
@@ -1007,7 +1021,7 @@ class CardRewardChannelBtnList extends StatelessWidget {
           for(int channelType in channelTypes)
             CardRewardChannelBtn(cardRewardID:cardRewardID, channelType:channelType,),
         ],
-      )
+      ),
     );
   }
 }
@@ -1026,14 +1040,12 @@ class CardRewardTaskList extends StatelessWidget {
     CardRewardViewModel cardRewardViewModel = Provider.of<CardRewardViewModel>(context);
 
     List<Task> tasks = cardRewardViewModel.getCardModel().getCardRewardTasksByChannelType(cardRewardID, 2);
-    
 
     return Container(
       child:Column(
         children:[
-          
           for(Task task in tasks)
-            CardRewardTask(task:task)
+            CardRewardTaskStf(task:task)
         ]
       )
     );
@@ -1041,10 +1053,19 @@ class CardRewardTaskList extends StatelessWidget {
 }
 
 
-class CardRewardTask extends StatelessWidget {
-  const CardRewardTask({ Key? key, required this.task }) : super(key: key);
+class CardRewardTaskStf extends StatefulWidget {
+  const CardRewardTaskStf({ Key? key, required this.task, }) : super(key: key);
 
   final Task task;
+
+
+  @override
+  _CardRewardTaskStfState createState() => _CardRewardTaskStfState();
+}
+
+class _CardRewardTaskStfState extends State<CardRewardTaskStf> {
+
+  bool expand = true;
 
   @override
   Widget build(BuildContext context) {
@@ -1052,50 +1073,84 @@ class CardRewardTask extends StatelessWidget {
 
     String cardRewardID = cardRewardViewModel.getSelectedCardRewardID();
 
-    bool hasChosen = cardRewardViewModel.hasChosenCardRewardTaskID(cardRewardID, task.id!);
+    bool hasChosen = cardRewardViewModel.hasChosenCardRewardTaskID(cardRewardID, widget.task.id!);
 
     return Container(
       child:Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children:[
           Row(
-              children:[
-                if(hasChosen) 
-                  const Icon(
-                    size:20,
-                    color:Colors.red,
-                    Icons.favorite
+            children:[
+              Container(
+                width:20,
+                child:TextButton(
+                  style:TextButton.styleFrom(
+                    padding: EdgeInsets.zero,
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    alignment: Alignment.centerLeft
                   ),
-                if(!hasChosen) 
+                  onPressed: (){
+                    setState(() {
+                      expand = !expand;
+                    });
+                  }, 
+                  child: expand ? 
                   const Icon(
-                    size:20,
+                    color:Colors.black,
+                    Icons.arrow_drop_down,
+                  )
+                  :const Icon(
                     color:Colors.black,
                     Icons.arrow_right
                   ),
-                TextButton(
-                  onPressed: (){
-                    cardRewardViewModel.toggleChosenCardRewardTask(cardRewardID, task.id!);
-                  },
-                  child:Text(
-                    task.name!,
-                    style:const TextStyle(
-                      fontSize:20,
-                      fontWeight:FontWeight.w300,
-                    ),
-                  ),
-                )
-                
-              ]
-          ),
-          
-          for(String desc in task.descs!)
-            Container(
-              child:Text(
-                desc
+                ),
               ),
-              padding:const EdgeInsets.only(left:25,bottom:10,),
-            ),
-            
+              Expanded(
+                flex:9,
+                child:TextButton(
+                  onPressed: (){
+                    cardRewardViewModel.toggleChosenCardRewardTask(cardRewardID, widget.task.id!);
+                  },
+                  child:Row(
+                    children:[
+                      if(hasChosen) 
+                        const Icon(
+                            size:20,
+                            color:Colors.red,
+                            Icons.favorite
+                          ),
+                      
+                      if(!hasChosen) 
+                         const Icon(
+                            size:20,
+                            color:Colors.red,
+                            Icons.favorite_border_rounded
+                          ),
+                      const SizedBox(width:5),
+                      Expanded(
+                        flex:20,
+                        child:Text(
+                          widget.task.name!,
+                          style:const TextStyle(
+                            fontSize:20,
+                            fontWeight:FontWeight.w300,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ]
+          ),
+          if(expand)
+            for(String desc in widget.task.descs!)
+              Container(
+                child:Text(
+                  desc
+                ),
+                padding:const EdgeInsets.only(left:30,bottom:10,),
+              ),
           SizedBox(height:10,)
         ]
       )
@@ -1140,34 +1195,35 @@ class CardRewardChannelBtn extends StatelessWidget {
 
     CardRewardViewModel cardRewardViewModel = Provider.of<CardRewardViewModel>(context);
 
-    bool isSelected = cardRewardViewModel.hasSelectedCardRewardChannelType(cardRewardID, channelType);
-
     bool hasChosen = cardRewardViewModel.hasChosenCardRewardChannelType(cardRewardID, channelType);
-
-    ChannelTypeModel channelTypeModel = ChannelTypeModels.getChannelTypeModel(channelType);
 
     IconData icon = ChannelTypeModels.getChannelTypeIconModels()[channelType]!;
 
     return TextButton(
       onPressed: (){
-
         cardRewardViewModel.toggleSelectedCardRewardChannelType(cardRewardID, channelType);
-
       },
       child:Column(
         children:[
-           Icon(
-                icon,
-                color: hasChosen ? Colors.greenAccent[700]!: const Color(0xff2db3ff),
-                size: 35.0,
-              ),
-              Text(
-                channelTypeName,
-                style: TextStyle(
-                  fontSize: 15,
-                  color: hasChosen ? Colors.greenAccent[700]!:const Color(0xff2db3ff),
-                ),
-              ),
+          if(hasChosen) 
+            Icon(
+              Icons.check_circle_outline_outlined,
+              color:Colors.greenAccent[700],
+              size: 35.0,
+            ),
+          if(!hasChosen)
+            Icon(
+              icon,
+              color:const Color(0xff2db3ff),
+              size: 35.0,
+            ),
+          Text(
+            channelTypeName,
+            style: TextStyle(
+              fontSize: 15,
+              color: hasChosen ? Colors.greenAccent[700]!:const Color(0xff2db3ff),
+            ),
+          ),
         ]
       ),
     );
@@ -1261,7 +1317,12 @@ class _CashItemStfState extends State<CashItemStf> {
         children:[
           Container(
             width:60,
-            child:Text('消費金額')
+            child:Text(
+              '消費金額',
+              style: TextStyle(
+                fontSize: 15,
+              ),
+            )
           ),
           const SizedBox(width:15,),
           Container(
@@ -1301,12 +1362,10 @@ class DateItem extends StatelessWidget {
   Widget build(BuildContext context) {
     
     EffectiveTimeViewModel effectiveTimeViewModel = Provider.of<EffectiveTimeViewModel>(context);
-
-
     return Container(
       child:Row(
         children:[
-          Container(
+          SizedBox(
             width:60,
             child:const Text(
               '消費日期',
@@ -1317,8 +1376,7 @@ class DateItem extends StatelessWidget {
             )
           ),
           const SizedBox(width:15),
-          SizedBox(
-            height:32,
+          Container(
             width:160,
             child:DateTimeField(
               resetIcon:null,
