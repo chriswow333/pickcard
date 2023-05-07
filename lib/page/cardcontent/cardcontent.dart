@@ -493,11 +493,11 @@ class _CardRewardItemStfState extends State<CardRewardItemStf> {
             ),
             if(showDetail)
                 CardRewardDetailWrapper(
-                cardRewardID: cardRewardID,
-                totalBonus: totalBonus,
-                calculateType: calculateType,
-                descs: descs,
-              ),
+                  cardRewardID: cardRewardID,
+                  totalBonus: totalBonus,
+                  calculateType: calculateType,
+                  descs: descs,
+                ),
             ],
           ),
         ),
@@ -762,27 +762,25 @@ class CardRewardChannelBtnWrapper extends StatelessWidget {
 
           CardRewardChannelBtnList(cardRewardID:cardRewardID, channelTypes:channelTypes),
 
-          const SizedBox(height:20,),
+          const SizedBox(height:10,),
           
           ChannelListStf(cardRewardID:cardRewardID),
-
-          const SizedBox(height:10,),
+          
+          const Divider(height:20,),
 
           if(hasTaskType)
             const CardRewardTaskBtnTitle(),
           
           if(hasTaskType)
             CardRewardTaskList(cardRewardID: cardRewardID,),
+          
+          const Divider(height:20,),
 
           const EvaluationCardRewardTitle(),
-
-          const SizedBox(height:10),
           
           CardRewardReturnWrapper(cardRewardID: cardRewardID, totalBonus: totalBonus, calculateType:calculateType,),
 
-          const SizedBox(height:10),
-          
-          const Divider(),
+          const Divider(height:20,),
         ],
       ),
     );
@@ -802,9 +800,34 @@ class ChannelListStf extends StatefulWidget {
 
 class _ChannelListStfState extends State<ChannelListStf> {
 
-  int _selectedChannelType = 0; 
+  int _selectedChannelType = 0;
   
   ScrollController scrollController = ScrollController();
+
+  List<CardContentChannelModel> originChannelModels = [];
+
+  List<CardContentChannelModel> channelModels = [];
+
+  void changeKeyword(String keyWord){
+
+    List<CardContentChannelModel> tempChannelItemList = [];
+
+    if(keyWord.isNotEmpty) {
+      final keywordRegxp = RegExp(r".*(" + keyWord+ ").*", caseSensitive:false);
+      for(CardContentChannelModel c in originChannelModels) {
+        if(keywordRegxp.hasMatch(c.name)){
+          tempChannelItemList.add(c);
+        }
+      }
+    } else {
+      tempChannelItemList = originChannelModels;
+    }
+
+    setState((){
+      channelModels = tempChannelItemList;
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -817,8 +840,11 @@ class _ChannelListStfState extends State<ChannelListStf> {
     if(selectedChannelType == 2)return Container();
     if (widget.cardRewardID != selectedCardRewardID)return Container();
     
-    List<CardContentChannelModel> channelModels = cardRewardViewModel.getCardModel().getCardRewardChannelsByChannelType(selectedCardRewardID, selectedChannelType);
-
+    if(originChannelModels.isEmpty){
+      originChannelModels = cardRewardViewModel.getCardModel().getCardRewardChannelsByChannelType(selectedCardRewardID, selectedChannelType);
+      channelModels = originChannelModels;
+    }
+    
     double channelListWidth = channelModels.length * 120; 
 
     double windowWidth = MediaQuery.of(context).size.width < 800 ? MediaQuery.of(context).size.width:800;
@@ -833,16 +859,11 @@ class _ChannelListStfState extends State<ChannelListStf> {
       child:Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children:[
-          Container(
-            padding:const EdgeInsets.only(bottom:10, left:20,),
-            child:Text(
-              Channels.getChannelTypeName(_selectedChannelType),
-              style: TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.w300,
-              ),
-            ),
-          ), 
+          ChannelItemtitle(
+            selectedChannelType: _selectedChannelType, 
+            changeKeyword: changeKeyword,
+
+          ),
           
           SingleChildScrollView(
             controller: scrollController,
@@ -963,6 +984,77 @@ class _ChannelListStfState extends State<ChannelListStf> {
 
 
 
+class ChannelItemtitle extends StatefulWidget {
+  const ChannelItemtitle({ 
+    Key? key, this.selectedChannelType, 
+    required this.changeKeyword 
+  }) : super(key: key);
+
+  final selectedChannelType;
+  
+  final Function(String keyword) changeKeyword;
+
+  @override
+  _ChannelItemtitleState createState() => _ChannelItemtitleState();
+}
+
+class _ChannelItemtitleState extends State<ChannelItemtitle> {
+
+  final TextEditingController _searchController = TextEditingController();
+
+  @override
+  void initState(){
+    super.initState();
+    _searchController.addListener(_listenKeyword);
+  }
+
+
+  void _listenKeyword(){
+    widget.changeKeyword(_searchController.text);
+  }
+
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding:const EdgeInsets.only(top:15, bottom:15),
+      child:Row(
+        children:[
+          Container(
+            padding:const EdgeInsets.only(bottom:10, left:20,),
+            child:Text(
+              Channels.getChannelTypeName(widget.selectedChannelType),
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.w300,
+              ),
+            ),
+          ), 
+          Container(
+            padding:const EdgeInsets.only(bottom:7, left:10,),
+            child:Icon(
+              Icons.search,
+              color:Colors.black45,
+            ),
+          ),
+          Container(
+            padding:const EdgeInsets.only(bottom:5),
+            width:100,
+            child:TextField(
+              controller:_searchController,
+              decoration: InputDecoration(
+                isDense: true,
+                // contentPadding: EdgeInsets.zero,
+              ),
+            ),
+          )
+
+        ]
+      )
+    );
+  }
+}
+
 
 class EvaluationCardRewardTitle extends StatelessWidget {
   const EvaluationCardRewardTitle({ Key? key }) : super(key: key);
@@ -971,7 +1063,7 @@ class EvaluationCardRewardTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       child:Text(
-        '優惠通路試算',
+        '回饋試算',
         style: const TextStyle(
           fontWeight: FontWeight.w300,
           fontSize: 20,
@@ -1440,6 +1532,7 @@ class EvaluateRewardReturnBtn extends StatelessWidget {
     CardRewardEvaluationViewModel cardRewardEvaluationViewModel = Provider.of<CardRewardEvaluationViewModel>(context);
 
     return Container(
+      height:40,
       width:100,
       child:ElevatedButton(
         style:ElevatedButton.styleFrom(
@@ -1453,8 +1546,8 @@ class EvaluateRewardReturnBtn extends StatelessWidget {
         child:const Text(
         '點我試算',
         style: TextStyle(
-          fontWeight: FontWeight.w100,
-          fontSize: 12,
+          fontWeight: FontWeight.w300,
+          fontSize: 15,
           color:Colors.white,
         ),
         ),
