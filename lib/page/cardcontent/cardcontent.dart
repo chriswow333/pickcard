@@ -138,14 +138,17 @@ class CardInfo extends StatelessWidget {
       alignment: Alignment.centerLeft,
       child:Row(
         mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children:[
-          Column(
-            children:[
-              CardIcon(imagePath: imagePath,),
-              CardTitle(bankName: bankName,cardName: cardName,),
-            ],
+          Container(
+            child:Column(
+              children:[
+                CardIcon(imagePath: imagePath,),
+                CardTitle(bankName: bankName,cardName: cardName,),
+              ],
+            ),
           ),
+          
           const SizedBox(width:20,),
           CardDescs(descs:descs),
         ],
@@ -163,7 +166,7 @@ class CardIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       child:Image(
-        width:200,
+        width:150,
         image: AssetImage('images/' + imagePath),
     )
     );
@@ -186,7 +189,7 @@ class CardTitle extends StatelessWidget {
             cardName,
             style: const TextStyle(
               fontWeight: FontWeight.w300,
-              fontSize: 20,
+              fontSize: 15,
               color: Colors.black87,
             ),
           ),
@@ -194,7 +197,7 @@ class CardTitle extends StatelessWidget {
             bankName,
             style: const TextStyle(
               fontWeight: FontWeight.w300,
-              fontSize: 20,
+              fontSize: 15,
               color: Colors.black87,
             ),
           ),
@@ -247,7 +250,7 @@ class CardDesc extends StatelessWidget {
                   desc,
                   style: const TextStyle(
                     fontWeight: FontWeight.w300,
-                    fontSize: 20,
+                    fontSize: 15,
                     color: Colors.black87,
                   ),
                 ),
@@ -644,7 +647,7 @@ class CardRewardTitle extends StatelessWidget {
         title,
         style: const TextStyle(
           fontWeight: FontWeight.w300,
-          fontSize: 20,
+          fontSize: 15,
           letterSpacing: 0.0,
           color: Colors.black87,
         ),
@@ -693,7 +696,7 @@ class CardRewardDescs extends StatelessWidget {
             "詳細說明",
              style: TextStyle(
               fontWeight: FontWeight.w300,
-              fontSize: 20,
+              fontSize: 15,
               color: Colors.black87,
             ),
           ),
@@ -889,8 +892,8 @@ class _ChannelListStfState extends State<ChannelListStf> {
                       child:Column(
                         children:[
                           Container(
-                            width:70,
-                            height:70,
+                            width:50,
+                            height:50,
                             child:Image(
                               image: AssetImage(
                                 'images/channel/'+selectedChannelType.toString() + 
@@ -1045,7 +1048,7 @@ class _ChannelItemtitleState extends State<ChannelItemtitle> {
             child:Text(
               Channels.getChannelTypeName(widget.selectedChannelType),
               style: TextStyle(
-                fontSize: 20,
+                fontSize: 15,
                 fontWeight: FontWeight.w300,
               ),
             ),
@@ -1089,7 +1092,7 @@ class CardRewardChannelBtnTitle extends StatelessWidget {
         style: const TextStyle(
           fontFamily: "Netflix",
           fontWeight: FontWeight.w300,
-          fontSize: 20,
+          fontSize: 15,
           letterSpacing: 0.0,
           color: Colors.black87,
         ),
@@ -1227,7 +1230,7 @@ class _CardRewardTaskStfState extends State<CardRewardTaskStf> {
                         child:Text(
                           widget.task.name!,
                           style:const TextStyle(
-                            fontSize:20,
+                            fontSize:15,
                             fontWeight:FontWeight.w300,
                           ),
                         ),
@@ -1268,7 +1271,7 @@ class CardRewardTaskBtnTitle extends StatelessWidget {
         style: const TextStyle(
           fontFamily: "Netflix",
           fontWeight: FontWeight.w300,
-          fontSize: 20,
+          fontSize: 15,
           letterSpacing: 0.0,
           color: Colors.black87,
         ),
@@ -1416,7 +1419,7 @@ class _CashItemStfState extends State<CashItemStf> {
             child:Text(
               '消費金額',
               style: TextStyle(
-                fontSize: 20,
+                fontSize: 15,
               ),
             )
           ),
@@ -1433,7 +1436,7 @@ class _CashItemStfState extends State<CashItemStf> {
               border: InputBorder.none,  
             ),  
             style: const TextStyle(
-              fontSize: 20,
+              fontSize: 15,
             ),
             onChanged:(text){
               var cash = int.parse(text);
@@ -1467,7 +1470,7 @@ class DateItem extends StatelessWidget {
               '消費日期',
               style: TextStyle(
                 fontWeight: FontWeight.w300,
-                fontSize: 20,
+                fontSize: 15,
               ),
             )
           ),
@@ -1487,7 +1490,7 @@ class DateItem extends StatelessWidget {
                 hintText: "",
               ),
               style: TextStyle(
-                fontSize: 20,
+                fontSize: 15,
               ),
               onShowPicker: (context, currentValue) async {
                 
@@ -1592,7 +1595,7 @@ class RewardReturnPercentage extends StatelessWidget {
             '${backBonus}%',
             style: const TextStyle(
               fontWeight: FontWeight.w300,
-              fontSize: 20,
+              fontSize: 15,
               letterSpacing: 0.0,
               color: Colors.black87,
             ),
@@ -1614,7 +1617,7 @@ class RewardReturnPercentage extends StatelessWidget {
             style: const TextStyle(
               fontFamily: "Netflix",
               fontWeight: FontWeight.w300,
-              fontSize: 20,
+              fontSize: 15,
               letterSpacing: 0.0,
               color: Colors.black87,
             ),
@@ -1651,7 +1654,7 @@ class RewardReturnDesc extends StatelessWidget {
         style: const TextStyle(
           fontFamily: "Netflix",
           fontWeight: FontWeight.w300,
-          fontSize: 20,
+          fontSize: 15,
           letterSpacing: 0.0,
           color: Colors.black87,
         ),
@@ -1687,7 +1690,7 @@ class ChannelTitle extends StatelessWidget {
             style: const TextStyle(
               fontFamily: "Netflix",
               fontWeight: FontWeight.w300,
-              fontSize: 20,
+              fontSize: 15,
               letterSpacing: 0.0,
               color: Colors.black87,
             ),
@@ -1837,7 +1840,7 @@ class CardOtherReward extends StatelessWidget {
               style: const TextStyle(
                 fontFamily: "Netflix",
                 fontWeight: FontWeight.w300,
-                fontSize: 20,
+                fontSize: 15,
                 letterSpacing: 0.0,
                 color: Colors.black87,
               ),
