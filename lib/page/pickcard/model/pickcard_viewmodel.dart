@@ -256,7 +256,7 @@ class PickcardViewModel extends ChangeNotifier{
     mobilepayViewModel.fetchMobilepays().then((value) => value);
 
     EcommerceObserver ecommerceViewModel = Provider.of<EcommerceObserver>(context);
-    ecommerceViewModel.fetchEcommerces();
+    ecommerceViewModel.fetchEcommerces(0);
 
     DeliveryObserver deliveryViewModel = Provider.of<DeliveryObserver>(context);
     deliveryViewModel.fetchDeliveries();
@@ -811,11 +811,11 @@ class PickcardViewModel extends ChangeNotifier{
         return mobilepays;
       case 4:
         final ecommerceViewModel = Provider.of<EcommerceObserver>(context, listen:false); 
-        final ecommerces = ecommerceViewModel.ecommerces;
-        if (ecommerces == null || ecommerces.result == null) {
-          ecommerceViewModel.fetchEcommerces();
+        final ecommerceFuture = ecommerceViewModel.ecommerceFuture;
+        if(ecommerceFuture == null || ecommerceFuture.result == null) {
+          ecommerceViewModel.fetchEcommerces(0);
         }
-        return ecommerces;
+        return ecommerceFuture;
       case 5:
         final supermarketObserver = Provider.of<SupermarketObserver>(context, listen:false); 
         final supermarkets = supermarketObserver.supermarkets;
@@ -949,7 +949,9 @@ class PickcardViewModel extends ChangeNotifier{
       case 4:
         final ecommerceViewModel = Provider.of<EcommerceObserver>(context, listen:false); 
         final ecommerces = ecommerceViewModel.ecommerces!;
-        future = ecommerces;
+
+        // future = ecommerces;
+
         break;
       case 5:
         final supermarketObserver = Provider.of<SupermarketObserver>(context, listen:false); 

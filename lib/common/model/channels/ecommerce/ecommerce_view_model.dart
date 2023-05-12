@@ -9,27 +9,50 @@ class EcommerceObserver = EcommerceBase with _$EcommerceObserver;
 
 abstract class EcommerceBase with Store {
 
-
-  // @observable
-  // ObservableSet<String> selectedEcommerceIDs = ObservableSet<String>();
+  @observable
+  ObservableList<Ecommerce> ecommerces = ObservableList<Ecommerce>();
 
   @observable
-  ObservableFuture<ObservableList<Ecommerce>>? ecommerces;
+  ObservableFuture<ObservableList<Ecommerce>>? ecommerceFuture;
+
+  @observable
+  bool isLoading = true;
+
+  // @action
+  // set changeLoadingStatus(bool value){
+  //   this.isLoading = value;
+  // }
 
   @action
-  Future fetchEcommerces() {
-    return ecommerces = ObservableFuture(
+  Future fetchEcommerces(int offset) async {
+    return ecommerceFuture = ObservableFuture(
       Future(() async {
-        final response = await _httpService.get('/channel/ecommerces');
+        final response = await _httpService.get('/channel/ecommerces?offset='+offset.toString());
       
         final jsonStr = json.encode(response.data);
       
         final ObservableList<Ecommerce> result =
             ObservableList.of(ecommerceFromJson(jsonStr));
 
-        return ecommerces = ObservableFuture.value(result);
+        ecommerces.addAll(result);
+        
+        return ecommerceFuture = ObservableFuture.value(result);
       }),
     );
+
+      // runInAction((){
+      //   isLoading = true;
+      // });
+
+      // final response = await _httpService.get('/channel/ecommerces?offset='+offset.toString());
+    
+      // final jsonStr = json.encode(response.data);
+    
+      // final ObservableList<Ecommerce> result = ObservableList.of(ecommerceFromJson(jsonStr));
+      // runInAction(() {
+      //   ecommerces.addAll(result);
+      //   isLoading = false;
+      // });
   }
 
 

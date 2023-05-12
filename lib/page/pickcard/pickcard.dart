@@ -29,6 +29,10 @@ import 'package:pickcard/common/model/evaluate/evaluate_resp.dart';
 import 'package:pickcard/common/model/evaluate/param.dart';
 import 'package:pickcard/common/repository/storage.dart';
 import 'package:pickcard/page/pickcard/model/pickcard_viewmodel.dart';
+import 'package:pickcard/shared/repository/creditcard/creditcard.dart';
+import 'package:pickcard/shared/viewmodel/searchcard.viewmodel.dart';
+import 'package:pickcard/shared/component/searchcard.component.dart';
+import 'package:pickcard/shared/component/topbar.component.dart';
 import 'package:provider/provider.dart';
 
 
@@ -71,6 +75,8 @@ class PickcardPage extends StatelessWidget {
         ChangeNotifierProvider<EffectiveTimeViewModel>(create:(_)=> EffectiveTimeViewModel()),
         ChangeNotifierProvider<SortTypeViewModel>(create:(_)=>SortTypeViewModel()),
 
+        ChangeNotifierProvider<CreditCardViewModel>(create:(_)=>CreditCardViewModel(creditCardRepo: CreditCardRepo())),
+
     ],
       child:const InitChannelWrapper(),
     );
@@ -82,10 +88,12 @@ class InitChannelWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // init data
-    // PickcardViewModel pickcardViewModel = Provider.of<PickcardViewModel>(context, listen:false);
-    // pickcardViewModel.initPickcardViewModel(context);
-    return const Pickcard();
+    return Column(
+      children:[
+        TopBar(),
+        Pickcard(),
+      ]
+    );
   }
 }
 
@@ -94,102 +102,44 @@ class Pickcard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    
+    CreditCardViewModel creditCardViewModel = Provider.of<CreditCardViewModel>(context);
+    
+    return Observer(builder:(context){
 
-    return Column(
-      children:const [
-        TopBar(),
-        SizedBox(height:25,),
-        ChannelBtnList(),
-        SizedBox(height:10),
-        Divider(),
-        SizedBox(height:10),
-        Caculator(),
-        Divider(),
-        SizedBox(height:20),
-        CardListTitle(),
-        SizedBox(height:20),
-        CardList(),
-      ],
-    );
+      if(creditCardViewModel.isEnabled){
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children:[
+            SizedBox(height:20),      
+            CardSearchBtn(),
+            SizedBox(height:20),
+            CardListTitle(),
+            CreditCardItemList(creditCards: creditCardViewModel.creditCards,),
+          ],
+        );
+      }else {
+        return Column(
+          children:const [
+            SizedBox(height:25,),
+            ChannelBtnList(),
+            SizedBox(height:10),
+            Divider(),
+            SizedBox(height:10),
+            Caculator(),
+            Divider(),
+            SizedBox(height:20),
+            CardListTitle(),
+            SizedBox(height:20),
+            CardList(),
+          ],
+        );
+      }
+    });
   }
 }
 
 
-
-class TopBar extends StatelessWidget {
-  const TopBar({ Key? key }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child:Row(
-        children:[
-          TopTitle(),
-          SizedBox(width:20),
-          SearchCardBar(),
-        ]
-      )
-    );
-  }
-}
-
-class TopTitle extends StatelessWidget {
-  const TopTitle({ Key? key }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child:const Text(
-        '選卡趣',
-        style:TextStyle(
-          fontSize: 20,
-        ),
-      )
-    );
-  }
-}
-
-class SearchCardBar extends StatefulWidget {
-  const SearchCardBar({ Key? key }) : super(key: key);
-
-  @override
-  _SearchCardBarState createState() => _SearchCardBarState();
-}
-
-class _SearchCardBarState extends State<SearchCardBar> {
-
-  final TextEditingController _searchController = TextEditingController();
-
-  @override
-  void initState(){
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height:35,
-      width:200,
-      child:TextField(
-        textAlign: TextAlign.start,
-        textAlignVertical:TextAlignVertical.bottom,
-        onTap:(){
-        },
-        controller:_searchController,
-        decoration: InputDecoration(
-          hintText: '信用卡',
-          prefixIcon:const Icon(Icons.search),
-          border:OutlineInputBorder(
-            borderRadius: BorderRadius.circular(20.0),
-          )
-        ),
-        style:const TextStyle(
-          fontSize:18,
-        ),
-      ),
-    );
-  }
-}
 
 
 class ChannelBtnList extends StatefulWidget {
@@ -203,7 +153,6 @@ class _ChannelBtnListState extends State<ChannelBtnList> {
 
   bool showMore  = false;
   
-
   @override
   Widget build(BuildContext context) {
     if(showMore) {
@@ -266,7 +215,7 @@ class ChannelBtnShowTap extends StatelessWidget {
           padding:const EdgeInsets.only(top:15),
           child:const Icon(
             Icons.more_horiz_outlined,
-            color: Color(0xff2db3ff),
+            color: Color.fromARGB(255, 34, 188, 208),
             size: 35.0,
           ),
         ),
@@ -326,7 +275,6 @@ class ChannelBtnShowMoreList extends StatelessWidget {
 }
 
 
-
 class ChannelBtn extends StatelessWidget {
   const ChannelBtn({ Key? key, required this.channelType, }) : super(key: key);
   
@@ -348,12 +296,14 @@ class ChannelBtn extends StatelessWidget {
     icon = pickcardViewModel.getIconChannelBtn(context, channelTypeID);
 
     return ConstrainedBox(
+      
       constraints: BoxConstraints(
         maxWidth: 80,
       ),
       child:TextButton(
+       
         style: ElevatedButton.styleFrom(
-            padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 2),
+          padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 2),
         ),
         onPressed: (){
 
@@ -363,14 +313,14 @@ class ChannelBtn extends StatelessWidget {
 
           final _context = context;
 
+
           Future<List<ChannelItemStatus>?> future = showDialog<List<ChannelItemStatus>?>
             (context: context, builder: (BuildContext context) {
             
-
             return Observer(builder:(context){
 
                 ObservableFuture<ObservableList<dynamic>>? future = pickcardViewModel.getChannelItemObserver(_context, channelTypeID);
-
+                
                 if (future == null || future.result == null) {
                   return Container();
                 } 
@@ -384,7 +334,7 @@ class ChannelBtn extends StatelessWidget {
                     channelModels = pickcardViewModel.getChannelModelsByChannelTypeID(context, channelTypeID, future.result);
                 }
 
-                List<ChannelItemStatus> channelItemStatuses = pickcardViewModel.transferChannelItemStatus(context, channelTypeID, channelModels);
+              List<ChannelItemStatus> channelItemStatuses = pickcardViewModel.transferChannelItemStatus(context, channelTypeID, channelModels);
 
               return AlertDialog(
                 title: Text(
@@ -398,8 +348,6 @@ class ChannelBtn extends StatelessWidget {
                 ),
               );
             });
-          
-          
           });
 
           if(future != null) {
@@ -412,8 +360,6 @@ class ChannelBtn extends StatelessWidget {
               }
             });
           }
-
-          
         },
         child:Container(
           alignment: Alignment.center,
@@ -422,7 +368,8 @@ class ChannelBtn extends StatelessWidget {
             children:[
               Icon(
                 icon,
-                color: hasChosen ? Colors.greenAccent[700]!: const Color(0xff2db3ff),
+                color: hasChosen ? Colors.greenAccent[700]!: Color.fromARGB(255, 34, 188, 208),
+
                 size: 35.0,
               ),
               const SizedBox(height:10),
@@ -430,7 +377,7 @@ class ChannelBtn extends StatelessWidget {
                 channelName,
                 style: TextStyle(
                   fontSize: 15,
-                  color: hasChosen ? Colors.greenAccent[700]!:const Color(0xff2db3ff),
+                  color: hasChosen ? Colors.greenAccent[700]!:Color.fromARGB(255, 34, 188, 208),
                 ),
               ),
             ],
@@ -532,8 +479,6 @@ class _ChannelItemListDialogState extends State<ChannelItemListDialog> {
 
   @override
   Widget build(BuildContext context) {
-
-
     return Container(
       child:Column(
         children:[
@@ -613,7 +558,6 @@ class _ChannelItemListDialogState extends State<ChannelItemListDialog> {
                               ]
                             )
                           ),
-                          
                         ]
                       ),
                     ),
@@ -629,7 +573,7 @@ class _ChannelItemListDialogState extends State<ChannelItemListDialog> {
                 Navigator.pop(context, widget.channelItemStatuses);
               },
               style:ElevatedButton.styleFrom(
-                primary: const Color(0xff2db3ff),
+                primary: Color.fromARGB(255, 34, 188, 208),
                 shape: RoundedRectangleBorder( 
                   borderRadius: BorderRadius.circular(10.0),
                 ),
@@ -638,7 +582,6 @@ class _ChannelItemListDialogState extends State<ChannelItemListDialog> {
                 alignment: Alignment.center,
                 width:400,
                 height:40,
-                
                 child:Text(
                 '送出',
                 style:TextStyle(
@@ -714,6 +657,7 @@ class _SortItemStfState extends State<SortItemStf> {
                   Radio(
                     value: 0,
                     groupValue: _value,
+                    activeColor: Color.fromARGB(255, 34, 188, 208),
                     onChanged: (int? value){
                       setState((){
                         _value = 0;
@@ -721,7 +665,12 @@ class _SortItemStfState extends State<SortItemStf> {
                       });
                     },
                   ),
-                  Text(sortTypeNamesModel.getSortTypeName(0)),
+                  Text(
+                    sortTypeNamesModel.getSortTypeName(0),
+                    style:TextStyle(
+                      color:Color.fromARGB(255, 34, 188, 208),
+                    ),
+                  ),
                 ]
               ),
             ),
@@ -741,6 +690,7 @@ class _SortItemStfState extends State<SortItemStf> {
                   Radio(
                     value: 1,
                     groupValue: _value,
+                    activeColor: Color.fromARGB(255, 34, 188, 208),
                     onChanged: (int? value){
                       setState(() {
                         _value = 1;
@@ -748,7 +698,12 @@ class _SortItemStfState extends State<SortItemStf> {
                       });
                     },
                   ),
-                  Text(sortTypeNamesModel.getSortTypeName(1)),
+                  Text(
+                    sortTypeNamesModel.getSortTypeName(1),
+                    style:TextStyle(
+                      color:Color.fromARGB(255, 34, 188, 208),
+                    ),
+                  ),
                 ]
               ),
             ),
@@ -932,6 +887,7 @@ class _RewardItemStfState extends State<RewardItemStf> {
                         Radio(
                           value: 0,
                           groupValue: _value,
+                          activeColor: Color.fromARGB(255, 34, 188, 208),
                           onChanged: (int? value){
                             setState((){
                               _value = 0;
@@ -939,7 +895,12 @@ class _RewardItemStfState extends State<RewardItemStf> {
                             });
                           },
                         ),
-                        Text(rewardTypeNamesModel.getRewardName(0)),
+                        Text(
+                          rewardTypeNamesModel.getRewardName(0),
+                          style:TextStyle(
+                            color:Color.fromARGB(255, 34, 188, 208),
+                          )
+                        ),
                       ]
                     ),
                   ),
@@ -959,6 +920,7 @@ class _RewardItemStfState extends State<RewardItemStf> {
                         Radio(
                           value: 1,
                           groupValue: _value,
+                          activeColor: Color.fromARGB(255, 34, 188, 208),
                           onChanged: (int? value){
                             setState(() {
                               _value = 1;
@@ -966,7 +928,12 @@ class _RewardItemStfState extends State<RewardItemStf> {
                             });
                           },
                         ),
-                        Text(rewardTypeNamesModel.getRewardName(1)),
+                        Text(
+                          rewardTypeNamesModel.getRewardName(1),
+                          style:TextStyle(
+                            color:Color.fromARGB(255, 34, 188, 208),
+                          )
+                        ),
                       ]
                     ),
                   ),
@@ -985,6 +952,7 @@ class _RewardItemStfState extends State<RewardItemStf> {
                         Radio(
                           value: 2,
                           groupValue: _value,
+                          activeColor: Color.fromARGB(255, 34, 188, 208),
                           onChanged: (int? value){
                             setState(() {
                               _value = 2;
@@ -992,7 +960,12 @@ class _RewardItemStfState extends State<RewardItemStf> {
                             });
                           },
                         ),
-                        Text(rewardTypeNamesModel.getRewardName(2)),
+                        Text(
+                          rewardTypeNamesModel.getRewardName(2),
+                          style:TextStyle(
+                            color:Color.fromARGB(255, 34, 188, 208),
+                          )
+                        ),
                       ]
                     ),
                   ),
@@ -1029,7 +1002,7 @@ class EvaluateBtnItem extends StatelessWidget {
 
         },
         style:ElevatedButton.styleFrom(
-          primary: const Color(0xff2db3ff),
+          primary: Color.fromARGB(255, 34, 188, 208),
           shape: RoundedRectangleBorder( 
             borderRadius: BorderRadius.circular(10.0),
           ),
@@ -1048,29 +1021,6 @@ class EvaluateBtnItem extends StatelessWidget {
 }
 
 
-class CardListTitle extends StatelessWidget {
-  const CardListTitle({ Key? key }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      alignment: Alignment.topLeft,
-      child:Column(
-        crossAxisAlignment:CrossAxisAlignment.start,
-        children:const [
-          Text(
-            '搜尋卡片結果',
-            style: TextStyle(
-              fontWeight: FontWeight.w300,
-              fontSize: 12,
-              color: Colors.black54,
-            ),
-          ),
-        ]
-      )
-    );
-  }
-}
 
 class CardList extends StatelessWidget {
   const CardList({ Key? key }) : super(key: key);

@@ -28,36 +28,65 @@ mixin _$EcommerceObserver on EcommerceBase, Store {
       Atom(name: 'EcommerceBase.ecommerces', context: context);
 
   @override
-  ObservableFuture<ObservableList<Ecommerce>>? get ecommerces {
+  ObservableList<Ecommerce> get ecommerces {
     _$ecommercesAtom.reportRead();
     return super.ecommerces;
   }
 
   @override
-  set ecommerces(ObservableFuture<ObservableList<Ecommerce>>? value) {
+  set ecommerces(ObservableList<Ecommerce> value) {
     _$ecommercesAtom.reportWrite(value, super.ecommerces, () {
       super.ecommerces = value;
     });
   }
 
-  late final _$EcommerceBaseActionController =
-      ActionController(name: 'EcommerceBase', context: context);
+  late final _$ecommerceFutureAtom =
+      Atom(name: 'EcommerceBase.ecommerceFuture', context: context);
 
   @override
-  Future<dynamic> fetchEcommerces() {
-    final _$actionInfo = _$EcommerceBaseActionController.startAction(
-        name: 'EcommerceBase.fetchEcommerces');
-    try {
-      return super.fetchEcommerces();
-    } finally {
-      _$EcommerceBaseActionController.endAction(_$actionInfo);
-    }
+  ObservableFuture<ObservableList<Ecommerce>>? get ecommerceFuture {
+    _$ecommerceFutureAtom.reportRead();
+    return super.ecommerceFuture;
+  }
+
+  @override
+  set ecommerceFuture(ObservableFuture<ObservableList<Ecommerce>>? value) {
+    _$ecommerceFutureAtom.reportWrite(value, super.ecommerceFuture, () {
+      super.ecommerceFuture = value;
+    });
+  }
+
+  late final _$isLoadingAtom =
+      Atom(name: 'EcommerceBase.isLoading', context: context);
+
+  @override
+  bool get isLoading {
+    _$isLoadingAtom.reportRead();
+    return super.isLoading;
+  }
+
+  @override
+  set isLoading(bool value) {
+    _$isLoadingAtom.reportWrite(value, super.isLoading, () {
+      super.isLoading = value;
+    });
+  }
+
+  late final _$fetchEcommercesAsyncAction =
+      AsyncAction('EcommerceBase.fetchEcommerces', context: context);
+
+  @override
+  Future<dynamic> fetchEcommerces(int offset) {
+    return _$fetchEcommercesAsyncAction
+        .run(() => super.fetchEcommerces(offset));
   }
 
   @override
   String toString() {
     return '''
-ecommerces: ${ecommerces}
+ecommerces: ${ecommerces},
+ecommerceFuture: ${ecommerceFuture},
+isLoading: ${isLoading}
     ''';
   }
 }

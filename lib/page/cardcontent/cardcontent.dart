@@ -16,6 +16,10 @@ import 'package:pickcard/common/model/evaluate/evaluate_resp.dart';
 import 'package:pickcard/common/model/evaluate/param.dart';
 import 'package:pickcard/common/repository/storage.dart';
 import 'package:pickcard/page/pickcard/model/pickcard_viewmodel.dart';
+import 'package:pickcard/shared/component/searchcard.component.dart';
+import 'package:pickcard/shared/component/topbar.component.dart';
+import 'package:pickcard/shared/repository/creditcard/creditcard.dart';
+import 'package:pickcard/shared/viewmodel/searchcard.viewmodel.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import 'package:percent_indicator/percent_indicator.dart';
@@ -40,6 +44,8 @@ class CardContentPage extends StatelessWidget {
         ChangeNotifierProvider<EffectiveTimeViewModel>(create:(_) => EffectiveTimeViewModel()),
 
         ChangeNotifierProvider<CardRewardEvaluationViewModel>(create:(_)=> CardRewardEvaluationViewModel()),
+
+        ChangeNotifierProvider<CreditCardViewModel>(create:(_)=>CreditCardViewModel(creditCardRepo: CreditCardRepo())),
 
     ],
       child:const InitialCardContentWrapper(),
@@ -72,7 +78,13 @@ class InitialCardContentWrapper extends StatelessWidget {
       
       cardRewardViewModel.initCardRewardModel(cardRewardResp.result);
 
-      return const CardContent();
+      return Column(
+        children:[
+          TopBar(),
+          SizedBox(height:20),      
+          CardContent()
+        ],
+      ); 
 
     });
   }
@@ -88,11 +100,32 @@ class CardContent extends StatelessWidget {
 
     String selectedFeature = cardFeatureViewModel.getSelectedFeature();
 
-    if("卡片優惠" == selectedFeature){
-      return const CardRewardWrapper();
-    }else {
-      return const CardOtherRewardWrapper();
-    }
+    CreditCardViewModel creditCardViewModel = Provider.of<CreditCardViewModel>(context);
+
+    return Observer(builder:(context){
+    
+      if(creditCardViewModel.isEnabled){
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children:[
+            SizedBox(height:20),      
+            CardSearchBtn(),
+            SizedBox(height:20),
+            CardListTitle(),
+            CreditCardItemList(creditCards: creditCardViewModel.creditCards,),
+          ],
+        );
+      }else {
+        if("卡片優惠" == selectedFeature){
+          return const CardRewardWrapper();
+        }else {
+          return const CardOtherRewardWrapper();
+        }
+      }
+
+    });
+
+    
   }
 }
 
@@ -167,7 +200,7 @@ class CardIcon extends StatelessWidget {
     return Container(
       child:Image(
         width:150,
-        image: AssetImage('images/' + imagePath),
+        image: AssetImage('images/${imagePath}'),
     )
     );
   }
@@ -243,7 +276,9 @@ class CardDesc extends StatelessWidget {
             children:[
               Container(
                 padding:const EdgeInsets.only(top:2),
-                child:const Icon(Icons.arrow_right_outlined,),
+                child:const Icon(
+                  Icons.arrow_right_outlined,
+                ),
               ),
               Expanded(
                 child:Text(
@@ -294,8 +329,9 @@ class LinkURL extends StatelessWidget {
             ),
             Icon(
               Icons.double_arrow,
-              color: Colors.black45,
               size: 30.0,
+              color: Colors.black54,
+              
             ),
           ],
         ),
@@ -372,7 +408,7 @@ class FeatureTitle extends StatelessWidget {
               fontWeight: FontWeight.w300,
               fontSize: 14,
               letterSpacing: 0.0,
-              color: selected ? const Color(0xff2db3ff):Colors.black87,
+              color: selected ? Color.fromARGB(255, 34, 188, 208):Colors.black87,
             ),
           ),
         ),
@@ -857,7 +893,7 @@ class _ChannelListStfState extends State<ChannelListStf> {
       channelModels = originChannelModels;
     }
     
-    double channelListWidth = channelModels.length * 120; 
+    double channelListWidth = channelModels.length * 140; 
 
     double windowWidth = MediaQuery.of(context).size.width < 800 ? MediaQuery.of(context).size.width:800;
 
@@ -896,8 +932,7 @@ class _ChannelListStfState extends State<ChannelListStf> {
                             height:50,
                             child:Image(
                               image: AssetImage(
-                                'images/channel/'+selectedChannelType.toString() + 
-                                '/'+channelModel.id +'.png'
+                                'images/channel/${selectedChannelType.toString()}/${channelModel.id}.png'
                               )
                             ),
                           ),
@@ -936,6 +971,7 @@ class _ChannelListStfState extends State<ChannelListStf> {
                                       channelModel.name,
                                       style: const TextStyle(
                                         fontSize: 15,
+                                        color:Color.fromARGB(255, 34, 188, 208),
                                       ),
                                     ),
                                   ),
@@ -969,6 +1005,7 @@ class _ChannelListStfState extends State<ChannelListStf> {
                   child:const Icon(
                     size:50,
                     Icons.arrow_left,
+                    color: Color.fromARGB(255, 34, 188, 208),
                   ),
                 ),
                 TextButton(
@@ -985,7 +1022,8 @@ class _ChannelListStfState extends State<ChannelListStf> {
                   },
                   child:const Icon(
                     size:50,
-                    Icons.arrow_right
+                    Icons.arrow_right,
+                    color: Color.fromARGB(255, 34, 188, 208),
                   ),
                 )
               ],
@@ -1050,6 +1088,7 @@ class _ChannelItemtitleState extends State<ChannelItemtitle> {
               style: TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.w300,
+                color:Color.fromARGB(255, 34, 188, 208),
               ),
             ),
           ), 
@@ -1232,6 +1271,7 @@ class _CardRewardTaskStfState extends State<CardRewardTaskStf> {
                           style:const TextStyle(
                             fontSize:15,
                             fontWeight:FontWeight.w300,
+                            color:Color.fromARGB(255, 34, 188, 208),
                           ),
                         ),
                       ),
@@ -1313,14 +1353,14 @@ class CardRewardChannelBtn extends StatelessWidget {
           if(!hasChosen)
             Icon(
               icon,
-              color:const Color(0xff2db3ff),
+              color:Color.fromARGB(255, 34, 188, 208),
               size: 35.0,
             ),
           Text(
             channelTypeName,
             style: TextStyle(
               fontSize: 15,
-              color: hasChosen ? Colors.greenAccent[700]!:const Color(0xff2db3ff),
+              color: hasChosen ? Colors.greenAccent[700]!:Color.fromARGB(255, 34, 188, 208),
             ),
           ),
         ]
@@ -1348,11 +1388,6 @@ class CardRewardReturnWrapper extends StatelessWidget {
 
     bool initRewardReturn = cardRewardEvaluationViewModel.hasInitCardRewardEvaluation(cardRewardID);
 
-    // String percentageDesc = "試算回饋金";
-
-    // if(initRewardReturn){
-    //   percentageDesc = "${backBonusPercentage.roundToDouble()}%";
-    // }
 
     return Container(
       child:Column(
@@ -1546,9 +1581,9 @@ class EvaluateRewardReturnBtn extends StatelessWidget {
       width:120,
       child:ElevatedButton(
         style:ElevatedButton.styleFrom(
-          primary: const Color(0xff2db3ff),
+          primary: Color.fromARGB(255, 34, 188, 208),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0),),
-          side: const BorderSide(width: 0.5, color: Color(0xff2db3ff),),
+          side: const BorderSide(width: 0.5, color: Color.fromARGB(255, 34, 188, 208),),
         ),
         onPressed: (){
           cardRewardEvaluationViewModel.evaluateSpecifiedCardReward(context, cardRewardID);
@@ -1652,7 +1687,6 @@ class RewardReturnDesc extends StatelessWidget {
       child:Text(
         actualBackDesc,
         style: const TextStyle(
-          fontFamily: "Netflix",
           fontWeight: FontWeight.w300,
           fontSize: 15,
           letterSpacing: 0.0,
@@ -1688,7 +1722,6 @@ class ChannelTitle extends StatelessWidget {
           Text(
             channelTypeName,
             style: const TextStyle(
-              fontFamily: "Netflix",
               fontWeight: FontWeight.w300,
               fontSize: 15,
               letterSpacing: 0.0,

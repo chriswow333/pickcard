@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:pickcard/page/cardcontent/cardcontent.dart';
 import 'package:pickcard/page/pickcard/pickcard.dart';
 
+
+// flutter packages pub run build_runner build --delete-conflicting-outputs
+// flutter build web
 void main() {
   runApp(const Pickcard());
 }
