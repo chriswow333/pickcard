@@ -73,6 +73,7 @@ flutter:
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
   assets: 
+    - images/homepage.png
     - images/card/sk_c02.png
     - images/card/sk_c03.png
     - images/card/sk_c04.png

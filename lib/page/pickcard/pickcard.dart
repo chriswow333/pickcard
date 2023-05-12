@@ -91,6 +91,7 @@ class InitChannelWrapper extends StatelessWidget {
     return Column(
       children:[
         TopBar(),
+        SizedBox(height:5),
         Pickcard(),
       ]
     );

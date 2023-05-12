@@ -171,7 +171,7 @@ class CardInfo extends StatelessWidget {
       alignment: Alignment.centerLeft,
       child:Row(
         mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children:[
           Container(
             child:Column(

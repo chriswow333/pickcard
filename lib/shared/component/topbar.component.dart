@@ -35,16 +35,35 @@ class TopTitle extends StatelessWidget {
       onPressed: (){
         html.window.open('/', '_self');
       }, 
+      style:ElevatedButton.styleFrom(
+        // primary: Color.fromRGBO(34, 188, 208, 1),
+        shape: RoundedRectangleBorder( 
+          borderRadius: BorderRadius.circular(5.0),
+        ),
+      ),
       child:Container(
         padding:const EdgeInsets.all(5),
-        child:const Text(
-          '選卡趣',
-          style:TextStyle(
-            fontSize: 25,
-            color: Color.fromRGBO(34, 188, 208, 1),
-            fontWeight:FontWeight.w500,
-          ),
-        )
+        child:Row(
+          children:[
+            Container(
+              padding:const EdgeInsets.only(top:5),
+              child:Image(
+                width:30,
+                image:AssetImage('images/homepage.png')
+              ),
+            ),
+            const SizedBox(width:5,),
+            const Text(
+              '選卡趣',
+              style:TextStyle(
+                fontSize: 25,
+                color: Color.fromRGBO(34, 188, 208, 1),
+                fontWeight:FontWeight.w500,
+              ),
+            )
+          ]
+        ),
+        
       )
     );
   }
