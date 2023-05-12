@@ -41,8 +41,8 @@ class TopTitle extends StatelessWidget {
           '選卡趣',
           style:TextStyle(
             fontSize: 25,
-            color: Color.fromARGB(255, 34, 188, 208),
-            fontWeight:FontWeight.w600
+            color: Color.fromRGBO(34, 188, 208, 1),
+            fontWeight:FontWeight.w500,
           ),
         )
       )
