@@ -8,7 +8,7 @@ import 'package:intl/intl.dart';
 
 class SortTypeViewModel extends ChangeNotifier{
   
-  int _sortType = 0;
+  int _sortType = 2;
 
   void toggleSortType(int sortType) {
     _sortType = sortType;

@@ -1347,7 +1347,7 @@ class CardRewardChannelBtn extends StatelessWidget {
           if(hasChosen) 
             Icon(
               Icons.check_circle_outline_outlined,
-              color:Colors.greenAccent[700],
+              color:Color.fromARGB(255, 255, 126, 7),
               size: 35.0,
             ),
           if(!hasChosen)
@@ -1360,7 +1360,7 @@ class CardRewardChannelBtn extends StatelessWidget {
             channelTypeName,
             style: TextStyle(
               fontSize: 15,
-              color: hasChosen ? Colors.greenAccent[700]!:Color.fromARGB(255, 34, 188, 208),
+              color: hasChosen ? Color.fromARGB(255, 255, 126, 7):Color.fromARGB(255, 34, 188, 208),
             ),
           ),
         ]

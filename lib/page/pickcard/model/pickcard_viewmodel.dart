@@ -108,8 +108,9 @@ class ChannelTypeModels {
 class SortTypeNamesModel {
 
    final Map<int, String> _sortTypeNames = {
-    0:"符合程度",
-    1:"回饋高低"
+    // 1:"符合程度",
+    2:"%數回饋",
+    3:"回饋金"
   };
 
   String getSortTypeName(int sortType) {
@@ -119,7 +120,7 @@ class SortTypeNamesModel {
 
   int getSortType(String sortTypeName) {
 
-    int sortType = 0;
+    int sortType = 2;
     _sortTypeNames.forEach((key, value) {
         if (sortTypeName == value) {
           sortType = key;
@@ -647,29 +648,9 @@ class PickcardViewModel extends ChangeNotifier{
 
 
   CardRewardEventResp getMaxBackBonusEventResp(List<CardRewardEventResp> cardRewardEventResps){
-    CardRewardEventResp? maxReturnEventResp;
-    double maxBackBonus = 0.0;
+    CardRewardEventResp? maxReturnEventResp = cardRewardEventResps[0];
 
-    for(CardRewardEventResp cardRewardEventResp in cardRewardEventResps){
-      
-      maxReturnEventResp ??= cardRewardEventResp;
-
-      switch (cardRewardEventResp.rewardType) {
-        case 1:
-         if(maxBackBonus <= cardRewardEventResp.feedReturn!.cashReturn!.cashReturnBonus!){
-           maxReturnEventResp = cardRewardEventResp;
-         }
-          break;
-        case 2:
-          if(maxBackBonus <= cardRewardEventResp.feedReturn!.pointReturn!.pointReturnBonus!){
-            maxReturnEventResp = cardRewardEventResp;
-          }
-          break;
-      }
-
-    }
-
-    return maxReturnEventResp!;
+    return maxReturnEventResp;
   }
 
   List<String> getLimitTypeNames(CardRewardEventResp rewardEventResp){

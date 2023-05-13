@@ -302,7 +302,6 @@ class ChannelBtn extends StatelessWidget {
         maxWidth: 80,
       ),
       child:TextButton(
-       
         style: ElevatedButton.styleFrom(
           padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 2),
         ),
@@ -369,8 +368,7 @@ class ChannelBtn extends StatelessWidget {
             children:[
               Icon(
                 icon,
-                color: hasChosen ? Colors.greenAccent[700]!: Color.fromARGB(255, 34, 188, 208),
-
+                color: hasChosen ? Color.fromARGB(255, 255, 126, 7): Color.fromARGB(255, 34, 188, 208),
                 size: 35.0,
               ),
               const SizedBox(height:10),
@@ -378,7 +376,7 @@ class ChannelBtn extends StatelessWidget {
                 channelName,
                 style: TextStyle(
                   fontSize: 15,
-                  color: hasChosen ? Colors.greenAccent[700]!:Color.fromARGB(255, 34, 188, 208),
+                  color: hasChosen ? Color.fromARGB(255, 255, 126, 7):Color.fromARGB(255, 34, 188, 208),
                 ),
               ),
             ],
@@ -628,7 +626,7 @@ class SortItemStf extends StatefulWidget {
 
 class _SortItemStfState extends State<SortItemStf> {
 
-    int _value = 0;
+    int _value = 2;
 
   @override
   Widget build(BuildContext context) {
@@ -644,30 +642,31 @@ class _SortItemStfState extends State<SortItemStf> {
             alignment: Alignment.centerLeft,
             child:const Text('排序方式')
           ),
+
           Container(
             width:110,
             child:TextButton(
               onPressed: (){
                 setState((){
-                  _value = 0;
-                  sortTypeViewModel.toggleSortType(0);
+                  _value = 2;
+                  sortTypeViewModel.toggleSortType(2);
                 });
               },
               child:Row(
                 children:[
                   Radio(
-                    value: 0,
+                    value: 2,
                     groupValue: _value,
                     activeColor: Color.fromARGB(255, 34, 188, 208),
                     onChanged: (int? value){
-                      setState((){
-                        _value = 0;
-                        sortTypeViewModel.toggleSortType(0);
+                      setState(() {
+                        _value = 2;
+                        sortTypeViewModel.toggleSortType(2);  
                       });
                     },
                   ),
                   Text(
-                    sortTypeNamesModel.getSortTypeName(0),
+                    sortTypeNamesModel.getSortTypeName(2),
                     style:TextStyle(
                       color:Color.fromARGB(255, 34, 188, 208),
                     ),
@@ -676,31 +675,30 @@ class _SortItemStfState extends State<SortItemStf> {
               ),
             ),
           ),
-
           Container(
             width:110,
             child:TextButton(
               onPressed: (){
                 setState((){
-                  _value = 1;
-                  sortTypeViewModel.toggleSortType(1);
+                  _value = 3;
+                  sortTypeViewModel.toggleSortType(3);
                 });
               },
               child:Row(
                 children:[
                   Radio(
-                    value: 1,
+                    value: 3,
                     groupValue: _value,
                     activeColor: Color.fromARGB(255, 34, 188, 208),
                     onChanged: (int? value){
                       setState(() {
-                        _value = 1;
-                        sortTypeViewModel.toggleSortType(1);  
+                        _value = 3;
+                        sortTypeViewModel.toggleSortType(3);  
                       });
                     },
                   ),
                   Text(
-                    sortTypeNamesModel.getSortTypeName(1),
+                    sortTypeNamesModel.getSortTypeName(3),
                     style:TextStyle(
                       color:Color.fromARGB(255, 34, 188, 208),
                     ),

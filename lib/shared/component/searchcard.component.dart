@@ -137,17 +137,6 @@ class _CreditCardItem extends StatelessWidget {
                   ]
                 ),
               ),  
-              SizedBox(width:20),
-              Expanded(
-                flex:1,
-                child:Text(
-                  '${creditCard.updateDate}',
-                  style: TextStyle(
-                    color:Colors.black,
-                    fontSize:10,
-                  ),
-                ),
-              ),
             ]
           )
         )

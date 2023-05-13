@@ -14,6 +14,10 @@ class CreditCardViewModel with ChangeNotifier {
 
   Future<void> fetchData() async {
     
+    if (_oldKeyword == _keyword){
+      return;
+    }
+
     try {
     
       List<String> likes = _keyword.split(" ");
@@ -23,6 +27,10 @@ class CreditCardViewModel with ChangeNotifier {
     }catch(exc) {
       debugPrint('Error in _fetchData : ${exc.toString()}');
     }
+
+
+    _oldKeyword = _keyword;
+
     notifyListeners();
   }
 
@@ -40,6 +48,8 @@ class CreditCardViewModel with ChangeNotifier {
   }
 
   String _keyword = "";
+
+  String _oldKeyword = "";
 
   set creditCards(List<CreditCard> creditCards) => _cards = creditCards;
   List<CreditCard> get creditCards => _cards;
