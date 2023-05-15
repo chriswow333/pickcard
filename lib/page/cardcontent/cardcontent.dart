@@ -826,7 +826,6 @@ class CardRewardChannelBtnWrapper extends StatelessWidget {
           if(hasTaskType)
             CardRewardTaskList(cardRewardID: cardRewardID,),
           
-          
           CardRewardReturnWrapper(cardRewardID: cardRewardID, totalBonus: totalBonus, calculateType:calculateType,),
 
           SizedBox(height:20),
@@ -1212,6 +1211,13 @@ class _CardRewardTaskStfState extends State<CardRewardTaskStf> {
 
     bool hasChosen = cardRewardViewModel.hasChosenCardRewardTaskID(cardRewardID, widget.task.id!);
 
+
+    bool defaultPass = widget.task.defaultPass!;
+
+    if(defaultPass){
+      cardRewardViewModel.toggleChosenCardRewardTask(cardRewardID, widget.task.id!);
+    }
+
     return Container(
       child:Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1232,32 +1238,35 @@ class _CardRewardTaskStfState extends State<CardRewardTaskStf> {
                     });
                   }, 
                   child: expand ? 
-                  const Icon(
-                    color:Colors.black,
-                    Icons.arrow_drop_down,
-                  )
-                  :const Icon(
-                    color:Colors.black,
-                    Icons.arrow_right
-                  ),
+                    const Icon(
+                      color:Colors.black,
+                      Icons.arrow_drop_down,
+                    )
+                    :const Icon(
+                      color:Colors.black,
+                      Icons.arrow_right
+                    ),
                 ),
               ),
               Expanded(
                 flex:9,
                 child:TextButton(
                   onPressed: (){
-                    cardRewardViewModel.toggleChosenCardRewardTask(cardRewardID, widget.task.id!);
+                    if(!defaultPass){
+                      cardRewardViewModel.toggleChosenCardRewardTask(cardRewardID, widget.task.id!);
+                    }
+                    
                   },
                   child:Row(
                     children:[
-                      if(hasChosen) 
+                      if(defaultPass || hasChosen) 
                         const Icon(
                             size:20,
                             color:Colors.red,
                             Icons.favorite
                           ),
                       
-                      if(!hasChosen) 
+                      if(!defaultPass && !hasChosen) 
                          const Icon(
                             size:20,
                             color:Colors.red,

@@ -58,9 +58,4 @@ class CreditCardViewModel with ChangeNotifier {
 
   bool isEnabled = false;
 
-
-  setDis() {
-
-  }
-
 }

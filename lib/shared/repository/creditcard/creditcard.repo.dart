@@ -18,10 +18,8 @@ abstract class CreditCardBase with Store {
     final creditCardParams = CreditCardParams(likes:like);
     return Future(() async {
       
-      print(creditCardParams);
       final response = await _httpService.post('/card/likecard',data:creditCardParams);
       final jsonStr = json.encode(response.data);
-      print("aa : " + jsonStr);
       return cardFromJson(jsonStr);
     });
 
