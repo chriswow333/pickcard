@@ -780,14 +780,25 @@ class CardRewardChannelBtnWrapper extends StatelessWidget {
     Set<int> channelTypes = {};
     bool hasTaskType = false;
 
+    List<Task> channelLabels = [];
+
     Map<int, List> rewardChannels = cardRewardViewModel.getCardModel().getCardRewardChannelsByCardReward(cardRewardID);
     
     rewardChannels.forEach((key, value) {
-      if(2 != key) {
-        channelTypes.add(key);
+
+      if (key == 2) {
+        List<Task> tasks = cardRewardViewModel.getCardModel().getCardRewardTasksByChannelType(cardRewardID, 2);
+        for(Task t in tasks) {
+          if (t.taskType == 3){
+            channelLabels.add(t);
+          }else {
+            hasTaskType = true;
+          }
+        }
       }else {
-        hasTaskType = true;
+        channelTypes.add(key);
       }
+
     });
 
     return Container(
@@ -814,7 +825,7 @@ class CardRewardChannelBtnWrapper extends StatelessWidget {
           
           const CardRewardChannelBtnTitle(),
 
-          CardRewardChannelBtnList(cardRewardID:cardRewardID, channelTypes:channelTypes),
+          CardRewardChannelBtnList(cardRewardID:cardRewardID, channelTypes:channelTypes, channelLabels: channelLabels,),
 
           const SizedBox(height:10,),
           
@@ -1141,10 +1152,11 @@ class CardRewardChannelBtnTitle extends StatelessWidget {
 
 
 class CardRewardChannelBtnList extends StatelessWidget {
-  const CardRewardChannelBtnList({ Key? key, required this.cardRewardID, required this.channelTypes, }) : super(key: key);
+  const CardRewardChannelBtnList({ Key? key, required this.cardRewardID, required this.channelTypes, required this.channelLabels,}) : super(key: key);
 
   final String cardRewardID;
   final Set<int> channelTypes;
+  final List<Task> channelLabels;
   @override
   Widget build(BuildContext context) {
 
@@ -1156,12 +1168,68 @@ class CardRewardChannelBtnList extends StatelessWidget {
         children:[
           for(int channelType in channelTypes)
             CardRewardChannelBtn(cardRewardID:cardRewardID, channelType:channelType,),
+
+          for(Task channelLabel in channelLabels)
+            ChannelLabelBtn(cardRewardID:cardRewardID, channelLabel: channelLabel,),
         ],
       ),
     );
   }
 }
 
+
+class ChannelLabelBtn extends StatefulWidget {
+  const ChannelLabelBtn({ Key? key, required this.cardRewardID, required this.channelLabel, }) : super(key: key);
+  final String cardRewardID;
+  final Task channelLabel;
+  @override
+  _ChannelLabelBtnState createState() => _ChannelLabelBtnState();
+}
+
+class _ChannelLabelBtnState extends State<ChannelLabelBtn> {
+
+
+  bool hasChosen = false;
+
+  @override
+  Widget build(BuildContext context) {
+      
+      CardRewardViewModel cardRewardViewModel = Provider.of<CardRewardViewModel>(context);
+
+    return TextButton(
+      onPressed: (){
+        setState(() {
+          hasChosen = !hasChosen;
+          cardRewardViewModel.toggleChosenCardRewardTask(widget.cardRewardID, widget.channelLabel.id!);
+
+        });
+      },
+      child:Column(
+        children:[
+          if(hasChosen) 
+            Icon(
+              Icons.check_circle_outline_outlined,
+              color:Color.fromARGB(255, 255, 126, 7),
+              size: 35.0,
+            ),
+          if(!hasChosen)
+            Icon(
+              Icons.task_outlined,
+              color:Color.fromARGB(255, 34, 188, 208),
+              size: 35.0,
+            ),
+          Text(
+            widget.channelLabel.name!,
+            style: TextStyle(
+              fontSize: 15,
+              color: hasChosen ? Color.fromARGB(255, 255, 126, 7):Color.fromARGB(255, 34, 188, 208),
+            ),
+          ),
+        ]
+      ),
+    );
+  }
+}
 
 
 class CardRewardTaskList extends StatelessWidget {
@@ -1181,7 +1249,8 @@ class CardRewardTaskList extends StatelessWidget {
       child:Column(
         children:[
           for(Task task in tasks)
-            CardRewardTaskStf(task:task)
+            if (task.taskType != 3)
+              CardRewardTaskStf(task:task)
         ]
       )
     );
