@@ -16,7 +16,7 @@ abstract class EvaluateRespBase with Store {
 
   @action
   Future evaluate(EvaluateParams param) {
-
+        logger.i(param);
     return evaluateResp = ObservableFuture(
      Future(() async {
 
@@ -26,7 +26,7 @@ abstract class EvaluateRespBase with Store {
         
         final EvaluateResp result = evaluateRespFromJson(jsonStr);
 
-        logger.i(result);
+        // logger.i(result);
 
         return evaluateResp = ObservableFuture.value(result);
       }),

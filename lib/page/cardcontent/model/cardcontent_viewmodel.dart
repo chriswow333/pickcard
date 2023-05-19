@@ -690,8 +690,8 @@ class CardRewardViewModel extends ChangeNotifier {
 
 
   void toggleChosenCardRewardTask(String cardRewardID, String taskID) {
-    
-    
+
+
     if(!_chosenCardRewardChannel.containsKey(cardRewardID)){
       _chosenCardRewardChannel[cardRewardID] = { 2: { taskID }};
       notifyListeners();
@@ -936,6 +936,8 @@ class CardRewardEvaluationViewModel extends ChangeNotifier {
 
     int rewardType = cardRewardViewModel.getRewardTypeByCardRewardID(cardRewardID);
     String cardID = cardRewardViewModel.getCardID();
+    
+    
 
     return EvaluateParams(
         cash:cash,
@@ -974,7 +976,7 @@ class CardRewardEvaluationViewModel extends ChangeNotifier {
 
 
     EvaluateParams params = evaluteCardReward(context, cardRewardID);
-
+    
     evaluateRespObserver.evaluate(params).then((value) => {
       setEvaluateResp(cardRewardID, value)
     });

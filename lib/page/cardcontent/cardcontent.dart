@@ -1194,7 +1194,8 @@ class _ChannelLabelBtnState extends State<ChannelLabelBtn> {
   @override
   Widget build(BuildContext context) {
       
-      CardRewardViewModel cardRewardViewModel = Provider.of<CardRewardViewModel>(context);
+    // for channel label
+    CardRewardViewModel cardRewardViewModel = Provider.of<CardRewardViewModel>(context);
 
     return TextButton(
       onPressed: (){
@@ -1250,7 +1251,7 @@ class CardRewardTaskList extends StatelessWidget {
         children:[
           for(Task task in tasks)
             if (task.taskType != 3)
-              CardRewardTaskStf(task:task)
+              CardRewardTaskStf(cardRewardID:cardRewardID, task:task)
         ]
       )
     );
@@ -1259,9 +1260,10 @@ class CardRewardTaskList extends StatelessWidget {
 
 
 class CardRewardTaskStf extends StatefulWidget {
-  const CardRewardTaskStf({ Key? key, required this.task, }) : super(key: key);
+  const CardRewardTaskStf({ Key? key, required this.cardRewardID, required this.task, }) : super(key: key);
 
   final Task task;
+  final String cardRewardID;
 
 
   @override
@@ -1276,15 +1278,15 @@ class _CardRewardTaskStfState extends State<CardRewardTaskStf> {
   Widget build(BuildContext context) {
     CardRewardViewModel cardRewardViewModel = Provider.of<CardRewardViewModel>(context);
 
-    String cardRewardID = cardRewardViewModel.getSelectedCardRewardID();
+    // String cardRewardID = cardRewardViewModel.getSelectedCardRewardID();
 
-    bool hasChosen = cardRewardViewModel.hasChosenCardRewardTaskID(cardRewardID, widget.task.id!);
+    bool hasChosen = cardRewardViewModel.hasChosenCardRewardTaskID(widget.cardRewardID, widget.task.id!);
 
 
     bool defaultPass = widget.task.defaultPass!;
 
     if(defaultPass){
-      cardRewardViewModel.toggleChosenCardRewardTask(cardRewardID, widget.task.id!);
+      cardRewardViewModel.toggleChosenCardRewardTask(widget.cardRewardID, widget.task.id!);
     }
 
     return Container(
@@ -1322,7 +1324,7 @@ class _CardRewardTaskStfState extends State<CardRewardTaskStf> {
                 child:TextButton(
                   onPressed: (){
                     if(!defaultPass){
-                      cardRewardViewModel.toggleChosenCardRewardTask(cardRewardID, widget.task.id!);
+                      cardRewardViewModel.toggleChosenCardRewardTask(widget.cardRewardID, widget.task.id!);
                     }
                     
                   },

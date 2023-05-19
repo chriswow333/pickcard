@@ -100,3 +100,102 @@ class AndroidAlertDialog extends DialogFactory{
     );
   }
 }
+
+
+const double xOrigin = 0;
+const double yOrigin = 0;
+class Point {
+  final double x;
+  final double y;
+  Point(this.x, this.y);
+
+  Point.nameConstructor()
+    : x = xOrigin, 
+      y = yOrigin;
+
+}
+
+void main() {
+  Point(1, 2);
+}
+
+
+class Vector2d {
+
+  final double x;
+  final double y;
+  Vector2d.name({required this.x, required this.y});
+}
+
+// class Vector3d extends Vector2d {
+
+
+//   final double z;
+
+
+//   // Vector3d.yzPlan({required super.x, required super.y, required this.z,}) : super.name(super.x:0s);
+
+
+//   Vector3d.fromJson(Map<String, double> json, this.z ): x = json['x']!, y = json, super.${1:name}(${2:0.0}, ${3:0.0}):['y']! {
+//   }
+// }
+
+
+
+class Point3 {
+  double x, y;
+
+  Point3(this.x, this.y);
+
+  Point3.alongXAxis(double x):this(x, 0);
+
+}
+
+class Logger {
+  
+  final String name;
+  bool mute = false;
+
+  static final Map<String, Logger> _cache = <String, Logger>{};
+
+  factory Logger(String name) {
+    return _cache.putIfAbsent(name, () => Logger._internal(name));
+  }
+
+
+
+  Logger._internal(this.name);
+}
+
+
+
+class Vector {
+  
+  final int x, y;
+
+  Vector(this.x, this.y);
+
+  Vector operator +(Vector v) => Vector(x+v.x, y+v.y);
+  Vector operator -(Vector v) => Vector(x-v.x, y-v.x);
+
+  @override
+  bool operator ==(Object other) => other is Vector && x == other.x && y == other.y;
+
+
+}
+
+
+class Rectangle {
+  double left, top, width, height;
+
+  Rectangle(this.left, this.top, this.width, this.height);
+
+  double get right => left+width;
+
+  set right(double value) => left = value - width;
+  double get bottom => top + height;
+  set bottom(double value) => top = value - height;
+
+}
+
+

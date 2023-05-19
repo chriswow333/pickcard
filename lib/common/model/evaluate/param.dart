@@ -190,7 +190,7 @@ class EvaluateParams {
       'streamings':streamings,
       'foods':foods,
       'transportations':transportations,
-      'travles':travels,
+      'travels':travels,
       'deliveries':deliveries,
       'insurances':insurances,
       'malls':malls,
