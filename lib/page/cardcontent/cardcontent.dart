@@ -1283,11 +1283,11 @@ class _CardRewardTaskStfState extends State<CardRewardTaskStf> {
     bool hasChosen = cardRewardViewModel.hasChosenCardRewardTaskID(widget.cardRewardID, widget.task.id!);
 
 
-    bool defaultPass = widget.task.defaultPass!;
+    // bool defaultPass = widget.task.defaultPass!;
 
-    if(defaultPass){
-      cardRewardViewModel.toggleChosenCardRewardTask(widget.cardRewardID, widget.task.id!);
-    }
+    // if(defaultPass){
+    //   cardRewardViewModel.toggleChosenCardRewardTask(widget.cardRewardID, widget.task.id!);
+    // }
 
     return Container(
       child:Column(
@@ -1323,21 +1323,21 @@ class _CardRewardTaskStfState extends State<CardRewardTaskStf> {
                 flex:9,
                 child:TextButton(
                   onPressed: (){
-                    if(!defaultPass){
+                    // if(!defaultPass){
                       cardRewardViewModel.toggleChosenCardRewardTask(widget.cardRewardID, widget.task.id!);
-                    }
+                    // }
                     
                   },
                   child:Row(
                     children:[
-                      if(defaultPass || hasChosen) 
+                      if(hasChosen) 
                         const Icon(
                             size:20,
                             color:Colors.red,
                             Icons.favorite
                           ),
                       
-                      if(!defaultPass && !hasChosen) 
+                      if(!hasChosen) 
                          const Icon(
                             size:20,
                             color:Colors.red,
