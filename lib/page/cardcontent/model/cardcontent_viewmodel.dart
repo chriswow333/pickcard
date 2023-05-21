@@ -1018,6 +1018,31 @@ class CardRewardEvaluationViewModel extends ChangeNotifier {
     return 0.0;
   } 
 
+  int getCashCalculateType(String cardRewardID){
+
+     if(!_cardRewardEvaluationResps.containsKey(cardRewardID)){
+       return 0;
+     }
+
+     for(CardEventResp cardEventResp in _cardRewardEvaluationResps[cardRewardID]!.cardEventResps ?? []){
+       for(CardRewardEventResp cardRewardEventResp in cardEventResp.cardRewardEventResps ?? [] ) {
+         int rewardType = cardRewardEventResp.rewardType ?? 0;
+
+         switch(rewardType) {
+           case 1:
+            return cardRewardEventResp.feedbackBonus!.cashFeedbackBonus!.cashCalculateType!;
+          case 2:
+            return 0;
+         }
+       }
+     }
+
+    return 0;
+  } 
+
+  
+
+
 
   String getActualBackDesc(String cardRewardID){
 

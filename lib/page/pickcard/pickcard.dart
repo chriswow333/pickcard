@@ -1399,15 +1399,16 @@ class RewardReturn extends StatelessWidget {
       child:Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children:[
-          Text(
-            returnBonus.toString() + '%回饋',
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
-              letterSpacing: 0.0,
-              color: Colors.black87,
+          if (returnBonus < 100) // 大於100 基本上是直接折抵現金
+            Text(
+              returnBonus.toString() + '%回饋',
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+                letterSpacing: 0.0,
+                color: Colors.black87,
+              ),
             ),
-          ),
           const SizedBox(height:5,),
           Text(
             '現省' + actualBack.toString() +'元',

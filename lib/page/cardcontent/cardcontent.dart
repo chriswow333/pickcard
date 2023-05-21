@@ -1462,11 +1462,7 @@ class CardRewardReturnWrapper extends StatelessWidget {
 
     CardRewardEvaluationViewModel cardRewardEvaluationViewModel = Provider.of<CardRewardEvaluationViewModel>(context);
 
-    double backBonus = cardRewardEvaluationViewModel.getRewardReturnBackBonus(cardRewardID);
-
-    double backBonusPercentage = (backBonus/ totalBonus) * 100 ;
-
-    bool initRewardReturn = cardRewardEvaluationViewModel.hasInitCardRewardEvaluation(cardRewardID);
+  
 
 
     return Container(
@@ -1702,45 +1698,63 @@ class RewardReturnPercentage extends StatelessWidget {
 
     double backBonus = cardRewardEvaluationViewModel.getRewardReturnBackBonus(cardRewardID);
 
-    return Container(
-      child:Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children:[
-          Text(
+    int cashCalculateType = cardRewardEvaluationViewModel.getCashCalculateType(cardRewardID);
+
+    print(cashCalculateType);
+    if (cashCalculateType == 2) {
+      return Container(
+        child:Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children:[
+            Text(
+              '${backBonus}%',
+              style: const TextStyle(
+                fontWeight: FontWeight.w300,
+                fontSize: 15,
+                letterSpacing: 0.0,
+                color: Colors.black87,
+              ),
+            ),
+            const SizedBox(width:5),
+            const Text(
+              '/',
+              style:TextStyle(
+                fontFamily: "Netflix",
+                fontWeight: FontWeight.w300,
+                fontSize:15,
+                letterSpacing: 0.0,
+                color: Colors.black87,
+              ),
+            ),
+            const SizedBox(width:2),
+            Text(
+              '$totalBonus%',
+              style: const TextStyle(
+                fontFamily: "Netflix",
+                fontWeight: FontWeight.w300,
+                fontSize: 15,
+                letterSpacing: 0.0,
+                color: Colors.black87,
+              ),
+            ),
+          ],
+        ),
+      );
+    }else {
+
+      return Container(
+        child:Text(
             '${backBonus}%',
-            style: const TextStyle(
-              fontWeight: FontWeight.w300,
-              fontSize: 15,
-              letterSpacing: 0.0,
-              color: Colors.black87,
-            ),
+          style: const TextStyle(
+            fontWeight: FontWeight.w300,
+            fontSize: 15,
+            letterSpacing: 0.0,
+            color: Colors.black87,
           ),
-          const SizedBox(width:5),
-          const Text(
-            '/',
-            style:TextStyle(
-              fontFamily: "Netflix",
-              fontWeight: FontWeight.w300,
-              fontSize:15,
-              letterSpacing: 0.0,
-              color: Colors.black87,
-            ),
-          ),
-          const SizedBox(width:2),
-          Text(
-            '$totalBonus%',
-            style: const TextStyle(
-              fontFamily: "Netflix",
-              fontWeight: FontWeight.w300,
-              fontSize: 15,
-              letterSpacing: 0.0,
-              color: Colors.black87,
-            ),
-          ),
-        ],
-      ),
-    );
-    
+        ),
+      );
+
+    }
     
   }
 }

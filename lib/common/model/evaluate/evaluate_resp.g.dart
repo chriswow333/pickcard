@@ -107,6 +107,7 @@ _$_CashFeedbackBonus _$$_CashFeedbackBonusFromJson(Map<String, dynamic> json) =>
     _$_CashFeedbackBonus(
       cashFeedbackBonusType: json['cashFeedbackBonusType'] as int?,
       totalBonus: (json['totalBonus'] as num?)?.toDouble(),
+      cashCalculateType: json['cashCalculateType'] as int?,
       title: json['title'] as String?,
       returnBonusTitle: json['returnBonusTitle'] as String?,
       cashReturnTitlePrefix: json['cashReturnTitlePrefix'] as String?,
@@ -118,6 +119,7 @@ Map<String, dynamic> _$$_CashFeedbackBonusToJson(
     <String, dynamic>{
       'cashFeedbackBonusType': instance.cashFeedbackBonusType,
       'totalBonus': instance.totalBonus,
+      'cashCalculateType': instance.cashCalculateType,
       'title': instance.title,
       'returnBonusTitle': instance.returnBonusTitle,
       'cashReturnTitlePrefix': instance.cashReturnTitlePrefix,

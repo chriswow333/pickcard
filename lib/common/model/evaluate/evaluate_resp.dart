@@ -76,6 +76,7 @@ abstract class CashFeedbackBonus with _$CashFeedbackBonus {
   const factory CashFeedbackBonus({
     int? cashFeedbackBonusType,
     double? totalBonus,
+    int? cashCalculateType,
     String? title,
     String? returnBonusTitle,
     String? cashReturnTitlePrefix,

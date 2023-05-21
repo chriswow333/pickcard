@@ -1121,6 +1121,7 @@ class _$CashFeedbackBonusTearOff {
   _CashFeedbackBonus call(
       {int? cashFeedbackBonusType,
       double? totalBonus,
+      int? cashCalculateType,
       String? title,
       String? returnBonusTitle,
       String? cashReturnTitlePrefix,
@@ -1128,6 +1129,7 @@ class _$CashFeedbackBonusTearOff {
     return _CashFeedbackBonus(
       cashFeedbackBonusType: cashFeedbackBonusType,
       totalBonus: totalBonus,
+      cashCalculateType: cashCalculateType,
       title: title,
       returnBonusTitle: returnBonusTitle,
       cashReturnTitlePrefix: cashReturnTitlePrefix,
@@ -1147,6 +1149,7 @@ const $CashFeedbackBonus = _$CashFeedbackBonusTearOff();
 mixin _$CashFeedbackBonus {
   int? get cashFeedbackBonusType => throw _privateConstructorUsedError;
   double? get totalBonus => throw _privateConstructorUsedError;
+  int? get cashCalculateType => throw _privateConstructorUsedError;
   String? get title => throw _privateConstructorUsedError;
   String? get returnBonusTitle => throw _privateConstructorUsedError;
   String? get cashReturnTitlePrefix => throw _privateConstructorUsedError;
@@ -1166,6 +1169,7 @@ abstract class $CashFeedbackBonusCopyWith<$Res> {
   $Res call(
       {int? cashFeedbackBonusType,
       double? totalBonus,
+      int? cashCalculateType,
       String? title,
       String? returnBonusTitle,
       String? cashReturnTitlePrefix,
@@ -1185,6 +1189,7 @@ class _$CashFeedbackBonusCopyWithImpl<$Res>
   $Res call({
     Object? cashFeedbackBonusType = freezed,
     Object? totalBonus = freezed,
+    Object? cashCalculateType = freezed,
     Object? title = freezed,
     Object? returnBonusTitle = freezed,
     Object? cashReturnTitlePrefix = freezed,
@@ -1199,6 +1204,10 @@ class _$CashFeedbackBonusCopyWithImpl<$Res>
           ? _value.totalBonus
           : totalBonus // ignore: cast_nullable_to_non_nullable
               as double?,
+      cashCalculateType: cashCalculateType == freezed
+          ? _value.cashCalculateType
+          : cashCalculateType // ignore: cast_nullable_to_non_nullable
+              as int?,
       title: title == freezed
           ? _value.title
           : title // ignore: cast_nullable_to_non_nullable
@@ -1229,6 +1238,7 @@ abstract class _$CashFeedbackBonusCopyWith<$Res>
   $Res call(
       {int? cashFeedbackBonusType,
       double? totalBonus,
+      int? cashCalculateType,
       String? title,
       String? returnBonusTitle,
       String? cashReturnTitlePrefix,
@@ -1250,6 +1260,7 @@ class __$CashFeedbackBonusCopyWithImpl<$Res>
   $Res call({
     Object? cashFeedbackBonusType = freezed,
     Object? totalBonus = freezed,
+    Object? cashCalculateType = freezed,
     Object? title = freezed,
     Object? returnBonusTitle = freezed,
     Object? cashReturnTitlePrefix = freezed,
@@ -1264,6 +1275,10 @@ class __$CashFeedbackBonusCopyWithImpl<$Res>
           ? _value.totalBonus
           : totalBonus // ignore: cast_nullable_to_non_nullable
               as double?,
+      cashCalculateType: cashCalculateType == freezed
+          ? _value.cashCalculateType
+          : cashCalculateType // ignore: cast_nullable_to_non_nullable
+              as int?,
       title: title == freezed
           ? _value.title
           : title // ignore: cast_nullable_to_non_nullable
@@ -1290,6 +1305,7 @@ class _$_CashFeedbackBonus implements _CashFeedbackBonus {
   const _$_CashFeedbackBonus(
       {this.cashFeedbackBonusType,
       this.totalBonus,
+      this.cashCalculateType,
       this.title,
       this.returnBonusTitle,
       this.cashReturnTitlePrefix,
@@ -1303,6 +1319,8 @@ class _$_CashFeedbackBonus implements _CashFeedbackBonus {
   @override
   final double? totalBonus;
   @override
+  final int? cashCalculateType;
+  @override
   final String? title;
   @override
   final String? returnBonusTitle;
@@ -1313,7 +1331,7 @@ class _$_CashFeedbackBonus implements _CashFeedbackBonus {
 
   @override
   String toString() {
-    return 'CashFeedbackBonus(cashFeedbackBonusType: $cashFeedbackBonusType, totalBonus: $totalBonus, title: $title, returnBonusTitle: $returnBonusTitle, cashReturnTitlePrefix: $cashReturnTitlePrefix, cashReturnTitleSuffix: $cashReturnTitleSuffix)';
+    return 'CashFeedbackBonus(cashFeedbackBonusType: $cashFeedbackBonusType, totalBonus: $totalBonus, cashCalculateType: $cashCalculateType, title: $title, returnBonusTitle: $returnBonusTitle, cashReturnTitlePrefix: $cashReturnTitlePrefix, cashReturnTitleSuffix: $cashReturnTitleSuffix)';
   }
 
   @override
@@ -1325,6 +1343,8 @@ class _$_CashFeedbackBonus implements _CashFeedbackBonus {
                 .equals(other.cashFeedbackBonusType, cashFeedbackBonusType) &&
             const DeepCollectionEquality()
                 .equals(other.totalBonus, totalBonus) &&
+            const DeepCollectionEquality()
+                .equals(other.cashCalculateType, cashCalculateType) &&
             const DeepCollectionEquality().equals(other.title, title) &&
             const DeepCollectionEquality()
                 .equals(other.returnBonusTitle, returnBonusTitle) &&
@@ -1339,6 +1359,7 @@ class _$_CashFeedbackBonus implements _CashFeedbackBonus {
       runtimeType,
       const DeepCollectionEquality().hash(cashFeedbackBonusType),
       const DeepCollectionEquality().hash(totalBonus),
+      const DeepCollectionEquality().hash(cashCalculateType),
       const DeepCollectionEquality().hash(title),
       const DeepCollectionEquality().hash(returnBonusTitle),
       const DeepCollectionEquality().hash(cashReturnTitlePrefix),
@@ -1359,6 +1380,7 @@ abstract class _CashFeedbackBonus implements CashFeedbackBonus {
   const factory _CashFeedbackBonus(
       {int? cashFeedbackBonusType,
       double? totalBonus,
+      int? cashCalculateType,
       String? title,
       String? returnBonusTitle,
       String? cashReturnTitlePrefix,
@@ -1371,6 +1393,8 @@ abstract class _CashFeedbackBonus implements CashFeedbackBonus {
   int? get cashFeedbackBonusType;
   @override
   double? get totalBonus;
+  @override
+  int? get cashCalculateType;
   @override
   String? get title;
   @override
